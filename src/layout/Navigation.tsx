@@ -1,5 +1,5 @@
 import { Link, Navbar, NavbarBrand, NavbarContent, Switch } from "@nextui-org/react";
-import icon from "../assets/icon.svg"
+import icon from "../assets/icon.png"
 import NavEntry from "./NavEntry.tsx";
 import { Moon, Sun } from "lucide-react";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
@@ -17,7 +17,7 @@ export default function Navigation() {
 		<Navbar maxWidth="full" height="50px" isBordered>
 			<NavbarBrand>
 				<Link className="gap-2" color="foreground" href="/">
-					<img src={ icon }/>
+					<img src={ icon } className="w-[30px]"/>
 					<p className="font-bold text-inherit">{ import.meta.env._TITLE }</p>
 				</Link>
 			</NavbarBrand>
