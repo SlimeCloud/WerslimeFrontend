@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ErrorResponse } from "./ErrorResponse.ts";
+import { ErrorResponse } from "../types/ErrorResponse.ts";
 import { useToken } from "./useToken.ts";
 
 export type RequestState = "success" | "error" | "idle" | "loading"
@@ -103,7 +103,7 @@ export function useRest<T>(route: string, {
 			if(signal.reason === "Cancel") setState("idle")
 			else {
 				setState("error")
-				setError("TIMEOUT")
+				setError({ status: 0, type: "TIMEOUT" })
 			}
 		})
 	}, [ cache, parser, route, timeout, token ])
