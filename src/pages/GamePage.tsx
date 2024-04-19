@@ -1,7 +1,79 @@
+import { useGameState } from "../hooks/useGameState.ts";
+import { useParams } from "react-router";
+import GameBoard from "./GameBoard.tsx";
+import GameLobby from "./GameLobby.tsx";
+import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { useRest } from "../hooks/useRest.ts";
+import { FormEvent, useMemo, useState } from "react";
+import Spinner from "../components/Spinner.tsx";
+import { useToken } from "../hooks/useToken.ts";
+
 export default function GamePage() {
+	const state = useGameState()
+
+	const params = useParams()
+	const id = params.id
+
 	return (
 		<>
+			{ (!state?.game || state.game.id !== id) ? <JoinGame id={ id! }/> : (
+				state.game.started
+					? <GameBoard/>
+					: <GameLobby/>
+			) }
+		</>
+	)
+}
 
+function JoinGame({ id }: { id: string }) {
+	const { setToken } = useToken()
+
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const { state, error, post } = useRest<{ token: string }>("/game/join", {
+		onError: onOpen,
+		onSuccess: ({ token }) => setToken(token)
+	})
+
+	const [ name, setName ] = useState("");
+	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ]);
+
+	function joinGame(e?: FormEvent) {
+		e?.preventDefault()
+
+		post({
+			path: `?id=${ id }`,
+			data: {
+				name: name
+			}
+		})
+	}
+
+	return (
+		<>
+			<Card shadow="sm" className="flex-grow md:w-1/2">
+				<CardHeader className="text-2xl font-black flex justify-center">Runde Beitreten</CardHeader>
+				<Divider/>
+				<CardBody>
+					<ScrollShadow className="gap-10 flex flex-col px-5 py-10">
+						<form className="gap-5 flex flex-col" onSubmit={ joinGame }>
+							<Input label="Name" placeholder="Gib deinen Namen ein"
+							       color="default"
+							       value={ name }
+							       onValueChange={ setName }
+							/>
+							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => joinGame() } isLoading={ state === "loading" }>Beitreten</Button>
+						</form>
+					</ScrollShadow>
+				</CardBody>
+			</Card>
+			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
+				<ModalContent>
+					<ModalHeader className="text-danger">Fehler</ModalHeader>
+					<ModalBody>
+						{ error?.type }
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 		</>
 	)
 }

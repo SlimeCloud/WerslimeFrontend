@@ -4,11 +4,10 @@ import NavEntry from "./NavEntry.tsx";
 import { Moon, Sun } from "lucide-react";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
 import { useEffect } from "react";
-import { useGameState } from "../hooks/useGameState.ts";
+import { GameState } from "../types/GameState.ts";
 
-export default function Navigation() {
+export default function Navigation({ gameState }: { gameState?: GameState }) {
 	const { darkMode, setDarkMode } = useDarkMode()
-	const gameState = useGameState()
 
 	useEffect(() => {
 		if(darkMode) document.body.classList.add("dark")

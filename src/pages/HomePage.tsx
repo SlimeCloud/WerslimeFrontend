@@ -3,6 +3,8 @@ import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, M
 import { FormEvent, useMemo, useState } from "react";
 import { useRest } from "../hooks/useRest.ts";
 import Spinner from "../components/Spinner.tsx";
+import { useNavigate } from "react-router";
+import { useToken } from "../hooks/useToken.ts";
 
 export default function HomePage() {
 	return (
@@ -14,8 +16,17 @@ export default function HomePage() {
 }
 
 function CreateGame() {
+	const navigate = useNavigate()
+	const { setToken } = useToken()
+
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { state, error, post } = useRest("/game", { onError: onOpen })
+	const { state, error, post } = useRest<{ token: string, game: string }>("/game", {
+		onError: onOpen,
+		onSuccess: ({ token, game }) => {
+			setToken(token)
+			navigate(`/game/${ game }`)
+		}
+	})
 
 	const [ name, setName ] = useState("");
 	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ]);
@@ -68,19 +79,14 @@ function CreateGame() {
 }
 
 function JoinGame() {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { state, error, post } = useRest("/game/join", { onError: onOpen })
+	const navigate = useNavigate()
 
-	const [ name, setName ] = useState("");
-	const invalid = useMemo(() => !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(name), [ name ]);
+	const [ id, setId ] = useState("");
+	const invalid = useMemo(() => !/^[a-zA-Z0-9]]{11}$/i.test(id), [ id ]);
 
 	function joinGame(e?: FormEvent) {
 		e?.preventDefault()
-		post({
-			data: {
-				masterName: name
-			}
-		})
+		navigate(`/game/${ id }`)
 	}
 
 	return (
@@ -93,10 +99,10 @@ function JoinGame() {
 						<form className="gap-5 flex flex-col" onSubmit={ joinGame }>
 							<Input label="Spiel-ID" placeholder="Gib die ID der Runde ein"
 							       color="default"
-							       value={ name }
-							       onValueChange={ setName }
+							       value={ id }
+							       onValueChange={ setId }
 							/>
-							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => joinGame() } isLoading={ state === "loading" }>Runde Beitreten</Button>
+							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
 
 						<Card className={ `text-xl tracking-wide hidden md:flex ${ styles.description }` } shadow="none">
@@ -108,14 +114,6 @@ function JoinGame() {
 					</ScrollShadow>
 				</CardBody>
 			</Card>
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
-				<ModalContent>
-					<ModalHeader className="text-danger">Fehler</ModalHeader>
-					<ModalBody>
-						{ error?.type }
-					</ModalBody>
-				</ModalContent>
-			</Modal>
 		</>
 	)
 }
