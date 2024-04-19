@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ErrorResponse } from "../types/ErrorResponse.ts";
 import { useToken } from "./useToken.ts";
 
@@ -47,17 +47,25 @@ function anySignal(signals: AbortSignal[]) {
 	return controller.signal
 }
 
+export interface RestOptions {
+
+}
+
 export function useRest<T>(route: string, {
 	parser = res => res.json(),
 	auto = false,
 	cache = true,
-	timeout = 10
+	timeout = 10,
+	onError,
+	onSuccess
 }: {
 	parser?: (res: Response) => Promise<T>
 	auto?: boolean,
 	cache?: boolean,
-	timeout?: number
-}): RestRoute<T> {
+	timeout?: number,
+	onError?: (error: ErrorResponse) => void,
+	onSuccess?: (data: T) => void
+} = {}): RestRoute<T> {
 	const abort = useRef<AbortController>()
 	const { token } = useToken()
 
@@ -65,7 +73,7 @@ export function useRest<T>(route: string, {
 	const [ data, setData ] = useState<T | undefined>(undefined)
 	const [ error, setError ] = useState<ErrorResponse | undefined>(undefined)
 
-	const execute = useCallback((method: string, request: Request) => {
+	function execute(method: string, request: Request) {
 		const controller = new AbortController()
 		abort.current = controller
 
@@ -78,10 +86,10 @@ export function useRest<T>(route: string, {
 			setError(undefined)
 		}
 
-		fetch(`${ import.meta.env._API }${ route }${ request.path || "" }`, {
+		setTimeout(() => fetch(`${ import.meta.env._API }${ route }${ request.path || "" }`, {
 			signal: signal,
 			method: method,
-			body: data && JSON.stringify(data),
+			body: request.data && JSON.stringify(request.data),
 			headers: {
 				Authorization: token || ""
 			}
@@ -91,26 +99,33 @@ export function useRest<T>(route: string, {
 					setState("success")
 					setError(undefined)
 					setData(data)
+
+					if(onSuccess) onSuccess(data)
 				})
 			} else {
 				res.json().then(data => {
 					setState("error")
-					setError((data as { type: ErrorResponse }).type)
+					setError(data as ErrorResponse)
 					setData(undefined)
+
+					if(onError) onError(data)
 				})
 			}
 		}).catch(() => {
 			if(signal.reason === "Cancel") setState("idle")
 			else {
 				setState("error")
-				setError({ status: 0, type: "TIMEOUT" })
+
+				const error = { status: 0, type: "TIMEOUT" } as ErrorResponse
+				setError(error)
+				if(onError) onError(error)
 			}
-		})
-	}, [ cache, parser, route, timeout, token ])
+		}), 0)
+	}
 
 	useEffect(() => {
 		if(auto) execute("GET", {})
-	}, [ auto, execute, token ])
+	}, [ auto, token ])
 
 	function reset() {
 		setState(auto ? "loading" : "idle")

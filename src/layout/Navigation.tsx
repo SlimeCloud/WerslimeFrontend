@@ -4,9 +4,11 @@ import NavEntry from "./NavEntry.tsx";
 import { Moon, Sun } from "lucide-react";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
 import { useEffect } from "react";
+import { useGameState } from "../hooks/useGameState.ts";
 
 export default function Navigation() {
 	const { darkMode, setDarkMode } = useDarkMode()
+	const gameState = useGameState()
 
 	useEffect(() => {
 		if(darkMode) document.body.classList.add("dark")
@@ -14,7 +16,7 @@ export default function Navigation() {
 	}, [ darkMode ])
 
 	return (
-		<Navbar maxWidth="full" height="50px" isBordered>
+		<Navbar maxWidth="full" height="50px" className="select-none" isBordered>
 			<NavbarBrand>
 				<Link className="gap-1" color="foreground" href="/">
 					<img src={ icon } className="w-[30px]"/>
@@ -23,9 +25,9 @@ export default function Navigation() {
 			</NavbarBrand>
 
 			<NavbarContent className="hidden sm:flex gap-7" justify="center">
-				<NavEntry path="/">Home</NavEntry>
-				<NavEntry path="/test">Test</NavEntry>
-				<NavEntry path="/abc">Abc</NavEntry>
+				<NavEntry path="/">Startseite</NavEntry>
+				<NavEntry path="/instructions">Anleitung</NavEntry>
+				{ gameState?.game && <NavEntry path={ `/game/${ gameState.game.id }` }>Spiel</NavEntry> }
 			</NavbarContent>
 
 			<NavbarContent justify="end">
