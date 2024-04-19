@@ -16,7 +16,7 @@ export default function Navigation() {
 	return (
 		<Navbar maxWidth="full" height="50px" isBordered>
 			<NavbarBrand>
-				<Link className="gap-2" color="foreground" href="/">
+				<Link className="gap-1" color="foreground" href="/">
 					<img src={ icon } className="w-[30px]"/>
 					<p className="font-bold text-inherit">{ import.meta.env._TITLE }</p>
 				</Link>
