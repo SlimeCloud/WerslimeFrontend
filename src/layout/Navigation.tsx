@@ -28,7 +28,7 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 			<NavbarContent className="hidden sm:flex gap-7" justify="center">
 				<NavEntry path="/">Startseite</NavEntry>
 				<NavEntry path="/instructions">Anleitung</NavEntry>
-				{ !!gameState?.game || pathname.startsWith("/game/") && <NavEntry path={ gameState?.game ? `/game/${ gameState.game.id }` : pathname }>Spiel</NavEntry> }
+				{ (!!gameState?.game || pathname.startsWith("/game/")) && <NavEntry path={ gameState?.game ? `/game/${ gameState.game.id }` : pathname }>Spiel</NavEntry> }
 			</NavbarContent>
 
 			<NavbarContent justify="end">
