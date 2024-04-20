@@ -28,10 +28,12 @@ function PlayerList() {
 							<li key={ p.id } className="w-fit">
 								<Tooltip
 									placement="right-end"
-									content={ p.master ? "Spiel-Leiter" :
-										player.master
-											? <Button color="danger" size="sm" onPress={ () => post({ data: { id: p.id } }) }><UserX/></Button>
-											: "Mitspieler"
+									className="font-bold"
+									content={ p.master ? "Spiel-Leiter" : !player.master ? "Mitspieler" :
+										<span className="flex gap-2 items-center">
+											<span>Aktionen</span>
+											<Button color="danger" size="sm" onPress={ () => post({ data: { id: p.id } }) }><UserX/></Button>
+										</span>
 									}
 								>
 									<span className={ `flex gap-2 ${ p.id === player.id ? "font-bold" : "" }` }>
