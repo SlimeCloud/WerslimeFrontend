@@ -65,7 +65,7 @@ function JoinGame({ id }: { id: string }) {
 
 	return (
 		<>
-			<Card shadow="sm" className="flex-grow md:w-1/2">
+			<Card shadow="sm" className="flex-grow lg:max-w-[75%] xl:max-w-[60%]">
 				<CardHeader className="text-2xl font-black flex justify-center">Runde Beitreten</CardHeader>
 				<Divider/>
 				<CardBody>

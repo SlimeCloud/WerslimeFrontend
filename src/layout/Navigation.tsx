@@ -5,8 +5,10 @@ import { Moon, Sun } from "lucide-react";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
 import { useEffect } from "react";
 import { GameState } from "../types/GameState.ts";
+import { useLocation } from "react-router";
 
 export default function Navigation({ gameState }: { gameState?: GameState }) {
+	const { pathname } = useLocation()
 	const { darkMode, setDarkMode } = useDarkMode()
 
 	useEffect(() => {
@@ -26,7 +28,7 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 			<NavbarContent className="hidden sm:flex gap-7" justify="center">
 				<NavEntry path="/">Startseite</NavEntry>
 				<NavEntry path="/instructions">Anleitung</NavEntry>
-				{ gameState?.game && <NavEntry path={ `/game/${ gameState.game.id }` }>Spiel</NavEntry> }
+				{ !!gameState?.game || pathname.startsWith("/game/") && <NavEntry path={ gameState?.game ? `/game/${ gameState.game.id }` : pathname }>Spiel</NavEntry> }
 			</NavbarContent>
 
 			<NavbarContent justify="end">
