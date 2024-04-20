@@ -8,7 +8,9 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const navigate = useNavigate()
 	const { setToken } = useToken()
 
-	const { post } = useRest("/game/reset")
+	const { post: reset } = useRest("/game/reset")
+	const { post: leave } = useRest("/game/leave")
+
 
 	return (
 		<Dropdown placement="bottom-end">
@@ -25,8 +27,12 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 				</DropdownItem>
 
 				<DropdownItem onPress={ () => navigate(`/game/${ gameState.game.id }`) }>Zurück zur Runde</DropdownItem>
-				{ (gameState.player.master && <DropdownItem onPress={ () => post() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
-				<DropdownItem color="danger" onPress={ () => setToken("") }>Runde Verlassen</DropdownItem>
+				{ (gameState.player.master && <DropdownItem onPress={ () => reset() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
+				<DropdownItem color="danger" onPress={ () => {
+					leave()
+					setToken("")
+					navigate("/")
+				} }>{ gameState.player.master ? "Runde Schließen" : "Runde Verlassen" }</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>
 	)

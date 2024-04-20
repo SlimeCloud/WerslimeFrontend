@@ -1,10 +1,10 @@
 import { GameStateContext, useGameState } from "../hooks/useGameState.ts";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useMemo, useState } from "react";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
 import { useServerValue } from "../hooks/useServerValue.ts";
@@ -29,11 +29,10 @@ export default function GamePage() {
 }
 
 function Game({ defaultValue }: { defaultValue: GameState }) {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const navigate = useNavigate();
 	const { setToken } = useToken()
 
 	const state = useServerValue("UPDATE", defaultValue)
-	useEvent("KICK", onOpen)
 
 	return (
 		<>
@@ -43,14 +42,35 @@ function Game({ defaultValue }: { defaultValue: GameState }) {
 					: <GameLobby/>
 				}
 			</GameStateContext.Provider>
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ () => setToken("") }>
-				<ModalContent>
-					<ModalHeader className="text-danger">Kick</ModalHeader>
-					<Divider/>
-					<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
-				</ModalContent>
-			</Modal>
+
+			<EventModal event="KICK" onClose={ () => setToken("") }>
+				<ModalHeader className="text-danger">Kick</ModalHeader>
+				<Divider/>
+				<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
+			</EventModal>
+
+			<EventModal event="CLOSE" onClose={ () => {
+				setToken("")
+				navigate("/")
+			} }>
+				<ModalHeader className="text-danger">Spiel Beendet</ModalHeader>
+				<Divider/>
+				<ModalBody className="p-5">Diese Runde wurde beendet. Erstelle selbst eine neue Runde oder tritt einer andren bei, um weiter zu spielen!</ModalBody>
+			</EventModal>
 		</>
+	)
+}
+
+function EventModal({ event, onClose, children }: { event: string, onClose?: () => void, children: ReactNode }) {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	useEvent(event, onOpen)
+
+	return (
+		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ onClose }>
+			<ModalContent>
+				{ children }
+			</ModalContent>
+		</Modal>
 	)
 }
 
