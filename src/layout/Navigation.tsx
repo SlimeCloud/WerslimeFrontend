@@ -6,6 +6,7 @@ import { useDarkMode } from "../hooks/useDarkMode.ts";
 import { useEffect } from "react";
 import { GameState } from "../types/GameState.ts";
 import { useLocation } from "react-router";
+import UserInfo from "./UserInfo.tsx";
 
 export default function Navigation({ gameState }: { gameState?: GameState }) {
 	const { pathname } = useLocation()
@@ -38,6 +39,7 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 					endContent={ <Moon/> }
 					isSelected={ darkMode } onValueChange={ setDarkMode }
 				/>
+				{ gameState?.game && <UserInfo gameState={ gameState }/> }
 			</NavbarContent>
 		</Navbar>
 	)
