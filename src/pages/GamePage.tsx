@@ -88,6 +88,7 @@ function JoinGame({ id }: { id: string }) {
 
 	function joinGame(e?: FormEvent) {
 		e?.preventDefault()
+		if(invalid) return
 
 		post({
 			path: `?id=${ id }`,

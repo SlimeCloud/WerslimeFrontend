@@ -33,6 +33,7 @@ function CreateGame() {
 
 	function createGame(e?: FormEvent) {
 		e?.preventDefault()
+		if(invalid) return
 
 		post({
 			data: {
@@ -86,6 +87,8 @@ function JoinGame() {
 
 	function joinGame(e?: FormEvent) {
 		e?.preventDefault()
+		if(invalid) return
+
 		navigate(`/game/${ id }`)
 	}
 
