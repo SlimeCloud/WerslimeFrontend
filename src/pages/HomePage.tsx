@@ -1,10 +1,11 @@
 import styles from "./HomePage.module.css"
-import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Divider, Input, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { FormEvent, useMemo, useState } from "react";
 import { useRest } from "../hooks/useRest.ts";
 import { useNavigate } from "react-router";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
+import ErrorModal from "../components/ErrorModal.tsx";
 
 export default function HomePage() {
 	return (
@@ -67,14 +68,7 @@ function CreateGame() {
 					</ScrollShadow>
 				</CardBody>
 			</Card>
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
-				<ModalContent>
-					<ModalHeader className="text-danger">Fehler</ModalHeader>
-					<ModalBody>
-						{ error?.type }
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
 		</>
 	)
 }

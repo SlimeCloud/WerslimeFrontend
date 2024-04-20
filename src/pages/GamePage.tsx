@@ -11,6 +11,7 @@ import { useServerValue } from "../hooks/useServerValue.ts";
 import { GameState } from "../types/GameState.ts";
 import EventProvider from "../components/EventProvider.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
+import ErrorModal from "../components/ErrorModal.tsx";
 
 export default function GamePage() {
 	const state = useGameState()
@@ -116,14 +117,7 @@ function JoinGame({ id }: { id: string }) {
 					</ScrollShadow>
 				</CardBody>
 			</Card>
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
-				<ModalContent>
-					<ModalHeader className="text-danger">Fehler</ModalHeader>
-					<ModalBody>
-						{ error?.type }
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
 		</>
 	)
 }
