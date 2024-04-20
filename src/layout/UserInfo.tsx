@@ -32,7 +32,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					leave()
 					setToken("")
 					navigate("/")
-				} }>{ gameState.player.master ? "Runde Schließen" : "Runde Verlassen" }</DropdownItem>
+				} }>{ (gameState.player.master && gameState.game.players.filter(p => p.master).length === 1) ? "Runde Schließen" : "Runde Verlassen" }</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>
 	)

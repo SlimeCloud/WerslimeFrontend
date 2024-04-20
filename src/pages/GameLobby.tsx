@@ -1,6 +1,6 @@
 import { useGameState } from "../hooks/useGameState.ts";
 import { Button, Card, CardBody, CardHeader, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
-import { Crown, Unplug, UserX } from "lucide-react";
+import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
@@ -15,7 +15,8 @@ export default function GameLobby() {
 }
 
 function PlayerList() {
-	const { post } = useRest("/game/kick")
+	const { post: kick } = useRest("/game/kick")
+	const { post: promote } = useRest("/game/promote")
 	const { game, player } = useGameState()!
 
 	return (
@@ -33,7 +34,8 @@ function PlayerList() {
 									content={ p.master ? "Spiel-Leiter" : !player.master ? "Mitspieler" :
 										<span className="flex gap-2 items-center">
 											<span>Aktionen</span>
-											<Button color="danger" size="sm" onPress={ () => post({ data: { id: p.id } }) }><UserX/></Button>
+											<Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button>
+											<Button title="Zum Spielleiter machen" color="warning" size="sm" onPress={ () => promote({ data: { id: p.id } }) }><ShieldPlus/></Button>
 										</span>
 									}
 								>
