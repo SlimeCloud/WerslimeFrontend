@@ -6,7 +6,6 @@ export default function EventProvider({ route, children }: { route: string, chil
 	const { token } = useToken()
 
 	const source = useMemo(() => {
-		source?.close()
 		return new EventSource(`${ import.meta.env._API }${ route }?token=${ token }`)
 	}, [ route, token ])
 

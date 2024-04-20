@@ -1,12 +1,15 @@
-import { useGameState } from "../hooks/useGameState.ts";
+import { GameStateContext, useGameState } from "../hooks/useGameState.ts";
 import { useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
 import { FormEvent, useMemo, useState } from "react";
-import Spinner from "../components/Spinner.tsx";
 import { useToken } from "../hooks/useToken.ts";
+import Spinner from "../components/Spinner.tsx";
+import { useServerValue } from "../hooks/useServerValue.ts";
+import { GameState } from "../types/GameState.ts";
+import EventProvider from "../components/EventProvider.tsx";
 
 export default function GamePage() {
 	const state = useGameState()
@@ -16,12 +19,24 @@ export default function GamePage() {
 
 	return (
 		<>
-			{ (!state?.game || state.game.id !== id) ? <JoinGame id={ id! }/> : (
-				state.game.started
-					? <GameBoard/>
-					: <GameLobby/>
-			) }
+			{ (!state?.game || state.game.id !== id)
+				? <JoinGame id={ id! }/>
+				: <EventProvider route="/events"><Game defaultValue={ state }/></EventProvider>
+			}
 		</>
+	)
+}
+
+function Game({ defaultValue }: { defaultValue: GameState }) {
+	const state = useServerValue("UPDATE", defaultValue)
+
+	return (
+		<GameStateContext.Provider value={ state }>
+			{ state.game.started
+				? <GameBoard/>
+				: <GameLobby/>
+			}
+		</GameStateContext.Provider>
 	)
 }
 
@@ -56,10 +71,10 @@ function JoinGame({ id }: { id: string }) {
 				<CardBody>
 					<ScrollShadow className="gap-10 flex flex-col px-5 py-10">
 						<form className="gap-5 flex flex-col" onSubmit={ joinGame }>
-							<Input label="Name" placeholder="Gib deinen Namen ein"
-							       color="default"
-							       value={ name }
-							       onValueChange={ setName }
+							<Input
+								label="Name" placeholder="Gib deinen Namen ein"
+								value={ name }
+								onValueChange={ setName }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => joinGame() } isLoading={ state === "loading" }>Beitreten</Button>
 						</form>

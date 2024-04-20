@@ -52,7 +52,7 @@ export interface RestOptions {
 }
 
 export function useRest<T>(route: string, {
-	parser = res => res.json(),
+	parser = res => res.text().then(t => t && JSON.parse(t)),
 	auto = false,
 	cache = true,
 	timeout = 10,

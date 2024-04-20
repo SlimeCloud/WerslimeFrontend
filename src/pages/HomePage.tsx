@@ -2,9 +2,9 @@ import styles from "./HomePage.module.css"
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { FormEvent, useMemo, useState } from "react";
 import { useRest } from "../hooks/useRest.ts";
-import Spinner from "../components/Spinner.tsx";
 import { useNavigate } from "react-router";
 import { useToken } from "../hooks/useToken.ts";
+import Spinner from "../components/Spinner.tsx";
 
 export default function HomePage() {
 	return (
@@ -49,10 +49,10 @@ function CreateGame() {
 				<CardBody>
 					<ScrollShadow className="gap-10 flex flex-col px-5 py-10">
 						<form className="gap-5 flex flex-col" onSubmit={ createGame }>
-							<Input label="Name" placeholder="Gib deinen Namen ein"
-							       color="default"
-							       value={ name }
-							       onValueChange={ setName }
+							<Input
+								label="Name" placeholder="Gib deinen Namen ein"
+								value={ name }
+								onValueChange={ setName }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => createGame() } isLoading={ state === "loading" }>Runde Erstellen</Button>
 						</form>
@@ -97,10 +97,10 @@ function JoinGame() {
 				<CardBody>
 					<ScrollShadow className="gap-10 flex flex-col px-5 py-10">
 						<form className="gap-5 flex flex-col" onSubmit={ joinGame }>
-							<Input label="Spiel-ID" placeholder="Gib die ID der Runde ein"
-							       color="default"
-							       value={ id }
-							       onValueChange={ setId }
+							<Input
+								label="Spiel-ID" placeholder="Gib die ID der Runde ein"
+								value={ id }
+								onValueChange={ setId }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
