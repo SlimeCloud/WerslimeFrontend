@@ -1,9 +1,10 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardHeader, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
+import { Role, roleNames, specialRoles } from "../types/Role.ts"
 
 export default function GameLobby() {
 	return (
@@ -64,18 +65,25 @@ function Settings() {
 	const disabled = !player.master || updateState === "loading"
 
 	const [ amount, setAmount ] = useState<number>(game.settings.werewolfAmount)
+	const [ roles, setRoles ] = useState(game.settings.roles)
 
 	function updateSettings(werewolfAmount?: number) {
 		update({
 			data: {
 				werewolfAmount: werewolfAmount || amount,
-				roles: []
+				roles: roles
 			}
 		})
 	}
 
 	useEffect(() => {
+		if(roles == game.settings.roles) return
+		updateSettings()
+	}, [ roles ])
+
+	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
+		setRoles(game.settings.roles)
 	}, [ game.settings ])
 
 	return (
@@ -83,14 +91,28 @@ function Settings() {
 			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
 			<Divider/>
 			<CardBody className="flex flex-col justify-between">
-				<Slider
-					label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
-					minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
-					value={ amount }
-					onChange={ value => setAmount(value as number) }
-					onChangeEnd={ value => updateSettings(value as number) }
-					isDisabled={ disabled }
-				/>
+				<div className="flex flex-col gap-5">
+					<Slider
+						label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
+						minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
+						value={ amount }
+						onChange={ value => setAmount(value as number) }
+						onChangeEnd={ value => updateSettings(value as number) }
+						isDisabled={ disabled }
+					/>
+
+					<CheckboxGroup
+						classNames={ { label: "font-bold [&_*]:!text-md" } }
+						label="Spezial-Rollen" size="md"
+						value={ roles }
+						onValueChange={ values => setRoles(values as Role[]) }
+						isDisabled={ disabled }
+					>
+						{ specialRoles.map(role =>
+							<Checkbox value={ role }>{ roleNames.get(role) }</Checkbox>
+						) }
+					</CheckboxGroup>
+				</div>
 
 				{ player.master && <Button className="font-bold" isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 			</CardBody>
