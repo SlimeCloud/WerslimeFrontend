@@ -3,6 +3,7 @@ import { Button, Card, CardBody, CardHeader, Divider, ScrollShadow, Slider, Tool
 import { Crown, Unplug, UserX } from "lucide-react";
 import { useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
+import Spinner from "../components/Spinner.tsx";
 
 export default function GameLobby() {
 	return (
@@ -54,14 +55,16 @@ function PlayerList() {
 
 function Settings() {
 	const { game, player } = useGameState()!
-	const { state, post } = useRest("/game/settings")
 
-	const disabled = !player.master || state === "loading"
+	const { state: startState, post: start } = useRest("/game/start")
+	const { state: updateState, post: update } = useRest("/game/settings")
+
+	const disabled = !player.master || updateState === "loading"
 
 	const [ amount, setAmount ] = useState<number>(game.settings.werewolfAmount)
 
 	function updateSettings(werewolfAmount?: number) {
-		post({
+		update({
 			data: {
 				werewolfAmount: werewolfAmount || amount,
 				roles: []
@@ -74,10 +77,10 @@ function Settings() {
 	}, [ game.settings ])
 
 	return (
-		<Card shadow="sm" className="flex-grow md:w-1/2" isDisabled={ state === "loading" }>
+		<Card shadow="sm" className="flex-grow md:w-1/2" isDisabled={ updateState === "loading" }>
 			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
 			<Divider/>
-			<CardBody>
+			<CardBody className="flex flex-col justify-between">
 				<Slider
 					label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
 					minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
@@ -86,6 +89,8 @@ function Settings() {
 					onChangeEnd={ value => updateSettings(value as number) }
 					isDisabled={ disabled }
 				/>
+
+				{ player.master && <Button className="font-bold" isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 			</CardBody>
 		</Card>
 	)

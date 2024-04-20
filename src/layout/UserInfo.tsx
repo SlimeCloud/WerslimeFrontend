@@ -2,10 +2,13 @@ import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@
 import { GameState } from "../types/GameState.ts";
 import { useToken } from "../hooks/useToken.ts";
 import { useNavigate } from "react-router";
+import { useRest } from "../hooks/useRest.ts";
 
 export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const navigate = useNavigate()
 	const { setToken } = useToken()
+
+	const { post } = useRest("/game/reset")
 
 	return (
 		<Dropdown placement="bottom-end">
@@ -15,13 +18,14 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					color="primary" size="sm"
 				/>
 			</DropdownTrigger>
-			<DropdownMenu aria-label="Profile Actions" variant="flat">
-				<DropdownItem key="profile" className="h-14 gap-2">
+			<DropdownMenu aria-label="Nutzer Optionen" variant="flat">
+				<DropdownItem className="h-14 gap-2" textValue="Nutzer Info">
 					<p className="font-semibold">Aktuell eingeloggt als</p>
 					<p className="font-semibold text-primary">{ gameState.player.name }</p>
 				</DropdownItem>
 
 				<DropdownItem onPress={ () => navigate(`/game/${ gameState.game.id }`) }>Zurück zur Runde</DropdownItem>
+				{ (gameState.player.master && <DropdownItem onPress={ () => post() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
 				<DropdownItem color="danger" onPress={ () => setToken("") }>Runde Verlassen</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>
