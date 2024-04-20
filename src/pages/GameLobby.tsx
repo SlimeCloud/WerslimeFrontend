@@ -1,6 +1,6 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Card, CardBody, CardHeader, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
-import { Crown } from "lucide-react";
+import { Button, Card, CardBody, CardHeader, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
+import { Crown, Unplug, UserX } from "lucide-react";
 import { useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 
@@ -14,6 +14,7 @@ export default function GameLobby() {
 }
 
 function PlayerList() {
+	const { post } = useRest("/game/kick")
 	const { game, player } = useGameState()!
 
 	return (
@@ -24,12 +25,20 @@ function PlayerList() {
 				<ScrollShadow>
 					<ul className="flex flex-col gap-2">
 						{ game.players.map(p =>
-							<li key={ p.id }>
-								<Tooltip content={ p.master && "Spiel-Leiter" } placement="top-start">
+							<li key={ p.id } className="w-fit">
+								<Tooltip
+									placement="right-end"
+									content={ p.master ? "Spiel-Leiter" :
+										player.master
+											? <Button color="danger" size="sm" onPress={ () => post({ data: { id: p.id } }) }><UserX/></Button>
+											: "Mitspieler"
+									}
+								>
 									<span className={ `flex gap-2 ${ p.id === player.id ? "font-bold" : "" }` }>
 										<span>-</span>
 										{ p.name }
 										{ p.master && <Crown color="gold" width="20px"/> }
+										{ !p.connected && <Unplug color="red" width="20px"/> }
 									</span>
 								</Tooltip>
 							</li>

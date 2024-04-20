@@ -10,6 +10,7 @@ import Spinner from "../components/Spinner.tsx";
 import { useServerValue } from "../hooks/useServerValue.ts";
 import { GameState } from "../types/GameState.ts";
 import EventProvider from "../components/EventProvider.tsx";
+import { useEvent } from "../hooks/useEvent.ts";
 
 export default function GamePage() {
 	const state = useGameState()
@@ -28,15 +29,28 @@ export default function GamePage() {
 }
 
 function Game({ defaultValue }: { defaultValue: GameState }) {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const { setToken } = useToken()
+
 	const state = useServerValue("UPDATE", defaultValue)
+	useEvent("KICK", onOpen)
 
 	return (
-		<GameStateContext.Provider value={ state }>
-			{ state.game.started
-				? <GameBoard/>
-				: <GameLobby/>
-			}
-		</GameStateContext.Provider>
+		<>
+			<GameStateContext.Provider value={ state }>
+				{ state.game.started
+					? <GameBoard/>
+					: <GameLobby/>
+				}
+			</GameStateContext.Provider>
+			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ () => setToken("") }>
+				<ModalContent>
+					<ModalHeader className="text-danger">Kick</ModalHeader>
+					<Divider/>
+					<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
 	)
 }
 

@@ -8,4 +8,6 @@ export interface Player {
 	master: boolean
 	alive: boolean
 	mayor: boolean
+
+	connected: boolean
 }
