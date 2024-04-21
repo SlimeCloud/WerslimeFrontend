@@ -13,11 +13,12 @@ import { Role, roleImages, roleNames } from "../types/Role.ts"
 import { GameState } from "../types/GameState.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
-import { ReactNode, useEffect } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import { useNavigate } from "react-router"
 import { useToken } from "../hooks/useToken.ts"
 import { useServerValue } from "../hooks/useServerValue.ts"
+import Spinner from "../components/Spinner.tsx"
 
 export default function GameBoard() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -30,7 +31,11 @@ export default function GameBoard() {
 	const { post: action } = useRest("/game/action")
 	const { post: reset } = useRest("/game/reset")
 
-	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, onOpen)
+	const [ waiting, setWaiting ] = useState(false)
+	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, () => {
+		onOpen()
+		setWaiting(false)
+	})
 
 	return (
 		<>
@@ -47,7 +52,7 @@ export default function GameBoard() {
 				Weiter (<b>{ game.interacted } / { game.total }</b>)
 			</Button> }
 
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
+			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ false } hideCloseButton={ true }>
 				<ModalContent>
 					<ModalHeader>Spiel Beendet</ModalHeader>
 					<Divider/>
@@ -57,13 +62,14 @@ export default function GameBoard() {
 					</ModalBody>
 					<Divider/>
 					<ModalFooter>
-						<Button size="sm" color="primary" onPress={ () => {
+						<Button size="sm" onPress={ () => {
 							if(player.master) reset()
 							else {
 								navigate("/")
 								setToken("")
 							}
 						} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
+						{ !player.master && <Button color="primary" size="sm" spinner={ <Spinner/> } isLoading={ waiting } onPress={ () => setWaiting(true) }>{ waiting ? "Warte auf Spielleiter…" : "Auf nächste Runde Warten" }</Button> }
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
