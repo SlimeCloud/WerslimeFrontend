@@ -68,7 +68,7 @@ export default function GameBoard() {
 			</Modal>
 
 			<EventModal event="KILL">
-				<ModalHeader className="text-default">Du bist gestorben</ModalHeader>
+				<ModalHeader>Du bist gestorben</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Du bist gestorben. Du kannst das Spielgeschehen weiter beobachten und in der nächsten Runde wieder mitspielen!</ModalBody>
 			</EventModal>
