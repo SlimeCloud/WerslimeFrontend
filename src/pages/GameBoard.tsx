@@ -57,7 +57,7 @@ export default function GameBoard() {
 					</ModalBody>
 					<Divider/>
 					<ModalFooter>
-						<Button size="sm" color="warning" onPress={ () => {
+						<Button size="sm" color="primary" onPress={ () => {
 							if(player.master) reset()
 							else {
 								navigate("/")
