@@ -32,7 +32,8 @@ function PlayerList() {
 								<Tooltip
 									placement="right-end"
 									className="font-bold"
-									content={ p.id === player.id ? "Du" : p.master ? "Spiel-Leiter" : !player.master ? `Mitspieler${ p.connected ? "" : " (Verbindung getrennt)" }` :
+									crossOffset={ !p.master && !p.connected && !player.master ? 10 : 0 }
+									content={ p.id === player.id ? "Du" : p.master ? "Spiel-Leiter" : !player.master ? <>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</> :
 										<span className="flex gap-2 items-center">
 											<span>Aktionen</span>
 											<Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button>
