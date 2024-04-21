@@ -3,6 +3,7 @@ import victim from "../assets/modifier/victim.png"
 
 import heal from "../assets/action/heal.png"
 import poison from "../assets/action/poison.png"
+import shoot from "../assets/action/shoot.png"
 import view from "../assets/action/view.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
@@ -185,6 +186,27 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 									width="300px"
 									alt="Rolle Ansehen" isZoomed isBlurred
 									src={ view }
+								/>
+							</div>
+						</ModalBody>
+					</ModalContent>
+				</Modal>,
+				execute: onOpen
+			}
+		case "HUNTER":
+			if(!target.alive) return
+			if(state.game.interacted) return
+
+			return {
+				node: <Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="sm" placement="center">
+					<ModalContent>
+						<ModalHeader className="flex justify-center">Erschießen</ModalHeader>
+						<ModalBody>
+							<div className="cursor-pointer flex justify-center" onClick={ () => action({ data: { target: target.id } }) }>
+								<Image
+									width="300px"
+									alt="Rolle Ansehen" isZoomed isBlurred
+									src={ shoot }
 								/>
 							</div>
 						</ModalBody>
