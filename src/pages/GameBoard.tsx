@@ -91,7 +91,7 @@ function PlayerCard({ state, player }: { state: GameState, player: Player }) {
 	return (
 		<>
 			<Card
-				className={ `h-[250px] border-2 border-transparent ${ player.id === state.player.id ? "border-primary" : "" } ${ player.id === state.game.victim ? "border-danger" : "" } ${ ((state.game.current === "VILLAGER" || state.game.current === state.player.role) && !!action) ? "hover:scale-[1.05]" : "" }` }
+				className={ `h-[250px] border-2 border-transparent select-none ${ player.id === state.player.id ? "border-primary" : "" } ${ player.id === state.game.victim ? "border-danger" : "" } ${ ((state.game.current === "VILLAGER" || state.game.current === state.player.role) && !!action) ? "hover:scale-[1.05]" : "" }` }
 				isDisabled={ !player.alive }
 				isPressable={ ((state.game.current === "VILLAGER" || state.game.current === state.player.role) && !!action) }
 				onPress={ () => action?.execute() }
@@ -114,7 +114,7 @@ function PlayerCard({ state, player }: { state: GameState, player: Player }) {
 					</Tooltip>
 				</CardBody>
 				<Divider/>
-				<CardFooter className="h-[26px]">
+				<CardFooter className="h-[26px] overflow-hidden whitespace-nowrap">
 					{ targetName && (`${ state.game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }
 				</CardFooter>
 			</Card>
