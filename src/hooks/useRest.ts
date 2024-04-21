@@ -21,6 +21,7 @@ export interface RestRoute<T> {
 
 	reset: () => void
 	cancel: () => void
+	set: (data?: T, error?: ErrorResponse) => void
 }
 
 
@@ -146,6 +147,21 @@ export function useRest<T>(route: string, {
 		delete: (request: Request = {}) => execute("DELETE", request),
 
 		reset: reset,
-		cancel: () => abort.current?.abort("Cancel")
+		cancel: () => abort.current?.abort("Cancel"),
+		set: (data, error) => {
+			if(data) {
+				setData(data)
+				setError(undefined)
+				setState("success")
+			} else if(error) {
+				setData(undefined)
+				setError(error)
+				setState("error")
+			} else {
+				setData(undefined)
+				setError(undefined)
+				setState("idle")
+			}
+		}
 	}
 }

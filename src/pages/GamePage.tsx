@@ -1,10 +1,10 @@
-import { GameStateContext, useGameState } from "../hooks/useGameState.ts";
+import { GameStateContext, useGameState, useGameStateRequest } from "../hooks/useGameState.ts";
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
 import { Button, Card, CardBody, CardHeader, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
 import { useServerValue } from "../hooks/useServerValue.ts";
@@ -33,7 +33,12 @@ function Game({ defaultValue }: { defaultValue: GameState }) {
 	const navigate = useNavigate();
 	const { setToken } = useToken()
 
+	const { set } = useGameStateRequest()!
 	const state = useServerValue("UPDATE", defaultValue)
+
+	useEffect(() => {
+		set(state)
+	}, [ state ])
 
 	return (
 		<>
