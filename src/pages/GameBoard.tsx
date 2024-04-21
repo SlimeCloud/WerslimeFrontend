@@ -137,7 +137,7 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 		onClose()
 	}, [ state.game.interactions ])
 
-	switch(state.game.current) {
+	switch(state.player.role) {
 		case "VILLAGER":
 		case "WEREWOLF":
 			if(!state.player.alive || !target.alive || target.role === state.player.role) return
@@ -147,8 +147,8 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 			}
 		case "WITCH":
 			if(!state.player.alive || !target.alive || (target.id === state.player.id && target.id !== state.game.victim)) return
-			if(target.id === state.game.victim && !(state.game.roleMeta as string[]).includes("HEAL")) return
-			if(target.id !== state.game.victim && !(state.game.roleMeta as string[]).includes("POISON")) return
+			if(target.id === state.game.victim && !array(state.game.roleMeta)?.includes("HEAL")) return
+			if(target.id !== state.game.victim && !array(state.game.roleMeta)?.includes("POISON")) return
 			if(state.game.interacted) return
 
 			return {
@@ -172,7 +172,7 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 			}
 		case "SEER":
 			if(!state.player.alive || !target.alive || target.id === state.player.id) return
-			if((state.game.roleMeta as string[])?.includes(target.id)) return
+			if(array(state.game.roleMeta)?.includes(target.id)) return
 			if(state.game.interacted) return
 
 			return {
@@ -193,4 +193,8 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 				execute: onOpen
 			}
 	}
+}
+
+function array<T>(value?: object): T[] | undefined {
+	return value && Array.isArray(value) ? value : undefined
 }
