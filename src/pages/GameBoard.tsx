@@ -8,16 +8,18 @@ import view from "../assets/action/view.png"
 import { useGameState } from "../hooks/useGameState.ts";
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { Player } from "../types/Player.ts"
-import { roleImages, roleNames } from "../types/Role.ts"
+import { Role, roleImages, roleNames } from "../types/Role.ts"
 import { GameState } from "../types/GameState.ts"
-import EventModal from "./EventModal.tsx"
+import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
 import { ReactNode, useEffect } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import { useNavigate } from "react-router"
 import { useToken } from "../hooks/useToken.ts"
+import { useServerValue } from "../hooks/useServerValue.ts"
 
 export default function GameBoard() {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { game, player } = useGameState()!
 
 	const navigate = useNavigate()
@@ -26,6 +28,8 @@ export default function GameBoard() {
 	const { post: next } = useRest("/game/next")
 	const { post: action } = useRest("/game/action")
 	const { post: reset } = useRest("/game/reset")
+
+	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, onOpen)
 
 	return (
 		<>
@@ -38,24 +42,30 @@ export default function GameBoard() {
 			</div>
 
 			{ (player.role === "WITCH" && game.current === player.role) && <Button className="fixed bottom-[60px] left-5" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button> }
-			{ player.master && <Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] right-5" onPress={ () => next() }>Weiter
-				({ game.interacted } / { game.total })</Button> }
+			{ player.master && <Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] right-5" onPress={ () => next() }>
+				Weiter ({ game.interacted } / { game.total })
+			</Button> }
 
-			<EventModal event="END">
-				<ModalHeader>Spiel Beendet</ModalHeader>
-				<Divider/>
-				<ModalBody className="p-5">XY hat diese Runde gewonnen!</ModalBody>
-				<Divider/>
-				<ModalFooter>
-					<Button size="sm" color="warning" onPress={ () => {
-						if(player.master) reset()
-						else {
-							navigate("/")
-							setToken("")
-						}
-					} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
-				</ModalFooter>
-			</EventModal>
+			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
+				<ModalContent>
+					<ModalHeader>Spiel Beendet</ModalHeader>
+					<Divider/>
+					<ModalBody className="p-5 flex flex-row">
+						<Image width="25px" alt={ roleNames.get(winner?.winner || "VILLAGER") } src={ roleImages.get(winner?.winner || "VILLAGER") }/>
+						{ winner?.winner === "VILLAGER" ? <><b>Das Dorf</b> hat</> : <><b>Die Werwölfe</b> haben</> } die Runde gewonnen!
+					</ModalBody>
+					<Divider/>
+					<ModalFooter>
+						<Button size="sm" color="warning" onPress={ () => {
+							if(player.master) reset()
+							else {
+								navigate("/")
+								setToken("")
+							}
+						} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
 
 			<EventModal event="KILL">
 				<ModalHeader className="text-default">Du bist gestorben</ModalHeader>

@@ -11,7 +11,7 @@ import { useServerValue } from "../hooks/useServerValue.ts";
 import { GameState } from "../types/GameState.ts";
 import EventProvider from "../components/EventProvider.tsx";
 import ErrorModal from "../components/ErrorModal.tsx";
-import EventModal from "./EventModal.tsx"
+import EventModal from "../components/EventModal.tsx"
 
 export default function GamePage() {
 	const state = useGameState()
