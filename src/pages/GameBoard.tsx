@@ -137,7 +137,7 @@ function useInteractions(state: GameState, target: Player, action: (req?: Reques
 		onClose()
 	}, [ state.game.interactions ])
 
-	switch(state.player.role) {
+	switch(state.game.current) {
 		case "VILLAGER":
 		case "WEREWOLF":
 			if(!state.player.alive || !target.alive || target.role === state.player.role) return
