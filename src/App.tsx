@@ -1,10 +1,10 @@
 import { Route, Routes, useNavigate } from "react-router";
-import Layout from "./layout/Layout.tsx";
 import { NextUIProvider } from "@nextui-org/react";
 import { lazy } from "react";
-import InstructionsPage from "./pages/InstructionsPage.tsx";
+import Layout from "./layout/Layout.tsx"
 
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));
+const InstructionsPage = lazy(() => import("./pages/InstructionsPage.tsx"));
 const GamePage = lazy(() => import("./pages/GamePage.tsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.tsx"));
 
