@@ -29,8 +29,8 @@ export default function GameBoard() {
 
 	return (
 		<>
-			<div className="fixed top-[70px] left-0 text-xl w-full flex gap-4 justify-center">
-				Aktuelle Rolle: <b>{ roleNames.get(game.current) }</b>
+			<div className="fixed top-[70px] left-0 text-xl w-full flex gap-2 justify-center">
+				Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b>
 			</div>
 
 			<div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto">
