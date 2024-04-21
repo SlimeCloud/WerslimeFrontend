@@ -3,6 +3,7 @@ import { GameState } from "../types/GameState.ts";
 import { useToken } from "../hooks/useToken.ts";
 import { useNavigate } from "react-router";
 import { useRest } from "../hooks/useRest.ts";
+import { roleImages } from "../types/Role.ts"
 
 export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 				<Avatar
 					isBordered as="button" className="transition-transform"
 					color="primary" size="sm"
+					src={ gameState.game.started ? roleImages.get(gameState.player.role) : undefined }
 				/>
 			</DropdownTrigger>
 			<DropdownMenu aria-label="Nutzer Optionen" variant="flat">
