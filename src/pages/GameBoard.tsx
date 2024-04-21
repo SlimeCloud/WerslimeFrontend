@@ -42,8 +42,8 @@ export default function GameBoard() {
 			</div>
 
 			{ (player.role === "WITCH" && game.current === player.role) && <Button className="fixed bottom-[60px] left-5" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button> }
-			{ player.master && <Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] right-5" onPress={ () => next() }>
-				Weiter ({ game.interacted } / { game.total })
+			{ player.master && <Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] block right-5" onPress={ () => next() }>
+				Weiter (<b>{ game.interacted } / { game.total }</b>)
 			</Button> }
 
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
