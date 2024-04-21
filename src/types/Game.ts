@@ -1,5 +1,5 @@
-import { Player } from "./Player.ts";
 import { Role } from "./Role.ts";
+import { Player } from "./Player.ts"
 
 export interface Game {
 	id: string
@@ -11,6 +11,7 @@ export interface Game {
 	current: Role
 	victim?: string
 
+	interactions?: object
 	interacted: number
 	total: number
 

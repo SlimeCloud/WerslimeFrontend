@@ -2,16 +2,16 @@ import { GameStateContext, useGameState } from "../hooks/useGameState.ts";
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
-import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
-import { FormEvent, ReactNode, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
 import { useServerValue } from "../hooks/useServerValue.ts";
 import { GameState } from "../types/GameState.ts";
 import EventProvider from "../components/EventProvider.tsx";
-import { useEvent } from "../hooks/useEvent.ts";
 import ErrorModal from "../components/ErrorModal.tsx";
+import EventModal from "./EventModal.tsx"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -54,24 +54,11 @@ function Game({ defaultValue }: { defaultValue: GameState }) {
 				setToken("")
 				navigate("/")
 			} }>
-				<ModalHeader className="text-danger">Spiel Beendet</ModalHeader>
+				<ModalHeader className="text-warning">Runde Geschlossen</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Diese Runde wurde beendet. Erstelle selbst eine neue Runde oder tritt einer andren bei, um weiter zu spielen!</ModalBody>
 			</EventModal>
 		</>
-	)
-}
-
-function EventModal({ event, onClose, children }: { event: string, onClose?: () => void, children: ReactNode }) {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	useEvent(event, onOpen)
-
-	return (
-		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ onClose }>
-			<ModalContent>
-				{ children }
-			</ModalContent>
-		</Modal>
 	)
 }
 

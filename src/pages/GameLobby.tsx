@@ -32,7 +32,7 @@ function PlayerList() {
 								<Tooltip
 									placement="right-end"
 									className="font-bold"
-									content={ p.master ? "Spiel-Leiter" : !player.master ? "Mitspieler" :
+									content={ p.id === player.id ? "Du" : p.master ? "Spiel-Leiter" : !player.master ? "Mitspieler" :
 										<span className="flex gap-2 items-center">
 											<span>Aktionen</span>
 											<Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button>
@@ -109,7 +109,7 @@ function Settings() {
 						isDisabled={ disabled }
 					>
 						{ specialRoles.map(role =>
-							<Checkbox value={ role }>{ roleNames.get(role) }</Checkbox>
+							<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
 						) }
 					</CheckboxGroup>
 				</div>
