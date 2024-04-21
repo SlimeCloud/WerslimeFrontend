@@ -85,8 +85,12 @@ function PlayerCard({ state, player }: { state: GameState, player: Player }) {
 				isPressable={ ((state.game.current === "VILLAGER" || state.game.current === state.player.role) && !!action) }
 				onPress={ () => action?.execute() }
 			>
-				<CardHeader className="font-bold flex justify-between">{ player.name } <span className="flex gap-2">{ player.mayor && <Image alt="Bürgermeister" src={ mayor } width="25px"/> } { player.id === state.game.victim &&
-					<Image alt="Opfer der Nacht" src={ victim } width="25px"/> }</span></CardHeader>
+				<CardHeader className="font-bold flex justify-between">{ player.name }
+					<span className="flex gap-2">
+						{ player.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
+						{ player.id === state.game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
+					</span>
+				</CardHeader>
 				<Divider/>
 				<CardBody className="overflow-hidden">
 					<Tooltip content={ roleNames.get(player.role || (player.mayor ? "MAYOR" : "UNKNOWN")) }>
