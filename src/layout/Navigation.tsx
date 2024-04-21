@@ -21,8 +21,8 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 		<Navbar maxWidth="full" height="50px" className="select-none" isBordered>
 			<NavbarBrand>
 				<Link className="gap-1" color="foreground" href="/">
-					<img src={ icon } className="w-[30px]"/>
-					<p className="font-bold text-inherit">{ import.meta.env._TITLE }</p>
+					<img src={ icon } className="w-[35px]"/>
+					<p className="font-bold text-inherit text-lg">{ import.meta.env._TITLE }</p>
 				</Link>
 			</NavbarBrand>
 
