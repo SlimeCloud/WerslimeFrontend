@@ -90,6 +90,8 @@ function Settings() {
 	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
 		setRoles(game.settings.roles)
+		setPublic(game.settings.isPublic)
+		setDeadRoles(game.settings.revealDeadRoles)
 	}, [ game.settings ])
 
 	return (
@@ -99,7 +101,7 @@ function Settings() {
 			<CardBody className="flex flex-col justify-between">
 				<div className="flex flex-col gap-5 [&_h3]:font-bold [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
 					<div>
-						<h3>Werwolf Anzahl</h3>
+						<h3 className="flex flex-row justify-between">Werwolf Anzahl <span>{ amount }</span></h3>
 						<Slider
 							aria-label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
 							minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
