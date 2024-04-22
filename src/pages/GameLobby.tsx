@@ -4,7 +4,7 @@ import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
-import { Role, roleNames, specialRoles } from "../types/Role.ts"
+import { Role, roleDescriptions, roleNames } from "../types/Role.ts"
 
 export default function GameLobby() {
 	return (
@@ -30,9 +30,8 @@ function PlayerList() {
 						{ game.players.map(p =>
 							<li key={ p.id } className="w-fit">
 								<Tooltip
-									placement="right-end"
+									placement="right"
 									className="font-bold"
-									crossOffset={ !p.master && !p.connected && !player.master ? 10 : 0 }
 									content={ p.id === player.id ? "Du" : p.master ? "Spiel-Leiter" : !player.master ? <>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</> :
 										<span className="flex gap-2 items-center">
 											<span>Aktionen</span>
@@ -121,16 +120,28 @@ function Settings() {
 							onValueChange={ values => setRoles(values as Role[]) }
 							isReadOnly={ disabled }
 						>
-							{ specialRoles.map(role =>
-								<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
+							{ [...roleDescriptions.entries()].map(([ role, description]) =>
+								<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
+									<div className="w-fit">
+										<Checkbox value={ role }>{ roleNames.get(role) }</Checkbox>
+									</div>
+								</Tooltip>
 							) }
 						</CheckboxGroup>
 					</div>
 
 					<div>
 						<h3>Sonstiges</h3>
-						<Checkbox isReadOnly={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
-						<Checkbox isReadOnly={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+						<Tooltip shouldFlip={ false } placement="right" content={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }>
+							<div className="w-fit">
+								<Checkbox isReadOnly={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
+							</div>
+						</Tooltip>
+						<Tooltip shouldFlip={ false } placement="right" content={ <>Rollen von Toten werden für alle angezeigt</> }>
+							<div className="w-fit">
+								<Checkbox isReadOnly={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+							</div>
+						</Tooltip>
 					</div>
 				</div>
 

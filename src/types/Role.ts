@@ -5,6 +5,7 @@ import witch from "../assets/roles/witch.png"
 import hunter from "../assets/roles/hunter.png"
 import seer from "../assets/roles/seer.png"
 import mayor from "../assets/roles/mayor.png"
+import { ReactNode } from "react"
 
 export type Role =
 	"UNKNOWN" |
@@ -15,8 +16,6 @@ export type Role =
 	"WITCH" |
 	"VILLAGER" |
 	"HUNTER"
-
-export const specialRoles: Role[] = [ "WITCH", "SEER", "HUNTER" ]
 
 export const roleNames = new Map<Role, string>([
 	[ "UNKNOWN", "Unbekannt" ],
@@ -38,4 +37,10 @@ export const roleImages = new Map<Role, string>([
 	[ "WITCH", witch ],
 	[ "VILLAGER", villager ],
 	[ "HUNTER", hunter ],
+])
+
+export const roleDescriptions = new Map<Role, ReactNode>([
+	[ "WITCH", "Kann eine Person heilen und eine Person vergiften" ],
+	[ "SEER", "Kann jede Nacht die Rolle einer Person ansehen" ],
+	[ "HUNTER", "Kann wenn er stirbt eine weitere Person erschießen" ]
 ])
