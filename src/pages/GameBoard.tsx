@@ -47,7 +47,7 @@ export default function GameBoard() {
 				{ game.players.map(p => <PlayerCard key={ p.id } state={ { game, player } } player={ p }/>) }
 			</div>
 
-			{ (player.role === "WITCH" && game.current === player.role) && <Button className="fixed bottom-[60px] left-5" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button> }
+			{ (player.role === "WITCH" && game.current === player.role && !game.interacted) && <Button className="fixed bottom-[60px] left-5 z-20" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button> }
 			{ player.master && <Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] block right-5" onPress={ () => next() }>
 				Weiter (<b>{ game.interacted } / { game.total }</b>)
 			</Button> }
