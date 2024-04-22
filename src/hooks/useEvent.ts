@@ -1,25 +1,26 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect } from "react";
 
-export const EventSourceContext = createContext<EventSource | undefined>(undefined)
+export const EventSourceContext = createContext<WebSocket | undefined>(undefined)
 
-interface ListenerInfo {
-	listener: (event: MessageEvent) => void
-	event: string
+interface Payload<T> {
+	name: string
+	data: T
 }
 
-export function useEvent<T>(event: string, handler: (data: T) => void) {
+export function useEvent<T>(eventName: string, handler: (data: T) => void) {
 	const source = useContext(EventSourceContext)
-	const current = useRef<ListenerInfo>()
-
 	if(!source) throw new Error("Could not find an Event context. You have to wrap useEvent() in an <EventProvider>");
 
+
 	useEffect(() => {
-		if(current.current) source?.removeEventListener(current.current?.event, current.current?.listener)
-		const listener = (event: MessageEvent) => handler(event.data ? JSON.parse(event.data) : {})
+		const listener = (event: MessageEvent) => {
+			const payload = JSON.parse(event.data) as Payload<T>
+			if(payload.name !== eventName) return
 
-		source?.addEventListener(event, listener)
-		current.current = { listener, event }
+			handler(payload.data)
+		}
 
-		return () => source?.removeEventListener(event, listener)
-	}, [ event, handler, source ])
+		source.addEventListener("message", listener)
+		return () => source?.removeEventListener("message", listener)
+	}, [ eventName, handler, source ])
 }
