@@ -30,7 +30,7 @@ function CreateGame() {
 	})
 
 	const { name, setName } = useName()
-	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ])
+	const invalid = useMemo(() => !/^[a-zA-Z0-9_-]{3,16}$/.test(name), [ name ])
 
 	function createGame(e?: FormEvent) {
 		e?.preventDefault()
