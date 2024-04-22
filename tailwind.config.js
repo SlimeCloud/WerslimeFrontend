@@ -12,6 +12,25 @@ export default {
 			colors: {
 				primary: "#66B25B",
 				danger: "#ff0202"
+			},
+			keyframes: {
+				borderPulse: {
+					"0%": {
+						"outline": "2px solid rgba(102, 178, 91, 0.1)",
+						"box-shadow": "0 0 0 0 rgba(102, 178, 91, 0.6)"
+					},
+					"50%": {
+						"outline": "2px solid rgba(102, 178, 91, 0.6)",
+						"box-shadow": "0 0 0 20px rgba(102, 178, 91, 0)"
+					},
+					"100%": {
+						"outline": "2px solid rgba(102, 178, 91, 0)",
+						"box-shadow": "0 0 0 0 rgba(102, 178, 91, 0)"
+					}
+				}
+			},
+			animation: {
+				"border-pulse": "borderPulse 2s infinite"
 			}
 		}
 	},

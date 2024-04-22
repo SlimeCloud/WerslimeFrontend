@@ -134,7 +134,7 @@ function Settings() {
 					</div>
 				</div>
 
-				{ player.master && <Button className="font-bold" isDisabled={ game.players.length < 4 } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
+				{ player.master && <Button className="font-bold" isDisabled={ game.players.length < 4 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 			</CardBody>
 		</Card>
 	)

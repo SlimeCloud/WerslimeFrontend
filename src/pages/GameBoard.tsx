@@ -43,7 +43,7 @@ export default function GameBoard() {
 				Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b>
 			</div>
 
-			<div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto">
+			<div className={ `grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto rounded-[20px] p-5 ${ ((game.current === player.role || game.current === "VILLAGER") && !Object.keys(game.interactions || {}).includes(player.id)) ? "animate-border-pulse" : "" }` }>
 				{ game.players.map(p => <PlayerCard key={ p.id } state={ { game, player } } player={ p }/>) }
 			</div>
 
@@ -69,7 +69,7 @@ export default function GameBoard() {
 								setToken("")
 							}
 						} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
-						{ !player.master && <Button color="primary" size="sm" spinner={ <Spinner/> } isLoading={ waiting } onPress={ () => setWaiting(true) }>{ waiting ? "Warte auf Spielleiter…" : "Auf nächste Runde Warten" }</Button> }
+						{ !player.master && <Button color="primary" size="sm" spinner={ <Spinner/> } isLoading={ waiting } onPress={ () => setWaiting(true) }>{ waiting ? "Warte auf Spiel-Leiter…" : "Auf nächste Runde Warten" }</Button> }
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
