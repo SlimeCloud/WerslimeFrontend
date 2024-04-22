@@ -6,7 +6,7 @@ export default function EventProvider({ route, children }: { route: string, chil
 	const { token } = useToken()
 
 	const source = useMemo(() => {
-		return new WebSocket(`${ import.meta.env._API }${ route }?token=${ token }`)
+		return new WebSocket(`${ import.meta.env._WS }${ route }?token=${ token }`)
 	}, [ route, token ])
 
 	useEffect(() => {
