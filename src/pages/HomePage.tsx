@@ -1,4 +1,3 @@
-import styles from "./HomePage.module.css"
 import { Button, Card, CardBody, CardHeader, Divider, Input, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { FormEvent, useMemo, useState } from "react";
 import { useRest } from "../hooks/useRest.ts";
@@ -21,7 +20,7 @@ function CreateGame() {
 	const { setToken } = useToken()
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { state, error, post } = useRest<{ token: string, game: string }>("/game", {
+	const { state, error, post } = useRest<{ token: string, game: string }>("/games", {
 		onError: onOpen,
 		onSuccess: ({ token, game }) => {
 			setToken(token)
@@ -59,7 +58,7 @@ function CreateGame() {
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => createGame() } isLoading={ state === "loading" }>Runde Erstellen</Button>
 						</form>
 
-						<Card className={ `text-xl tracking-wide h-full hidden md:flex ${ styles.description }` } shadow="none">
+						<Card className="text-xl bg-default-100 tracking-wide h-full hidden md:flex" shadow="none">
 							<CardHeader className="font-bold">Informationen</CardHeader>
 							<CardBody>
 								Erstelle eine eigene Runde und lade andere Mitspieler ein. In dieser Runde kannst du eigene Einstellungen vornehmen und Teilnehmer verwalten.
@@ -102,7 +101,7 @@ function JoinGame() {
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
 
-						<Card className={ `text-xl tracking-wide hidden md:flex ${ styles.description }` } shadow="none">
+						<Card className="text-xl bg-default-100 tracking-wide hidden md:flex" shadow="none">
 							<CardHeader className="font-bold">Informationen</CardHeader>
 							<CardBody>
 								Tritt einer bestehenden Runde bei. Die Regeln werden vom Ersteller der Runde kontrolliert, dieser hat jedoch keine Vorteile im Spiel.

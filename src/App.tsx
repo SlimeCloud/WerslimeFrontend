@@ -5,6 +5,7 @@ import Layout from "./layout/Layout.tsx"
 
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));
 const InstructionsPage = lazy(() => import("./pages/InstructionsPage.tsx"));
+const GameListPage = lazy(() => import("./pages/GameListPage.tsx"));
 const GamePage = lazy(() => import("./pages/GamePage.tsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.tsx"));
 
@@ -17,6 +18,7 @@ export default function App() {
 				<Route path="/" element={ <Layout/> }>
 					<Route path="/" element={ <HomePage/> }/>
 					<Route path="/instructions" element={ <InstructionsPage/> }/>
+					<Route path="/games" element={ <GameListPage/> }/>
 					<Route path="/game/:id" element={ <GamePage/> }/>
 					<Route path="*" element={ <NotFoundPage/> }/>
 				</Route>

@@ -68,19 +68,24 @@ function Settings() {
 	const [ amount, setAmount ] = useState<number>(game.settings.werewolfAmount)
 	const [ roles, setRoles ] = useState(game.settings.roles)
 
+	const [ isPublic, setPublic ] = useState(game.settings.isPublic)
+	const [ deadRoles, setDeadRoles ] = useState(game.settings.revealDeadRoles)
+
 	function updateSettings(werewolfAmount?: number) {
 		update({
 			data: {
 				werewolfAmount: werewolfAmount || amount,
-				roles: roles
+				roles: roles,
+				isPublic: isPublic,
+				revealDeadRoles: deadRoles
 			}
 		})
 	}
 
 	useEffect(() => {
-		if(roles == game.settings.roles) return
+		if(roles === game.settings.roles && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles) return
 		updateSettings()
-	}, [ roles ])
+	}, [ roles, isPublic, deadRoles ])
 
 	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
@@ -92,27 +97,39 @@ function Settings() {
 			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
 			<Divider/>
 			<CardBody className="flex flex-col justify-between">
-				<div className="flex flex-col gap-5">
-					<Slider
-						label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
-						minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
-						value={ amount }
-						onChange={ value => setAmount(value as number) }
-						onChangeEnd={ value => updateSettings(value as number) }
-						isDisabled={ disabled }
-					/>
+				<div className="flex flex-col gap-5 [&_h3]:font-bold [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
+					<div>
+						<h3>Werwolf Anzahl</h3>
+						<Slider
+							aria-label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
+							minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
+							value={ amount }
+							onChange={ value => setAmount(value as number) }
+							onChangeEnd={ value => updateSettings(value as number) }
+							isDisabled={ disabled }
+						/>
+					</div>
 
-					<CheckboxGroup
-						classNames={ { label: "font-bold [&_*]:!text-md" } }
-						label="Spezial-Rollen" size="md"
-						value={ roles }
-						onValueChange={ values => setRoles(values as Role[]) }
-						isDisabled={ disabled }
-					>
-						{ specialRoles.map(role =>
-							<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
-						) }
-					</CheckboxGroup>
+					<div>
+						<h3>Rollen</h3>
+						<CheckboxGroup
+							classNames={ { label: "font-bold [&_*]:!text-md" } }
+							aria-label="Spezial-Rollen" size="md"
+							value={ roles }
+							onValueChange={ values => setRoles(values as Role[]) }
+							isReadOnly={ disabled }
+						>
+							{ specialRoles.map(role =>
+								<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
+							) }
+						</CheckboxGroup>
+					</div>
+
+					<div>
+						<h3>Sonstiges</h3>
+						<Checkbox isReadOnly={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
+						<Checkbox isReadOnly={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+					</div>
 				</div>
 
 				{ player.master && <Button className="font-bold" isDisabled={ game.players.length < 4 } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }

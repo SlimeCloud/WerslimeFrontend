@@ -57,6 +57,7 @@ export function useRest<T>(route: string, {
 	auto = false,
 	cache = true,
 	timeout = 10,
+	delay = 0,
 	onError,
 	onSuccess
 }: {
@@ -64,6 +65,7 @@ export function useRest<T>(route: string, {
 	auto?: boolean,
 	cache?: boolean,
 	timeout?: number,
+	delay?: number,
 	onError?: (error: ErrorResponse) => void,
 	onSuccess?: (data: T) => void
 } = {}): RestRoute<T> {
@@ -121,7 +123,7 @@ export function useRest<T>(route: string, {
 				setError(error)
 				if(onError) onError(error)
 			}
-		}), 0)
+		}), delay * 1000)
 	}
 
 	useEffect(() => {

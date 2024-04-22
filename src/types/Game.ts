@@ -21,4 +21,7 @@ export interface Game {
 export interface GameSettings {
 	werewolfAmount: number
 	roles: Role[]
+
+	isPublic: boolean
+	revealDeadRoles: boolean
 }
