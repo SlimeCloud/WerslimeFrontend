@@ -5,6 +5,6 @@ export function useDarkMode() {
 
 	return {
 		darkMode: darkMode,
-		setDarkMode: (state: boolean) => setDarkMode(state),
+		setDarkMode: (state: boolean) => setDarkMode(state)
 	}
 }

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
 import ErrorModal from "../components/ErrorModal.tsx";
+import { useName } from "../hooks/useName.ts"
 
 export default function HomePage() {
 	return (
@@ -28,8 +29,8 @@ function CreateGame() {
 		}
 	})
 
-	const [ name, setName ] = useState("");
-	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ]);
+	const { name, setName } = useName()
+	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ])
 
 	function createGame(e?: FormEvent) {
 		e?.preventDefault()

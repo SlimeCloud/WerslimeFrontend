@@ -4,7 +4,7 @@ import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
 import { Button, Card, CardBody, CardHeader, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo } from "react";
 import { useToken } from "../hooks/useToken.ts";
 import Spinner from "../components/Spinner.tsx";
 import { useServerValue } from "../hooks/useServerValue.ts";
@@ -12,6 +12,7 @@ import { GameState } from "../types/GameState.ts";
 import EventProvider from "../components/EventProvider.tsx";
 import ErrorModal from "../components/ErrorModal.tsx";
 import EventModal from "../components/EventModal.tsx"
+import { useName } from "../hooks/useName.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -76,7 +77,7 @@ function JoinGame({ id }: { id: string }) {
 		onSuccess: ({ token }) => setToken(token)
 	})
 
-	const [ name, setName ] = useState("");
+	const { name, setName } = useName();
 	const invalid = useMemo(() => !/^[A-Za-z0-9_\- ]{4,}$/.test(name), [ name ]);
 
 	function joinGame(e?: FormEvent) {

@@ -5,6 +5,6 @@ export function useToken() {
 
 	return {
 		token: token,
-		setToken: (state: string | undefined) => setToken(state),
+		setToken: (state: string | undefined) => setToken(state)
 	}
 }
