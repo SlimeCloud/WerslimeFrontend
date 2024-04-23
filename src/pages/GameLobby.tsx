@@ -82,7 +82,7 @@ function Settings() {
 	}
 
 	useEffect(() => {
-		if(roles === game.settings.roles && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles) return
+		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles) return
 		updateSettings()
 	}, [ roles, isPublic, deadRoles ])
 
