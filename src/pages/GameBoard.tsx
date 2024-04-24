@@ -74,7 +74,8 @@ function Board({ post }: { post: (req?: Request) => void }) {
 			<div className={ `grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto rounded-[20px] p-5 ${ ((game.current === player.role || game.current === "VILLAGER") && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
 				{ game.players.map(p => <PlayerCard key={ p.id } p={ p } action={ action?.execute(p) }/>) }
 			</div>
-			<Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense>
+
+			{ (game.current === "VILLAGER" || game.current === player.role) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
 		</>
 	)
 }
