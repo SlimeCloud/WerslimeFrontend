@@ -13,8 +13,8 @@ export default function Layout() {
 	return (
 		<div className="w-screen h-screen gap-12 flex flex-col items-start justify-center md:gap-24">
 			<Navigation gameState={ request.data }/>
-			<div className="w-[95vw] lg:w-[80vw] mx-auto flex-grow flex gap-20 justify-center flex-col md:flex-row overflow-auto p-5">
-				<Suspense fallback={ <CircularProgress aria-label="Lade Seite"/> }>
+			<div className="w-[95vw] lg:w-[80vw] mx-auto flex-grow flex gap-5 md:gap-20 justify-center flex-col md:flex-row overflow-auto p-5">
+				<Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Seite"/> }>
 					{ request.state === "loading" ? <CircularProgress className="m-auto" aria-label="Lade letztes Spiel"/> :
 						<GameStateContext.Provider value={ request.data }>
 							<GameStateRequestContext.Provider value={ request }>

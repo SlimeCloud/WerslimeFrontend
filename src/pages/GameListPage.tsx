@@ -39,7 +39,6 @@ export default function GameListPage() {
 									<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow w-1/2">
 										<h3 className="font-bold">Rollen</h3>
 										<CheckboxGroup
-											classNames={ { label: "font-bold [&_*]:!text-md" } }
 											aria-label="Spezial-Rollen" size="md"
 											value={ game.settings.roles }
 											isReadOnly={ true }
@@ -52,7 +51,7 @@ export default function GameListPage() {
 
 									<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow w-1/2">
 										<h3 className="font-bold">Spieler</h3>
-										<ul className="flex flex-col flex-wrap gap-1 max-h-28">
+										<ul className="flex flex-col flex-wrap gap-1 max-h-56">
 											{ game.players.slice(0, 8).map(player =>
 												<li key={ player.id }>
 													{ player.name }

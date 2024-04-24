@@ -1,10 +1,11 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
-import { useRest } from "../hooks/useRest.ts";
+import { Request, useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
-import { Role, roleDescriptions, roleNames } from "../types/Role.ts"
+import { Role, roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
+import { Player } from "../types/Player.ts"
 
 export default function GameLobby() {
 	return (
@@ -18,7 +19,7 @@ export default function GameLobby() {
 function PlayerList() {
 	const { post: kick } = useRest("/game/kick")
 	const { post: promote } = useRest("/game/promote")
-	const { game, player } = useGameState()!
+	const { game } = useGameState()!
 
 	return (
 		<Card shadow="sm" className="flex-grow md:w-1/2">
@@ -29,30 +30,50 @@ function PlayerList() {
 					<ul className="flex flex-col gap-2">
 						{ game.players.map(p =>
 							<li key={ p.id } className="w-fit">
-								<Tooltip
-									placement="right"
-									className="font-bold"
-									content={ p.id === player.id ? "Du" : p.master ? "Spiel-Leiter" : !player.master ? <>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</> :
-										<span className="flex gap-2 items-center">
-											<span>Aktionen</span>
-											<Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button>
-											<Button title="Zum Spielleiter machen" color="warning" size="sm" onPress={ () => promote({ data: { id: p.id } }) }><ShieldPlus/></Button>
-										</span>
-									}
-								>
-									<span className={ `flex gap-2 ${ p.id === player.id ? "font-bold" : "" }` }>
-										<span>-</span>
-										{ p.name }
-										{ p.master && <Crown color="gold" width="20px"/> }
-										{ !p.connected && <Unplug color="red" width="20px"/> }
-									</span>
-								</Tooltip>
+								<PlayerInfo p={ p } kick={ kick } promote={ promote }/>
 							</li>
 						) }
 					</ul>
 				</ScrollShadow>
 			</CardBody>
 		</Card>
+	)
+}
+
+function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request) => void, promote: (req: Request) => void }) {
+	const { player } = useGameState()!
+
+	return (
+		<Popover placement="right">
+			<PopoverTrigger>
+				<button>
+					<Tooltip
+						placement="right" className="font-bold"
+						content={
+							p.id === player.id ? "Du" :
+							p.master ? "Spiel-Leiter" :
+							<>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</>
+						}
+					>
+						<span className={ `flex gap-2 ${ p.id === player.id ? "font-bold" : "" }` }>
+							<span>-</span>
+							{ p.name }
+							{ p.master && <Crown color="gold" width="20px"/> }
+							{ !p.connected && <Unplug color="red" width="20px"/> }
+						</span>
+					</Tooltip>
+				</button>
+			</PopoverTrigger>
+			<PopoverContent>
+				{ player.master &&
+					<span className="flex gap-2 items-center">
+						<span className="font-bold">Aktionen</span>
+						<Tooltip content="Rauswerfen"><Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button></Tooltip>
+						<Tooltip content="Zum Spielleiter machen"><Button title="Zum Spiel-Leiter machen" color="warning" size="sm" onPress={ () => promote({ data: { id: p.id } }) }><ShieldPlus/></Button></Tooltip>
+					</span>
+				}
+			</PopoverContent>
+		</Popover>
 	)
 }
 
@@ -69,6 +90,7 @@ function Settings() {
 
 	const [ isPublic, setPublic ] = useState(game.settings.isPublic)
 	const [ deadRoles, setDeadRoles ] = useState(game.settings.revealDeadRoles)
+	const [ deadSpectators, setDeadSpectators ] = useState(game.settings.deadSpectators)
 
 	function updateSettings(werewolfAmount?: number) {
 		update({
@@ -76,21 +98,23 @@ function Settings() {
 				werewolfAmount: werewolfAmount || amount,
 				roles: roles,
 				isPublic: isPublic,
-				revealDeadRoles: deadRoles
+				revealDeadRoles: deadRoles,
+				deadSpectators: deadSpectators
 			}
 		})
 	}
 
 	useEffect(() => {
-		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles) return
+		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles && deadSpectators === game.settings.deadSpectators) return
 		updateSettings()
-	}, [ roles, isPublic, deadRoles ])
+	}, [ roles, isPublic, deadRoles, deadSpectators ])
 
 	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
 		setRoles(game.settings.roles)
 		setPublic(game.settings.isPublic)
 		setDeadRoles(game.settings.revealDeadRoles)
+		setDeadSpectators(game.settings.deadSpectators)
 	}, [ game.settings ])
 
 	return (
@@ -114,16 +138,15 @@ function Settings() {
 					<div>
 						<h3>Rollen</h3>
 						<CheckboxGroup
-							classNames={ { label: "font-bold [&_*]:!text-md" } }
 							aria-label="Spezial-Rollen" size="md"
 							value={ roles }
 							onValueChange={ values => setRoles(values as Role[]) }
 							isReadOnly={ disabled }
 						>
-							{ [...roleDescriptions.entries()].map(([ role, description]) =>
+							{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
 								<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
 									<div className="w-fit">
-										<Checkbox value={ role }>{ roleNames.get(role) }</Checkbox>
+										<Checkbox color={ teamColors.get(roleTeams.get(role)!) } value={ role }>{ roleNames.get(role) }</Checkbox>
 									</div>
 								</Tooltip>
 							) }
@@ -140,6 +163,11 @@ function Settings() {
 						<Tooltip shouldFlip={ false } placement="right" content={ <>Rollen von Toten werden für alle angezeigt</> }>
 							<div className="w-fit">
 								<Checkbox isReadOnly={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+							</div>
+						</Tooltip>
+						<Tooltip shouldFlip={ false } placement="right" content={ <>Toke können die Rollen Aller sehen</> }>
+							<div className="w-fit">
+								<Checkbox isReadOnly={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
 							</div>
 						</Tooltip>
 					</div>
