@@ -141,7 +141,7 @@ function Settings() {
 							aria-label="Spezial-Rollen" size="md"
 							value={ roles }
 							onValueChange={ values => setRoles(values as Role[]) }
-							isReadOnly={ disabled }
+							isDisabled={ disabled }
 						>
 							{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
 								<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
@@ -157,17 +157,17 @@ function Settings() {
 						<h3>Sonstiges</h3>
 						<Tooltip shouldFlip={ false } placement="right" content={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }>
 							<div className="w-fit">
-								<Checkbox isReadOnly={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
+								<Checkbox isDisabled={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
 							</div>
 						</Tooltip>
 						<Tooltip shouldFlip={ false } placement="right" content={ <>Rollen von Toten werden für alle angezeigt</> }>
 							<div className="w-fit">
-								<Checkbox isReadOnly={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+								<Checkbox isDisabled={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
 							</div>
 						</Tooltip>
 						<Tooltip shouldFlip={ false } placement="right" content={ <>Toke können die Rollen Aller sehen</> }>
 							<div className="w-fit">
-								<Checkbox isReadOnly={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
+								<Checkbox isDisabled={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
 							</div>
 						</Tooltip>
 					</div>
