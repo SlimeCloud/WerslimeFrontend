@@ -23,7 +23,7 @@ function PlayerList() {
 
 	return (
 		<Card shadow="sm" className="flex-grow md:w-1/2">
-			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler</CardHeader>
+			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler ({ game.players.length })</CardHeader>
 			<Divider/>
 			<CardBody>
 				<ScrollShadow>
