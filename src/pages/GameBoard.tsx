@@ -47,7 +47,7 @@ export default function GameBoard() {
 			<Board post={ post }/>
 
 			{ player.master &&
-				<Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] block right-5" onPress={ () => next() }>
+				<Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] block right-5 z-20" onPress={ () => next() }>
 					Weiter (<b>{ game.interacted } / { game.total }</b>)
 				</Button>
 			}
