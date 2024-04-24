@@ -46,7 +46,7 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 	return (
 		<Popover placement="right">
 			<PopoverTrigger>
-				<button>
+				<a className="cursor-pointer">
 					<Tooltip
 						placement="right" className="font-bold"
 						content={
@@ -62,7 +62,7 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 							{ !p.connected && <Unplug color="red" width="20px"/> }
 						</span>
 					</Tooltip>
-				</button>
+				</a>
 			</PopoverTrigger>
 			<PopoverContent>
 				{ player.master &&
