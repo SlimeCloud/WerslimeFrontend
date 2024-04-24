@@ -32,7 +32,7 @@ export default function GameListPage() {
 							<Card key={ game.id } className="flex-shrink-0 bg-default-100 mx-5 hover:scale-x-[1.025]" isPressable={ true } onPress={ () => navigate(`/game/${ game.id }`) }>
 								<CardHeader className="flex justify-between">
 									<Skeleton isLoaded={ state === "success" } className="rounded-lg px-2"><div className="font-bold h-6">{ game.players.find(p => p.master)?.name }</div></Skeleton>
-									<Skeleton isLoaded={ state === "success" } className="rounded-lg px-2"><div className="h-6">Spieler-Anzahl: { game.players.length }</div></Skeleton>
+									<Skeleton isLoaded={ state === "success" } className="rounded-lg px-2"><div className="h-6">Spieler-Anzahl: <b>{ game.players.length }</b></div></Skeleton>
 								</CardHeader>
 								<Divider></Divider>
 								<CardBody className="flex flex-row justify-between gap-10">
