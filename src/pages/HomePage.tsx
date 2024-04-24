@@ -99,6 +99,7 @@ function JoinGame() {
 								label="Spiel-ID" placeholder="Gib die ID der Runde ein"
 								value={ id }
 								onValueChange={ setId }
+								maxLength={ 11 }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
