@@ -124,7 +124,7 @@ function Settings() {
 		<Card shadow="sm" className="flex-grow md:w-1/2" isDisabled={ updateState === "loading" }>
 			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
 			<Divider/>
-			<CardBody className="flex flex-col justify-between">
+			<CardBody className="flex flex-col justify-between gap-4">
 				<div className="flex flex-col gap-5 [&_h3]:font-bold [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
 					<div>
 						<h3 className="flex flex-row justify-between">Werwolf Anzahl <span>{ amount }</span></h3>
@@ -182,7 +182,7 @@ function Settings() {
 					</div>
 				</div>
 
-				{ player.master && <Button className="font-bold" isDisabled={ game.players.length < 4 } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
+				{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ game.players.length < 4 } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 			</CardBody>
 		</Card>
 	)

@@ -31,6 +31,10 @@ export default {
 			},
 			animation: {
 				"border-pulse": "borderPulse 2s infinite"
+			},
+			screens: {
+				"h-md": { "raw": "(height >= 650px)" },
+				"h-lg": { "raw": "(height >= 800px)" }
 			}
 		}
 	},
