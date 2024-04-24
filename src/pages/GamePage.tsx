@@ -104,6 +104,7 @@ function JoinGame({ id }: { id: string }) {
 								label="Name" placeholder="Gib deinen Namen ein"
 								value={ name }
 								onValueChange={ setName }
+								maxLength={ 16 }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => joinGame() } isLoading={ state === "loading" }>Beitreten</Button>
 						</form>

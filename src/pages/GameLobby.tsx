@@ -91,6 +91,7 @@ function Settings() {
 	const [ isPublic, setPublic ] = useState(game.settings.isPublic)
 	const [ deadRoles, setDeadRoles ] = useState(game.settings.revealDeadRoles)
 	const [ deadSpectators, setDeadSpectators ] = useState(game.settings.deadSpectators)
+	const [ loverRoles, setLoverRoles ] = useState(game.settings.revealLoverRoles)
 
 	function updateSettings(werewolfAmount?: number) {
 		update({
@@ -99,15 +100,16 @@ function Settings() {
 				roles: roles,
 				isPublic: isPublic,
 				revealDeadRoles: deadRoles,
-				deadSpectators: deadSpectators
+				deadSpectators: deadSpectators,
+				revealLoverRoles: loverRoles
 			}
 		})
 	}
 
 	useEffect(() => {
-		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles && deadSpectators === game.settings.deadSpectators) return
+		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles && deadSpectators === game.settings.deadSpectators && loverRoles === game.settings.revealLoverRoles) return
 		updateSettings()
-	}, [ roles, isPublic, deadRoles, deadSpectators ])
+	}, [ roles, isPublic, deadRoles, deadSpectators, loverRoles ])
 
 	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
@@ -115,6 +117,7 @@ function Settings() {
 		setPublic(game.settings.isPublic)
 		setDeadRoles(game.settings.revealDeadRoles)
 		setDeadSpectators(game.settings.deadSpectators)
+		setLoverRoles(game.settings.revealLoverRoles)
 	}, [ game.settings ])
 
 	return (
@@ -165,9 +168,15 @@ function Settings() {
 								<Checkbox isDisabled={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
 							</div>
 						</Tooltip>
-						<Tooltip shouldFlip={ false } placement="right" content={ <>Toke können die Rollen Aller sehen</> }>
+						<Tooltip shouldFlip={ false } placement="right" content={ <>Tote können die Rollen Aller sehen</> }>
 							<div className="w-fit">
 								<Checkbox isDisabled={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
+							</div>
+						</Tooltip>
+
+						<Tooltip shouldFlip={ false } placement="right" content={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }>
+							<div className="w-fit">
+								<Checkbox isDisabled={ disabled } isSelected={ loverRoles } onValueChange={ setLoverRoles }>Zeige Verliebten Rolle</Checkbox>
 							</div>
 						</Tooltip>
 					</div>

@@ -3,37 +3,33 @@ import { Button, Image, Modal, ModalBody, ModalContent, ModalHeader, useDisclosu
 import heal from "../../assets/action/heal.png"
 import poison from "../../assets/action/poison.png"
 import { useGameState } from "../../hooks/useGameState.ts"
-import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from "react"
-import { Player } from "../../types/Player.ts"
+import { useEffect, useState } from "react"
 import array from "../../utils/array.ts"
+import { Action } from "./Action.ts"
 
-const WitchAction = forwardRef<(target: Player) => (() => void) | undefined, { action: (req?: Request) => void }>((props, ref) => WitchActionImpl({ ref, ...props }))
-export default WitchAction
-
-function WitchActionImpl({ action, ref }: { action: (req?: Request) => void, ref: ForwardedRef<(target: Player) => (() => void) | undefined> }) {
+export default function useWitchAction(action: (req?: Request) => void): Action {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const [ target, setTarget ] = useState("")
 
 	const { game, player } = useGameState()!
 
-	useImperativeHandle(ref, () => target => {
-		if(!player.alive || !target.alive || (target.id === player.id && target.id !== game.victim)) return
-		if(target.id === game.victim && !array(game.roleMeta)?.includes("HEAL")) return
-		if(target.id !== game.victim && !array(game.roleMeta)?.includes("POISON")) return
-		if(game.interacted) return
-
-		return () => {
-			setTarget(target.id)
-			onOpen()
-		}
-	})
-
 	useEffect(() => {
 		onClose()
 	}, [ game.interactions ])
 
-	return (
-		<>
+
+	return {
+		execute: target => {
+			if(!player.alive || !target.alive || (target.id === player.id && target.id !== game.victim)) return
+			if(target.id === game.victim && !array(game.roleMeta)?.includes("HEAL")) return
+			if(target.id !== game.victim && !array(game.roleMeta)?.includes("POISON")) return
+
+			return () => {
+				setTarget(target.id)
+				onOpen()
+			}
+		},
+		node: <>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="sm" placement="center">
 				<ModalContent>
 					<ModalHeader className="flex justify-center">{ target === game.victim ? "Heilen" : "Vergiften" }</ModalHeader>
@@ -50,7 +46,7 @@ function WitchActionImpl({ action, ref }: { action: (req?: Request) => void, ref
 					</ModalBody>
 				</ModalContent>
 			</Modal>
-			{ !game.interacted && <Button className="fixed bottom-[60px] left-5 z-20" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button> }
+			<Button className="fixed bottom-[60px] left-5 z-20" onPress={ () => action({ data: { action: "SKIP" } }) }>Überspringen</Button>
 		</>
-	)
+	}
 }

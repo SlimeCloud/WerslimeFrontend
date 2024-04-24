@@ -7,7 +7,7 @@ import { Player } from "../types/Player.ts"
 import { Role, roleImages, roleNames, teamColors } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
-import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react"
+import { Suspense, useContext, useEffect, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import { useNavigate } from "react-router"
 import { useToken } from "../hooks/useToken.ts"
@@ -16,10 +16,9 @@ import Spinner from "../components/Spinner.tsx"
 import { Heart } from "lucide-react"
 import { Action, TargetContext } from "./actions/Action.ts"
 import useArmorAction from "./actions/AmorAction.tsx"
-
-const HunterAction = lazy(() => import("./actions/HunterAction.tsx"))
-const SeerAction = lazy(() => import("./actions/SeerAction.tsx"))
-const WitchAction = lazy(() => import("./actions/WitchAction.tsx"))
+import useWitchAction from "./actions/WitchAction.tsx"
+import useSeerAction from "./actions/SeerAction.tsx"
+import useHunterAction from "./actions/HunterAction.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -169,10 +168,12 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 }
 
 function useInteractions(action: (req?: Request) => void): Action | undefined {
-	const ref = useRef<(target: Player) => (() => void) | undefined>(null)
 	const { game, player } = useGameState()!
 
 	const armorAction = useArmorAction(action)
+	const witchAction = useWitchAction(action)
+	const seerAction = useSeerAction(action)
+	const hunterAction = useHunterAction(action)
 
 	switch(game.current) {
 		case "VILLAGER":
@@ -185,21 +186,9 @@ function useInteractions(action: (req?: Request) => void): Action | undefined {
 				}
 			}
 		case "AMOR": return armorAction
-		case "WITCH":
-			return {
-				node: <WitchAction action={ action } ref={ ref }/>,
-				execute: ref.current || (() => undefined)
-			}
+		case "WITCH": return witchAction
 		case "AURA_SEER":
-		case "SEER":
-			return {
-				node: <SeerAction action={ action } ref={ ref }/>,
-				execute: ref.current || (() => undefined)
-			}
-		case "HUNTER":
-			return {
-				node: <HunterAction action={ action } ref={ ref }/>,
-				execute: ref.current || (() => undefined)
-			}
+		case "SEER": return seerAction
+		case "HUNTER": return hunterAction
 	}
 }

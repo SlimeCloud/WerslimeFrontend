@@ -25,4 +25,5 @@ export interface GameSettings {
 	isPublic: boolean
 	revealDeadRoles: boolean
 	deadSpectators: boolean
+	revealLoverRoles: boolean
 }
