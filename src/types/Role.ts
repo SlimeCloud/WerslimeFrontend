@@ -57,6 +57,12 @@ export const teamColors = new Map<Team, "primary" | "warning" | "danger">([
 	[ "WEREWOLF", "danger" ]
 ])
 
+export const teamNames = new Map<Team, string>([
+	[ "VILLAGE", "Dorf" ],
+	[ "NEUTRAL", "Neutral" ],
+	[ "WEREWOLF", "Werwolf" ]
+])
+
 export const roleImages = new Map<Role, string>([
 	[ "UNKNOWN", neutral ],
 	[ "MAYOR", mayor ],

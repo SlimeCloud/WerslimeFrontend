@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useGameState } from "../../hooks/useGameState.ts"
 import { Action } from "./Action.ts"
 
-export default function useHunterAction(action: (req?: Request) => void): Action {
+export default function useHunterAction(action: (req?: Request<unknown>) => void): Action {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const [ target, setTarget ] = useState("")
 

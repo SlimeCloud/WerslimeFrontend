@@ -4,9 +4,11 @@ import { useToken } from "./useToken.ts";
 
 export type RequestState = "success" | "error" | "idle" | "loading"
 
-export interface Request {
+export interface Request<T> {
 	path?: string
 	data?: object
+	onSuccess?: (data: T) => void
+	onError?: (error: ErrorResponse) => void
 }
 
 export interface RestRoute<T> {
@@ -14,10 +16,10 @@ export interface RestRoute<T> {
 	data?: T
 	error?: ErrorResponse
 
-	get: (data?: Request) => void
-	post: (data?: Request) => void
-	put: (data?: Request) => void
-	delete: (data?: Request) => void
+	get: (data?: Request<T>) => void
+	post: (data?: Request<T>) => void
+	put: (data?: Request<T>) => void
+	delete: (data?: Request<T>) => void
 
 	reset: () => void
 	cancel: () => void
@@ -48,10 +50,6 @@ function anySignal(signals: AbortSignal[]) {
 	return controller.signal
 }
 
-export interface RestOptions {
-
-}
-
 export function useRest<T>(route: string, {
 	parser = res => res.text().then(t => t && JSON.parse(t)),
 	auto = false,
@@ -76,7 +74,7 @@ export function useRest<T>(route: string, {
 	const [ data, setData ] = useState<T | undefined>(undefined)
 	const [ error, setError ] = useState<ErrorResponse | undefined>(undefined)
 
-	function execute(method: string, request: Request) {
+	function execute(method: string, request: Request<T>) {
 		const controller = new AbortController()
 		abort.current = controller
 
@@ -104,6 +102,7 @@ export function useRest<T>(route: string, {
 					setData(data)
 
 					if(onSuccess) onSuccess(data)
+					if(request.onSuccess) request.onSuccess(data)
 				})
 			} else {
 				res.json().then(data => {
@@ -112,6 +111,7 @@ export function useRest<T>(route: string, {
 					setData(undefined)
 
 					if(onError) onError(data)
+					if(request.onError) request.onError(data)
 				})
 			}
 		}).catch(() => {
@@ -122,6 +122,7 @@ export function useRest<T>(route: string, {
 				const error = { status: 0, type: "TIMEOUT" } as ErrorResponse
 				setError(error)
 				if(onError) onError(error)
+				if(request.onError) request.onError(error)
 			}
 		}), delay * 1000)
 	}
@@ -143,10 +144,10 @@ export function useRest<T>(route: string, {
 		data: data,
 		error: error,
 
-		get: (request: Request = {}) => execute("GET", request),
-		put: (request: Request = {}) => execute("PUT", request),
-		post: (request: Request = {}) => execute("POST", request),
-		delete: (request: Request = {}) => execute("DELETE", request),
+		get: (request: Request<T> = {}) => execute("GET", request),
+		put: (request: Request<T> = {}) => execute("PUT", request),
+		post: (request: Request<T> = {}) => execute("POST", request),
+		delete: (request: Request<T> = {}) => execute("DELETE", request),
 
 		reset: reset,
 		cancel: () => abort.current?.abort("Cancel"),

@@ -19,6 +19,7 @@ import useArmorAction from "./actions/AmorAction.tsx"
 import useWitchAction from "./actions/WitchAction.tsx"
 import useSeerAction from "./actions/SeerAction.tsx"
 import useHunterAction from "./actions/HunterAction.tsx"
+import useAuraSeerAction from "./actions/AuraSeerAction.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -63,7 +64,7 @@ export default function GameBoard() {
 	)
 }
 
-function Board({ post }: { post: (req?: Request) => void }) {
+function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 	const { game, player } = useGameState()!
 
 	const action = useInteractions(post)
@@ -167,11 +168,12 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	)
 }
 
-function useInteractions(action: (req?: Request) => void): Action | undefined {
+function useInteractions(action: (req?: Request<unknown>) => void): Action | undefined {
 	const { game, player } = useGameState()!
 
 	const armorAction = useArmorAction(action)
 	const witchAction = useWitchAction(action)
+	const auraSeerAction = useAuraSeerAction(action)
 	const seerAction = useSeerAction(action)
 	const hunterAction = useHunterAction(action)
 
@@ -187,7 +189,7 @@ function useInteractions(action: (req?: Request) => void): Action | undefined {
 			}
 		case "AMOR": return armorAction
 		case "WITCH": return witchAction
-		case "AURA_SEER":
+		case "AURA_SEER": return auraSeerAction
 		case "SEER": return seerAction
 		case "HUNTER": return hunterAction
 	}

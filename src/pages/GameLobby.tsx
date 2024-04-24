@@ -40,7 +40,7 @@ function PlayerList() {
 	)
 }
 
-function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request) => void, promote: (req: Request) => void }) {
+function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unknown>) => void, promote: (req: Request<unknown>) => void }) {
 	const { player } = useGameState()!
 
 	return (

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import array from "../../utils/array.ts"
 import { Action } from "./Action.ts"
 
-export default function useWitchAction(action: (req?: Request) => void): Action {
+export default function useWitchAction(action: (req?: Request<unknown>) => void): Action {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const [ target, setTarget ] = useState("")
 

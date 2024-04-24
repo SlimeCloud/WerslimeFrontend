@@ -4,7 +4,7 @@ import { Button } from "@nextui-org/react"
 import { useGameState } from "../../hooks/useGameState.ts"
 import { Action, TargetContext } from "./Action.ts"
 
-export default function useArmorAction(action: (req?: Request) => void): Action {
+export default function useArmorAction(action: (req?: Request<unknown>) => void): Action {
 	const [ selected, setSelected ] = useState([] as string[])
 	const { game, player } = useGameState()!
 
