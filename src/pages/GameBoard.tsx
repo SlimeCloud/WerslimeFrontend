@@ -181,7 +181,7 @@ function useInteractions(action: (req?: Request) => void): Action | undefined {
 			return {
 				node: undefined,
 				execute: target => {
-					if(!player.alive || !target.alive || target.role === player.role) return
+					if(!player.alive || !target.alive) return
 					return () => action({ data: { target: target.id } })
 				}
 			}
