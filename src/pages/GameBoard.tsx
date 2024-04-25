@@ -131,6 +131,8 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	const target = game.interactions && game.interactions[p.id as never] as string
 	const targetName = game.players.find(p => p.id === target)?.name
 
+	const votes = game.interactions ? Object.entries(game.interactions).filter(([, target]) => target === p.id).length : 0
+
 	const [ targets ] = useContext(TargetContext)!
 
 	return (
@@ -146,7 +148,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 					{ p.name }
 					{ p.lover && <Heart width="15px" color="hotpink" fill="hotpink"/> }
 				</span>
-				<span className="flex gap-2">
+				<span className="flex gap-2 absolute right-2">
 					{ p.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
 					{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
 				</span>
@@ -163,8 +165,9 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 				</Tooltip>
 			</CardBody>
 			<Divider/>
-			<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap">
+			<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
 				{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }
+				{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }
 			</CardFooter>
 		</Card>
 	)
