@@ -137,7 +137,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 
 	return (
 		<Card
-			className={ `h-[250px] border-2 border-transparent select-none ${ targets.includes(p.id) ? "border-[gold]" : "" } ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
+			className={ `h-[250px] border-2 border-transparent select-none ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[gold]" : "" }  ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
 			isDisabled={ !p.alive } isPressable
 			onPress={ () => {
 				(isRoleActive(player, game.current) && !!action) && action()
