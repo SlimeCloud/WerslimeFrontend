@@ -19,6 +19,7 @@ export interface RestRoute<T> {
 	get: (data?: Request<T>) => void
 	post: (data?: Request<T>) => void
 	put: (data?: Request<T>) => void
+	patch: (data?: Request<T>) => void
 	delete: (data?: Request<T>) => void
 
 	reset: () => void
@@ -145,8 +146,9 @@ export function useRest<T>(route: string, {
 		error: error,
 
 		get: (request: Request<T> = {}) => execute("GET", request),
-		put: (request: Request<T> = {}) => execute("PUT", request),
 		post: (request: Request<T> = {}) => execute("POST", request),
+		put: (request: Request<T> = {}) => execute("PUT", request),
+		patch: (request: Request<T> = {}) => execute("PATCH", request),
 		delete: (request: Request<T> = {}) => execute("DELETE", request),
 
 		reset: reset,

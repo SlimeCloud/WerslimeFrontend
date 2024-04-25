@@ -3,10 +3,11 @@ import icon from "../assets/icon.png"
 import NavEntry from "./NavEntry.tsx";
 import { Moon, Sun } from "lucide-react";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { GameState } from "../types/GameState.ts";
 import { useLocation } from "react-router";
-import UserInfo from "./UserInfo.tsx";
+
+const UserInfo = lazy(() => import("./UserInfo.tsx"));
 
 export default function Navigation({ gameState }: { gameState?: GameState }) {
 	const { pathname } = useLocation()
@@ -40,7 +41,9 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 					endContent={ <Moon/> }
 					isSelected={ darkMode } onValueChange={ setDarkMode }
 				/>
-				{ gameState?.game && <UserInfo gameState={ gameState }/> }
+				<Suspense>
+					{ gameState?.game && <UserInfo gameState={ gameState }/> }
+				</Suspense>
 			</NavbarContent>
 		</Navbar>
 	)
