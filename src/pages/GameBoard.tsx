@@ -156,12 +156,12 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 			<Divider/>
 			<CardBody className="overflow-hidden">
 				<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }>
-					{ <Image
+					<Image
 						isBlurred isZoomed
 						classNames={ { wrapper: "m-auto" } } className="object-cover h-[150px] hover:scale-[1.2]"
 						alt={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
 						src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
-					/> }
+					/>
 				</Tooltip>
 			</CardBody>
 			<Divider/>
