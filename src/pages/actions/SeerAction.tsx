@@ -37,10 +37,12 @@ export default function useSeerAction(action: (req?: Request<unknown>) => void):
 				<ModalContent>
 					<ModalHeader className="flex justify-center">Rolle Ansehen</ModalHeader>
 					<ModalBody>
-						<div className="cursor-pointer flex justify-center" onClick={ () => action({ data: { target: target.id }, onSuccess: data => {
-							setResult((data as { role: Role }).role)
-							onInfoOpen()
-						} }) }>
+						<div className="cursor-pointer flex justify-center" onClick={ () => action({
+							data: { target: target.id }, onSuccess: data => {
+								setResult((data as { role: Role }).role)
+								onInfoOpen()
+							}
+						}) }>
 							<Image width="300px" isZoomed isBlurred alt="Rolle Ansehen" src={ view }/>
 						</div>
 					</ModalBody>

@@ -37,10 +37,12 @@ export default function useAuraSeerAction(action: (req?: Request<unknown>) => vo
 				<ModalContent>
 					<ModalHeader className="flex justify-center">Team Ansehen</ModalHeader>
 					<ModalBody>
-						<div className="cursor-pointer flex justify-center" onClick={ () => action({ data: { target: target.id }, onSuccess: data => {
-							setResult((data as { team: Team }).team)
-							onInfoOpen()
-						} }) }>
+						<div className="cursor-pointer flex justify-center" onClick={ () => action({
+							data: { target: target.id }, onSuccess: data => {
+								setResult((data as { team: Team }).team)
+								onInfoOpen()
+							}
+						}) }>
 							<Image width="300px" isZoomed isBlurred alt="Team Ansehen" src={ view }/>
 						</div>
 					</ModalBody>

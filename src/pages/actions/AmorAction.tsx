@@ -30,7 +30,7 @@ export default function useArmorAction(action: (req?: Request<unknown>) => void)
 			})
 		},
 		node: <>
-			{ selected.length === 2 &&  <Button color="primary" className="fixed bottom-[60px] block left-5 z-20" onPress={ () => action({ data: { first: selected[0], second: selected[1] } }) }>Bestätigen</Button> }
+			{ selected.length === 2 && <Button color="primary" className="fixed bottom-[60px] block left-5 z-20" onPress={ () => action({ data: { first: selected[0], second: selected[1] } }) }>Bestätigen</Button> }
 		</>
 	}
 }

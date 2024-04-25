@@ -137,7 +137,9 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 		<Card
 			className={ `h-[250px] border-2 border-transparent select-none ${ targets.includes(p.id) ? "border-[gold]" : "" } ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ ((game.current === "VILLAGER" || game.current === player.role) && !!action) ? "hover:scale-[1.05]" : "" }` }
 			isDisabled={ !p.alive } isPressable
-			onPress={ () => { ((game.current === "VILLAGER" || game.current === player.role) && !!action) && action() } }
+			onPress={ () => {
+				((game.current === "VILLAGER" || game.current === player.role) && !!action) && action()
+			} }
 		>
 			<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
 				<span className="flex gap-1">
