@@ -4,7 +4,7 @@ import victim from "../assets/modifier/victim.png"
 import { useGameState } from "../hooks/useGameState.ts";
 import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { Player } from "../types/Player.ts"
-import { Role, roleImages, roleNames, teamColors } from "../types/Role.ts"
+import { isRoleActive, Role, roleImages, roleNames, teamColors } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
 import { Suspense, useContext, useEffect, useState } from "react"
@@ -71,11 +71,11 @@ function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 
 	return (
 		<>
-			<div className={ `grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto rounded-[20px] p-5 ${ ((game.current === player.role || game.current === "VILLAGER") && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
+			<div className={ `grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full mb-auto rounded-[20px] p-5 ${ (isRoleActive(player, game.current) && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
 				{ game.players.map(p => <PlayerCard key={ p.id } p={ p } action={ action?.execute(p) }/>) }
 			</div>
 
-			{ (game.current === "VILLAGER" || game.current === player.role) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
+			{ isRoleActive(player, game.current) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
 		</>
 	)
 }
@@ -135,10 +135,10 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 
 	return (
 		<Card
-			className={ `h-[250px] border-2 border-transparent select-none ${ targets.includes(p.id) ? "border-[gold]" : "" } ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ ((game.current === "VILLAGER" || game.current === player.role) && !!action) ? "hover:scale-[1.05]" : "" }` }
+			className={ `h-[250px] border-2 border-transparent select-none ${ targets.includes(p.id) ? "border-[gold]" : "" } ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
 			isDisabled={ !p.alive } isPressable
 			onPress={ () => {
-				((game.current === "VILLAGER" || game.current === player.role) && !!action) && action()
+				(isRoleActive(player, game.current) && !!action) && action()
 			} }
 		>
 			<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
@@ -163,7 +163,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 				</Tooltip>
 			</CardBody>
 			<Divider/>
-			<CardFooter className="h-[26px] overflow-hidden whitespace-nowrap">
+			<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap">
 				{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }
 			</CardFooter>
 		</Card>
@@ -181,6 +181,7 @@ function useInteractions(action: (req?: Request<unknown>) => void): Action | und
 
 	switch(game.current) {
 		case "VILLAGER":
+		case "VILLAGER_ELECT":
 		case "WEREWOLF":
 			return {
 				node: undefined,

@@ -9,6 +9,7 @@ import seer from "../assets/roles/seer.png"
 import aura_seer from "../assets/roles/aura_seer.png"
 import mayor from "../assets/roles/mayor.png"
 import { ReactNode } from "react"
+import { Player } from "./Player.ts"
 
 export type Team = "VILLAGE" | "WEREWOLF" | "NEUTRAL"
 
@@ -16,6 +17,7 @@ export type Role =
 	"UNKNOWN" |
 	"MAYOR" |
 	"LOVER" |
+	"VILLAGER_ELECT" |
 
 	"AMOR" |
 	"SEER" |
@@ -29,6 +31,7 @@ export type Role =
 export const roleNames = new Map<Role, string>([
 	[ "UNKNOWN", "Unbekannt" ],
 	[ "MAYOR", "Bürgermeister" ],
+	[ "VILLAGER_ELECT", "Dorfbewohner (Bürgermeister-Wahl)" ],
 
 	[ "AMOR", "Amor" ],
 	[ "SEER", "Seherin" ],
@@ -66,6 +69,7 @@ export const teamNames = new Map<Team, string>([
 export const roleImages = new Map<Role, string>([
 	[ "UNKNOWN", neutral ],
 	[ "MAYOR", mayor ],
+	[ "VILLAGER_ELECT", villager ],
 
 	[ "AMOR", amor ],
 	[ "SEER", seer ],
@@ -85,3 +89,7 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 	[ "AURA_SEER", "Kann jede Nacht das Team einer Person ansehen" ],
 	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ]
 ])
+
+export function isRoleActive(player: Player, role: Role) {
+	return role === "VILLAGER" || role === "VILLAGER_ELECT" || player.role === role
+}
