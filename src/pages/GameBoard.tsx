@@ -20,6 +20,7 @@ import useWitchAction from "./actions/WitchAction.tsx"
 import useSeerAction from "./actions/SeerAction.tsx"
 import useHunterAction from "./actions/HunterAction.tsx"
 import useAuraSeerAction from "./actions/AuraSeerAction.tsx"
+import useVoteAction from "./actions/VoteAction.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -174,8 +175,9 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 }
 
 function useInteractions(action: (req?: Request<unknown>) => void): Action | undefined {
-	const { game, player } = useGameState()!
+	const { game } = useGameState()!
 
+	const voteAction = useVoteAction(action)
 	const armorAction = useArmorAction(action)
 	const witchAction = useWitchAction(action)
 	const auraSeerAction = useAuraSeerAction(action)
@@ -185,14 +187,7 @@ function useInteractions(action: (req?: Request<unknown>) => void): Action | und
 	switch(game.current) {
 		case "VILLAGER":
 		case "VILLAGER_ELECT":
-		case "WEREWOLF":
-			return {
-				node: undefined,
-				execute: target => {
-					if(!player.alive || !target.alive) return
-					return () => action({ data: { target: target.id } })
-				}
-			}
+		case "WEREWOLF": return voteAction
 		case "AMOR": return armorAction
 		case "WITCH": return witchAction
 		case "AURA_SEER": return auraSeerAction
