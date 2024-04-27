@@ -3,6 +3,7 @@ import { Player } from "./Player.ts"
 
 export interface Game {
 	id: string
+	discord: boolean
 	players: Player[]
 
 	started: boolean

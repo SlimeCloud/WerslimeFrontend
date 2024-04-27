@@ -1,11 +1,12 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
 import { Role, roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
 import { Player } from "../types/Player.ts"
+import ConditionalParent from "../components/ConditionalParent.tsx"
 
 export default function GameLobby() {
 	return (
@@ -44,36 +45,41 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 	const { player } = useGameState()!
 
 	return (
-		<Popover placement="right">
-			<PopoverTrigger>
-				<a className="cursor-pointer">
-					<Tooltip
-						placement="right" className="font-bold"
-						content={
-							p.id === player.id ? "Du" :
-							p.master ? "Spiel-Leiter" :
-							<>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</>
-						}
-					>
-						<span className={ `flex gap-2 ${ p.id === player.id ? "font-bold" : "" }` }>
-							<span>-</span>
-							{ p.name }
-							{ p.master && <Crown color="gold" width="20px"/> }
-							{ !p.connected && <Unplug color="red" width="20px"/> }
-						</span>
-					</Tooltip>
-				</a>
-			</PopoverTrigger>
-			<PopoverContent>
-				{ player.master &&
-					<span className="flex gap-2 items-center">
+		<ConditionalParent condition={ player.master && !p.master } parent={ children =>
+			<Popover placement="right">
+				<PopoverTrigger>
+					<a className="cursor-pointer">
+						{ children }
+					</a>
+				</PopoverTrigger>
+				<PopoverContent>
+					{ player.master &&
+						<span className="flex gap-2 items-center">
 						<span className="font-bold">Aktionen</span>
 						<Tooltip content="Rauswerfen"><Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button></Tooltip>
 						<Tooltip content="Zum Spielleiter machen"><Button title="Zum Spiel-Leiter machen" color="warning" size="sm" onPress={ () => promote({ data: { id: p.id } }) }><ShieldPlus/></Button></Tooltip>
 					</span>
+					}
+				</PopoverContent>
+			</Popover>
+		}>
+			<Tooltip
+				placement="right" className="font-bold"
+				content={
+					p.id === player.id ? "Du" :
+					p.master ? "Spiel-Leiter" :
+					<>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</>
 				}
-			</PopoverContent>
-		</Popover>
+			>
+				<span className={ `flex gap-2 items-center ${ p.id === player.id ? "font-bold" : "" }` }>
+					<span>-</span>
+					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform"/> }
+					{ p.name }
+					{ p.master && <Crown color="gold" width="20px"/> }
+					{ !p.connected && <Unplug color="red" width="20px"/> }
+				</span>
+			</Tooltip>
+		</ConditionalParent>
 	)
 }
 

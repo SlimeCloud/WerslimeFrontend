@@ -2,6 +2,8 @@ import { Role, Team } from "./Role.ts";
 
 export interface Player {
 	id: string
+	avatar?: string
+
 	name: string
 	role: Role
 	team: Team

@@ -12,6 +12,8 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const navigate = useNavigate()
 	const { setToken } = useToken()
 
+	const { game, player } = gameState
+
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const { isOpen: isErrorOpen, onOpen: onErrorOpen, onOpenChange: onErrorOpenChange } = useDisclosure()
 
@@ -23,7 +25,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 		onSuccess: onClose
 	})
 
-	const [ name, setName ] = useState(gameState.player.name)
+	const [ name, setName ] = useState(player.name)
 	const invalid = useMemo(() => !/^[a-zA-Z0-9_-]{3,16}$/.test(name), [ name ])
 
 	function rename(e?: FormEvent) {
@@ -40,22 +42,22 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					<Avatar
 						isBordered as="button" className="transition-transform"
 						color="primary" size="sm"
-						src={ gameState.game.started ? roleImages.get(gameState.player.role) : undefined }
+						src={ player.avatar || (game.started ? roleImages.get(player.role) : undefined) }
 					/>
 				</DropdownTrigger>
 				<DropdownMenu aria-label="Nutzer Optionen" variant="flat">
-					<DropdownItem className="h-14 gap-2" textValue="Nutzer Info" onPress={ () => onOpen() } isDisabled={ isOpen || gameState.game.started }>
+					<DropdownItem className="h-14 gap-2" textValue="Nutzer Info" onPress={ () => !player.avatar && onOpen() } isDisabled={ isOpen || game.started }>
 						<p className="font-semibold">Aktuell eingeloggt als</p>
-						<p className="font-semibold text-primary">{ gameState.player.name }</p>
+						<p className="font-semibold text-primary">{ player.name }</p>
 					</DropdownItem>
 
-					<DropdownItem onPress={ () => navigate(`/game/${ gameState.game.id }`) }>Zurück zur Runde</DropdownItem>
-					{ (gameState.player.master && <DropdownItem onPress={ () => reset() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
+					<DropdownItem onPress={ () => navigate(`/game/${ game.id }`) }>Zurück zur Runde</DropdownItem>
+					{ (player.master && <DropdownItem onPress={ () => reset() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
 					<DropdownItem color="danger" onPress={ () => {
 						leave()
 						setToken("")
 						navigate("/")
-					} }>{ (gameState.player.master && gameState.game.players.filter(p => p.master).length === 1) ? "Runde Schließen" : "Runde Verlassen" }</DropdownItem>
+					} }>{ (player.master && game.players.filter(p => p.master).length === 1) ? "Runde Schließen" : "Runde Verlassen" }</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>

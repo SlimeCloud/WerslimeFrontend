@@ -2,7 +2,7 @@ import mayor from "../assets/modifier/mayor.png"
 import victim from "../assets/modifier/victim.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
+import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { Player } from "../types/Player.ts"
 import { isRoleActive, Role, roleImages, roleNames, teamColors } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
@@ -146,6 +146,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 		>
 			<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
 				<span className="flex gap-1">
+					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform"/> }
 					{ p.name }
 					{ p.lover && <Heart width="15px" color="hotpink" fill="hotpink"/> }
 				</span>
