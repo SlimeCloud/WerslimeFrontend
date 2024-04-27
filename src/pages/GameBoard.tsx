@@ -168,8 +168,8 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 			</CardBody>
 			<Divider/>
 			<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
-				{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }
-				{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }
+				<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
+				<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
 			</CardFooter>
 		</Card>
 	)
