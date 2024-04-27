@@ -45,7 +45,7 @@ function CreateGame() {
 
 	return (
 		<>
-			<Card shadow="sm" className="flex-grow md:w-1/2">
+			<Card shadow="sm" className="flex-grow md:w-1/2 select-none">
 				<CardHeader className="text-2xl font-black flex justify-center">Spiel Erstellen</CardHeader>
 				<Divider/>
 				<CardBody>
@@ -89,7 +89,7 @@ function JoinGame() {
 
 	return (
 		<>
-			<Card shadow="sm" className="flex-grow md:w-1/2">
+			<Card shadow="sm" className="flex-grow md:w-1/2 select-none">
 				<CardHeader className="text-2xl font-black flex justify-center">Spiel Beitreten</CardHeader>
 				<Divider/>
 				<CardBody>
