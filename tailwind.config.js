@@ -47,6 +47,11 @@ export default {
 					colors: {
 						background: "#0c0c0c"
 					}
+				},
+				light: {
+					colors: {
+						background: "#f8f8f8"
+					}
 				}
 			}
 		})
