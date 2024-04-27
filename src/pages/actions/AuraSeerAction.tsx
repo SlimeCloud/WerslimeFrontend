@@ -54,7 +54,7 @@ export default function useAuraSeerAction(action: (req?: Request<unknown>) => vo
 					<ModalHeader className="flex justify-center">Team von { target.name }</ModalHeader>
 					<Divider/>
 					<ModalBody className={ `flex flex-row items-center m-auto p-5 font-bold text-lg text-${ teamColors.get(result!) }` }>
-						<Image width="50px" isBlurred alt={ teamNames.get(result!) } src={ roleImages.get(result === "WEREWOLF" ? "WEREWOLF" : result === "VILLAGE" ? "VILLAGER" : "UNKNOWN") }/>
+						<Image width="50px" isBlurred alt={ teamNames.get(result!) } src={ roleImages.get(result === "HOSTILE" ? "WEREWOLF" : result === "VILLAGE" ? "VILLAGER" : "UNKNOWN") }/>
 						{ teamNames.get(result!) }
 					</ModalBody>
 				</ModalContent>

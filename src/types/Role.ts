@@ -11,7 +11,7 @@ import mayor from "../assets/roles/mayor.png"
 import { ReactNode } from "react"
 import { Player } from "./Player.ts"
 
-export type Team = "VILLAGE" | "WEREWOLF" | "NEUTRAL"
+export type Team = "VILLAGE" | "HOSTILE" | "NEUTRAL"
 
 export type Role =
 	"UNKNOWN" |
@@ -47,7 +47,7 @@ export const roleTeams = new Map<Role, Team>([
 	[ "AMOR", "VILLAGE" ],
 	[ "SEER", "VILLAGE" ],
 	[ "AURA_SEER", "VILLAGE" ],
-	[ "WEREWOLF", "WEREWOLF" ],
+	[ "WEREWOLF", "HOSTILE" ],
 	[ "WITCH", "VILLAGE" ],
 	[ "VILLAGER", "VILLAGE" ],
 	[ "HUNTER", "VILLAGE" ],
@@ -57,13 +57,13 @@ export const roleTeams = new Map<Role, Team>([
 export const teamColors = new Map<Team, "primary" | "warning" | "danger">([
 	[ "VILLAGE", "primary" ],
 	[ "NEUTRAL", "warning" ],
-	[ "WEREWOLF", "danger" ]
+	[ "HOSTILE", "danger" ]
 ])
 
 export const teamNames = new Map<Team, string>([
 	[ "VILLAGE", "Dorf" ],
 	[ "NEUTRAL", "Neutral" ],
-	[ "WEREWOLF", "Werwolf" ]
+	[ "HOSTILE", "Feindlich" ]
 ])
 
 export const roleImages = new Map<Role, string>([
