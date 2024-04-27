@@ -27,7 +27,7 @@ function PlayerList() {
 			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler ({ game.players.length })</CardHeader>
 			<Divider/>
 			<CardBody>
-				<ScrollShadow>
+				<ScrollShadow className="h-full">
 					<ul className="flex flex-col gap-2">
 						{ game.players.map(p =>
 							<li key={ p.id } className="w-fit">
