@@ -127,7 +127,7 @@ function Settings() {
 			<CardBody className="flex flex-col justify-between gap-4">
 				<div className="flex flex-col gap-5 [&_h3]:font-bold [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
 					<div>
-						<h3 className="flex flex-row justify-between">Werwolf Anzahl <span>{ amount }</span></h3>
+						<h3 className="flex flex-row justify-between">Werslime Anzahl <span>{ amount }</span></h3>
 						<Slider
 							aria-label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
 							minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
