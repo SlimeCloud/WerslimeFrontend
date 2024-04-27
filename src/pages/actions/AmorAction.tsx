@@ -16,7 +16,7 @@ export default function useArmorAction(action: (req?: Request<unknown>) => void)
 
 	return {
 		execute: target => {
-			if(!player.alive || !target.alive || (target.id === player.id && target.id !== game.victim)) return
+			if(!player.alive || !target.alive) return
 			if(game.interacted) return
 			if(selected.length >= 2 && !selected.includes(target.id)) return
 
