@@ -73,7 +73,7 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 			>
 				<span className={ `flex gap-2 items-center ${ p.id === player.id ? "font-bold" : "" }` }>
 					<span>-</span>
-					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform"/> }
+					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
 					{ p.name }
 					{ p.master && <Crown color="gold" width="20px"/> }
 					{ !p.connected && <Unplug color="red" width="20px"/> }
