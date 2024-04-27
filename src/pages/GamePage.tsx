@@ -2,7 +2,7 @@ import { GameStateContext, useGameState, useGameStateRequest } from "../hooks/us
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
-import { Button, Card, CardBody, CardHeader, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
 import { FormEvent, useEffect, useMemo } from "react";
 import { useToken } from "../hooks/useToken.ts";
@@ -13,6 +13,7 @@ import EventProvider from "../components/EventProvider.tsx";
 import ErrorModal from "../components/ErrorModal.tsx";
 import EventModal from "../components/EventModal.tsx"
 import { useName } from "../hooks/useName.ts"
+import { Game } from "../types/Game.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -24,13 +25,13 @@ export default function GamePage() {
 		<>
 			{ (!state?.game || state.game.id !== id)
 				? <JoinGame id={ id! }/>
-				: <EventProvider route="/events"><Game defaultValue={ state }/></EventProvider>
+				: <EventProvider route="/events"><GameDisplay defaultValue={ state }/></EventProvider>
 			}
 		</>
 	)
 }
 
-function Game({ defaultValue }: { defaultValue: GameState }) {
+function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 	const navigate = useNavigate();
 	const { setToken } = useToken()
 
@@ -50,7 +51,10 @@ function Game({ defaultValue }: { defaultValue: GameState }) {
 				}
 			</GameStateContext.Provider>
 
-			<EventModal event="KICK" onClose={ () => setToken("") }>
+			<EventModal event="KICK" onClose={ () => {
+				navigate("/")
+				setToken("")
+			} }>
 				<ModalHeader className="text-danger">Kick</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
@@ -69,6 +73,28 @@ function Game({ defaultValue }: { defaultValue: GameState }) {
 }
 
 function JoinGame({ id }: { id: string }) {
+	const navigate = useNavigate()
+
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const { state, data, error } = useRest<Game>(`/games/${ id }`, {
+		auto: true,
+		onError: onOpen
+	})
+
+	return (
+		<>
+			{ state === "loading" && <Spinner className="m-auto"/> }
+			{ state === "success" && data?.discord
+				? <JoinDiscordGame game={ data! }/>
+				: <JoinNormalGame game={ data! }/>
+			}
+
+			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ () => navigate("/") }/>
+		</>
+	)
+}
+
+function JoinNormalGame({ game }: { game: Game }) {
 	const { setToken } = useToken()
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -85,7 +111,7 @@ function JoinGame({ id }: { id: string }) {
 		if(invalid) return
 
 		post({
-			path: `?id=${ id }`,
+			path: `?id=${ game.id }`,
 			data: {
 				name: name
 			}
@@ -114,4 +140,12 @@ function JoinGame({ id }: { id: string }) {
 			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
 		</>
 	)
+}
+
+function JoinDiscordGame({ game }: { game: Game }) {
+	useEffect(() => {
+		window.location.href = `https://discord.com/oauth2/authorize?client_id=${ import.meta.env._CLIENT_ID }&scope=identify&response_type=code&redirect_uri=${ import.meta.env._BASE }/oauth2&state=${ game.id }`
+	}, [])
+
+	return <CircularProgress className="m-auto"/>
 }

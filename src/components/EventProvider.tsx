@@ -9,7 +9,7 @@ export default function EventProvider({ route, children }: { route: string, chil
 
 	const source = useMemo(() => {
 		const ws = new WebSocket(`${ import.meta.env._WS }${ route }?token=${ token }`)
-		ws.onclose = onOpen
+		ws.onclose = event => !event.wasClean && onOpen()
 
 		return ws
 	}, [ route, token ])
