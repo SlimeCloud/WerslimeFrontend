@@ -51,7 +51,10 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 				}
 			</GameStateContext.Provider>
 
-			<EventModal event="KICK" onClose={ () => setToken("") }>
+			<EventModal event="KICK" onClose={ () => {
+				navigate("/")
+				setToken("")
+			} }>
 				<ModalHeader className="text-danger">Kick</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
