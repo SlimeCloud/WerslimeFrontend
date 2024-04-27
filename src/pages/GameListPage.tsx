@@ -5,7 +5,7 @@ import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, S
 import { Game } from "../types/Game.ts"
 import { RefreshCw } from "lucide-react"
 import { useNavigate } from "react-router"
-import { roleDescriptions, roleNames } from "../types/Role.ts"
+import { roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
 
 export default function GameListPage() {
 	const navigate = useNavigate()
@@ -48,7 +48,7 @@ export default function GameListPage() {
 											isReadOnly={ true }
 										>
 											{ [ ...roleDescriptions.keys() ].map(role =>
-												<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
+												<Checkbox color={ teamColors.get(roleTeams.get(role)!) } key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
 											) }
 										</CheckboxGroup>
 									</Skeleton>
