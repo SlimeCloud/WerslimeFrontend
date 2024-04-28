@@ -27,4 +27,5 @@ export interface GameSettings {
 	revealDeadRoles: boolean
 	deadSpectators: boolean
 	revealLoverRoles: boolean
+	muteMembers: boolean
 }

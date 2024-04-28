@@ -98,6 +98,7 @@ function Settings() {
 	const [ deadRoles, setDeadRoles ] = useState(game.settings.revealDeadRoles)
 	const [ deadSpectators, setDeadSpectators ] = useState(game.settings.deadSpectators)
 	const [ loverRoles, setLoverRoles ] = useState(game.settings.revealLoverRoles)
+	const [ muteMembers, setMuteMember ] = useState(game.settings.muteMembers)
 
 	function updateSettings(werewolfAmount?: number) {
 		update({
@@ -107,15 +108,16 @@ function Settings() {
 				isPublic: isPublic,
 				revealDeadRoles: deadRoles,
 				deadSpectators: deadSpectators,
-				revealLoverRoles: loverRoles
+				revealLoverRoles: loverRoles,
+				muteMembers: muteMembers
 			}
 		})
 	}
 
 	useEffect(() => {
-		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles && deadSpectators === game.settings.deadSpectators && loverRoles === game.settings.revealLoverRoles) return
+		if(roles.toString() == game.settings.roles.toString() && isPublic === game.settings.isPublic && deadRoles === game.settings.revealDeadRoles && deadSpectators === game.settings.deadSpectators && loverRoles === game.settings.revealLoverRoles && muteMembers === game.settings.muteMembers) return
 		updateSettings()
-	}, [ roles, isPublic, deadRoles, deadSpectators, loverRoles ])
+	}, [ roles, isPublic, deadRoles, deadSpectators, loverRoles, muteMembers ])
 
 	useEffect(() => {
 		setAmount(game.settings.werewolfAmount)
@@ -124,6 +126,7 @@ function Settings() {
 		setDeadRoles(game.settings.revealDeadRoles)
 		setDeadSpectators(game.settings.deadSpectators)
 		setLoverRoles(game.settings.revealLoverRoles)
+		setMuteMember(game.settings.muteMembers)
 	}, [ game.settings ])
 
 	return (
@@ -185,10 +188,18 @@ function Settings() {
 								<Checkbox isDisabled={ disabled } isSelected={ loverRoles } onValueChange={ setLoverRoles }>Zeige Verliebten Rolle</Checkbox>
 							</div>
 						</Tooltip>
+
+						{ game.discord &&
+							<Tooltip shouldFlip={ false } placement="right" content={ <>Mitglieder werden automatisch gemutet, wenn sie nicht sprechen dürfen</> }>
+								<div className="w-fit">
+									<Checkbox isDisabled={ disabled } isSelected={ muteMembers } onValueChange={ setMuteMember }>Mitglieder muten</Checkbox>
+								</div>
+							</Tooltip>
+						}
 					</div>
 				</div>
 
-				{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ amount >= game.players.length / 2.0 } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
+				{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ amount >= game.players.length / 2.0 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 			</CardBody>
 		</Card>
 	)
