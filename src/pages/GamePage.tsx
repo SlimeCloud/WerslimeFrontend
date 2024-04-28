@@ -14,6 +14,8 @@ import ErrorModal from "../components/ErrorModal.tsx";
 import EventModal from "../components/EventModal.tsx"
 import { useName } from "../hooks/useName.ts"
 import { Game } from "../types/Game.ts"
+import { useEvent } from "../hooks/useEvent.ts"
+import { Sound } from "../types/Sound.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -31,12 +33,21 @@ export default function GamePage() {
 	)
 }
 
+async function playSound(sound: Sound) {
+	const path = await import(`../assets/sounds/${ sound.sound }.mp3`)
+	const audio = new Audio(path.default)
+	audio.volume = sound.volume
+	audio.play().catch(console.error)
+}
+
 function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 	const navigate = useNavigate();
 	const { setToken } = useToken()
 
 	const { set } = useGameStateRequest()!
 	const state = useServerValue("UPDATE", defaultValue)
+
+	useEvent<Sound>("SOUND", sound => playSound(sound))
 
 	useEffect(() => {
 		set(state)
