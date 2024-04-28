@@ -23,7 +23,7 @@ function PlayerList() {
 	const { game } = useGameState()!
 
 	return (
-		<Card shadow="sm" className="flex-grow md:w-1/2 select-none">
+		<Card shadow="sm" className="flex-shrink-0 md:w-1/2 select-none">
 			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler ({ game.players.length })</CardHeader>
 			<Divider/>
 			<CardBody>
@@ -127,7 +127,7 @@ function Settings() {
 	}, [ game.settings ])
 
 	return (
-		<Card shadow="sm" className="flex-grow md:w-1/2 select-none" isDisabled={ updateState === "loading" }>
+		<Card shadow="sm" className="md:w-1/2 select-none" isDisabled={ updateState === "loading" }>
 			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
 			<Divider/>
 			<CardBody className="flex flex-col justify-between gap-4">
