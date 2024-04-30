@@ -7,7 +7,7 @@ import './index.css'
 document.title = import.meta.env._TITLE
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<BrowserRouter basename="/app">
+	<BrowserRouter basename={ import.meta.env.BASE_URL }>
 		<App/>
 	</BrowserRouter>
 )
