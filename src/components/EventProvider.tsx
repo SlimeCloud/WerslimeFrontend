@@ -1,15 +1,20 @@
 import { EventSourceContext } from "../hooks/useEvent.ts";
 import { useToken } from "../hooks/useToken.ts";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react"
 
 export default function EventProvider({ route, children }: { route: string, children?: ReactNode }) {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const { token } = useToken()
 
+	const [ event, setEvent ] = useState<CloseEvent>()
+
 	const source = useMemo(() => {
 		const ws = new WebSocket(`${ import.meta.env._WS }${ route }?token=${ token }`)
-		ws.onclose = event => !event.wasClean && onOpen()
+		ws.onclose = event => {
+			setEvent(event)
+			onOpen()
+		}
 
 		return ws
 	}, [ route, token ])
@@ -30,7 +35,10 @@ export default function EventProvider({ route, children }: { route: string, chil
 					<Divider/>
 
 					<ModalBody>
-						Die Verbindung zum Server wurde Unterbrochen. Überprüfe deine Internet-Verbindung und stelle sicher, dass diese Seite nur in einem Tab geöffnet ist.
+						{ event?.wasClean
+							? <>Verbindung konnte nicht hergestellt werden: { event.reason }</>
+							: <>Die Verbindung zum Server wurde Unterbrochen. Überprüfe deine Internet-Verbindung und stelle sicher, dass diese Seite nur in einem Tab geöffnet ist.</>
+						}
 					</ModalBody>
 
 					<Divider/>

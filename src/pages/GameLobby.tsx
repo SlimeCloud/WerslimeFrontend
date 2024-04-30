@@ -1,5 +1,5 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import Spinner from "../components/Spinner.tsx";
 import { Role, roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
 import { Player } from "../types/Player.ts"
 import ConditionalParent from "../components/ConditionalParent.tsx"
+import ErrorModal from "../components/ErrorModal.tsx"
 
 export default function GameLobby() {
 	return (
@@ -86,8 +87,12 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 function Settings() {
 	const { game, player } = useGameState()!
 
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
 	const { state: startState, post: start } = useRest("/game/start")
-	const { state: updateState, post: update } = useRest("/game/settings")
+	const { state: updateState, error, post: update } = useRest("/game/settings", {
+		onError: onOpen
+	})
 
 	const disabled = !player.master || updateState === "loading"
 
@@ -130,77 +135,82 @@ function Settings() {
 	}, [ game.settings ])
 
 	return (
-		<Card shadow="sm" className="md:w-1/2 select-none" isDisabled={ updateState === "loading" }>
-			<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
-			<Divider/>
-			<CardBody className="flex flex-col justify-between gap-4">
-				<div className="flex flex-col gap-5 [&_h3]:font-bold [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
-					<div>
-						<h3 className="flex flex-row justify-between">Werslime Anzahl <span>{ amount }</span></h3>
-						<Slider
-							aria-label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
-							minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
-							value={ amount }
-							onChange={ value => setAmount(value as number) }
-							onChangeEnd={ value => updateSettings(value as number) }
-							isDisabled={ disabled }
-						/>
-					</div>
+		<>
+			<Card shadow="sm" className="md:w-1/2 select-none" isDisabled={ updateState === "loading" }>
+				<CardHeader className="text-2xl font-black flex justify-center">Einstellungen</CardHeader>
+				<Divider/>
+				<CardBody className="flex flex-col justify-between gap-4">
+					<div className="flex flex-col gap-5 [&_h3]:font-bold">
+						<div>
+							<h3 className="flex flex-row justify-between">Werslime Anzahl <span>{ amount }</span></h3>
+							<Slider
+								aria-label="Werwolf Anzahl" className="font-bold [&_*]:!text-md" size="md"
+								minValue={ 1 } maxValue={ 10 } step={ 1 } showSteps
+								value={ amount }
+								onChange={ value => setAmount(value as number) }
+								onChangeEnd={ value => updateSettings(value as number) }
+								isDisabled={ disabled }
+							/>
+						</div>
 
-					<div>
-						<h3>Rollen</h3>
-						<CheckboxGroup
-							aria-label="Spezial-Rollen" size="md"
-							value={ roles }
-							onValueChange={ values => setRoles(values as Role[]) }
-							isDisabled={ disabled }
-						>
-							{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
-								<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
+						<div className="flex flex-col gap-4 justify-between xl:flex-row xl:[&>div]:w-1/2 [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
+							<div>
+								<h3>Rollen</h3>
+								<CheckboxGroup
+									aria-label="Spezial-Rollen" size="md" className="[&>div]:gap-1"
+									value={ roles }
+									onValueChange={ values => setRoles(values as Role[]) }
+									isDisabled={ disabled }
+								>
+									{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
+										<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
+											<div className="w-fit">
+												<Checkbox color={ teamColors.get(roleTeams.get(role)!) } value={ role }>{ roleNames.get(role) }</Checkbox>
+											</div>
+										</Tooltip>
+									) }
+								</CheckboxGroup>
+							</div>
+
+							<div>
+								<h3>Sonstiges</h3>
+								<Tooltip shouldFlip={ false } placement="right" content={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }>
 									<div className="w-fit">
-										<Checkbox color={ teamColors.get(roleTeams.get(role)!) } value={ role }>{ roleNames.get(role) }</Checkbox>
+										<Checkbox isDisabled={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
 									</div>
 								</Tooltip>
-							) }
-						</CheckboxGroup>
+								<Tooltip shouldFlip={ false } placement="right" content={ <>Rollen von Toten werden für alle angezeigt</> }>
+									<div className="w-fit">
+										<Checkbox isDisabled={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
+									</div>
+								</Tooltip>
+								<Tooltip shouldFlip={ false } placement="right" content={ <>Tote können die Rollen Aller sehen</> }>
+									<div className="w-fit">
+										<Checkbox isDisabled={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
+									</div>
+								</Tooltip>
+
+								<Tooltip shouldFlip={ false } placement="right" content={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }>
+									<div className="w-fit">
+										<Checkbox isDisabled={ disabled } isSelected={ loverRoles } onValueChange={ setLoverRoles }>Zeige Verliebten Rolle</Checkbox>
+									</div>
+								</Tooltip>
+
+								{ game.discord &&
+									<Tooltip shouldFlip={ false } placement="right" content={ <>Mitglieder werden automatisch gemutet, wenn sie nicht sprechen dürfen</> }>
+										<div className="w-fit">
+											<Checkbox isDisabled={ disabled } isSelected={ muteMembers } onValueChange={ setMuteMember }>Mitglieder muten</Checkbox>
+										</div>
+									</Tooltip>
+								}
+							</div>
+						</div>
 					</div>
 
-					<div>
-						<h3>Sonstiges</h3>
-						<Tooltip shouldFlip={ false } placement="right" content={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }>
-							<div className="w-fit">
-								<Checkbox isDisabled={ disabled } isSelected={ isPublic } onValueChange={ setPublic }>Öffentlich</Checkbox>
-							</div>
-						</Tooltip>
-						<Tooltip shouldFlip={ false } placement="right" content={ <>Rollen von Toten werden für alle angezeigt</> }>
-							<div className="w-fit">
-								<Checkbox isDisabled={ disabled } isSelected={ deadRoles } onValueChange={ setDeadRoles }>Tote Rollen anzeigen</Checkbox>
-							</div>
-						</Tooltip>
-						<Tooltip shouldFlip={ false } placement="right" content={ <>Tote können die Rollen Aller sehen</> }>
-							<div className="w-fit">
-								<Checkbox isDisabled={ disabled } isSelected={ deadSpectators } onValueChange={ setDeadSpectators }>Tote Zuschauer</Checkbox>
-							</div>
-						</Tooltip>
-
-						<Tooltip shouldFlip={ false } placement="right" content={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }>
-							<div className="w-fit">
-								<Checkbox isDisabled={ disabled } isSelected={ loverRoles } onValueChange={ setLoverRoles }>Zeige Verliebten Rolle</Checkbox>
-							</div>
-						</Tooltip>
-
-						{ game.discord &&
-							<Tooltip shouldFlip={ false } placement="right" content={ <>Mitglieder werden automatisch gemutet, wenn sie nicht sprechen dürfen</> }>
-								<div className="w-fit">
-									<Checkbox isDisabled={ disabled } isSelected={ muteMembers } onValueChange={ setMuteMember }>Mitglieder muten</Checkbox>
-								</div>
-							</Tooltip>
-						}
-					</div>
-				</div>
-
-				{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ amount >= game.players.length / 2.0 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
-			</CardBody>
-		</Card>
+					{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ amount >= game.players.length / 2.0 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
+				</CardBody>
+			</Card>
+			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
+		</>
 	)
 }
