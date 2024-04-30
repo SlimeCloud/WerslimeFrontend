@@ -4,6 +4,7 @@ import wolf from "../assets/roles/wolf.png"
 import witch from "../assets/roles/witch.png"
 import hunter from "../assets/roles/hunter.png"
 import jester from "../assets/roles/jester.png"
+import spy from "../assets/roles/spy.png"
 import amor from "../assets/roles/amor.png"
 import seer from "../assets/roles/seer.png"
 import aura_seer from "../assets/roles/aura_seer.png"
@@ -26,7 +27,8 @@ export type Role =
 	"WITCH" |
 	"VILLAGER" |
 	"HUNTER" |
-	"JESTER"
+	"JESTER" |
+	"SPY"
 
 export const roleNames = new Map<Role, string>([
 	[ "UNKNOWN", "Unbekannt" ],
@@ -40,7 +42,8 @@ export const roleNames = new Map<Role, string>([
 	[ "WITCH", "Hexe" ],
 	[ "VILLAGER", "Dorfbewohner" ],
 	[ "HUNTER", "Jäger" ],
-	[ "JESTER", "Narr" ]
+	[ "JESTER", "Narr" ],
+	[ "SPY", "Spion" ]
 ])
 
 export const roleTeams = new Map<Role, Team>([
@@ -51,7 +54,8 @@ export const roleTeams = new Map<Role, Team>([
 	[ "WITCH", "VILLAGE" ],
 	[ "VILLAGER", "VILLAGE" ],
 	[ "HUNTER", "VILLAGE" ],
-	[ "JESTER", "NEUTRAL" ]
+	[ "JESTER", "NEUTRAL" ],
+	[ "SPY", "VILLAGE" ]
 ])
 
 export const teamColors = new Map<Team, "primary" | "warning" | "danger">([
@@ -78,7 +82,8 @@ export const roleImages = new Map<Role, string>([
 	[ "WITCH", witch ],
 	[ "VILLAGER", villager ],
 	[ "HUNTER", hunter ],
-	[ "JESTER", jester ]
+	[ "JESTER", jester ],
+	[ "SPY", spy ]
 ])
 
 export const roleDescriptions = new Map<Role, ReactNode>([
@@ -87,7 +92,8 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 	[ "SEER", "Kann jede Nacht die Rolle einer Person ansehen" ],
 	[ "HUNTER", "Kann wenn er stirbt eine weitere Person erschießen" ],
 	[ "AURA_SEER", "Kann jede Nacht das Team einer Person ansehen" ],
-	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ]
+	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ],
+	[ "SPY", "Dorfbewohner, der für Werwölfe als Werwolf angezeigt wird" ]
 ])
 
 export function isRoleActive(player: Player, role: Role) {
