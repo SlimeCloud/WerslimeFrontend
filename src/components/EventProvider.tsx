@@ -12,6 +12,8 @@ export default function EventProvider({ route, children }: { route: string, chil
 	const source = useMemo(() => {
 		const ws = new WebSocket(`${ import.meta.env._WS }${ route }?token=${ token }`)
 		ws.onclose = event => {
+			if(event.reason === "leave") return
+
 			setEvent(event)
 			onOpen()
 		}
@@ -36,7 +38,7 @@ export default function EventProvider({ route, children }: { route: string, chil
 
 					<ModalBody>
 						{ event?.wasClean
-							? <>Verbindung konnte nicht hergestellt werden: { event.reason }</>
+							? <>Verbindung konnte nicht hergestellt werden: <b>{ event.reason || "Unbekannt" }</b></>
 							: <>Die Verbindung zum Server wurde Unterbrochen. Überprüfe deine Internet-Verbindung und stelle sicher, dass diese Seite nur in einem Tab geöffnet ist.</>
 						}
 					</ModalBody>
