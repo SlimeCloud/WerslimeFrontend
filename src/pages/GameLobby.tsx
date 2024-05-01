@@ -24,7 +24,7 @@ function PlayerList() {
 	const { game } = useGameState()!
 
 	return (
-		<Card shadow="sm" className="flex-shrink-0 md:w-1/2 select-none">
+		<Card shadow="sm" className="flex-shrink-0 md:flex-shrink md:w-1/2 select-none">
 			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler ({ game.players.length })</CardHeader>
 			<Divider/>
 			<CardBody>
@@ -207,7 +207,7 @@ function Settings() {
 						</div>
 					</div>
 
-					{ player.master && <Button className="font-bold min-h-[28px]" isDisabled={ amount >= game.players.length / 2.0 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
+					{ player.master && <Button className="font-bold min-h-[28px] flex-shrink-0" isDisabled={ amount >= game.players.length / 2.0 && false } isLoading={ startState === "loading" } spinner={ <Spinner/> } onPress={ () => start() }>Runde Starten</Button> }
 				</CardBody>
 			</Card>
 			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
