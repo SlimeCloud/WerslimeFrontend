@@ -1,4 +1,5 @@
 import { Link, Navbar, NavbarBrand, NavbarContent, Switch } from "@nextui-org/react";
+import { NavLink } from "react-router-dom"
 import icon from "../assets/icon.png"
 import NavEntry from "./NavEntry.tsx";
 import { Moon, Sun } from "lucide-react";
@@ -21,9 +22,11 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 	return (
 		<Navbar maxWidth="full" height="50px" className="select-none" isBordered>
 			<NavbarBrand>
-				<Link className="gap-1" color="foreground" href="/">
-					<img src={ icon } className="w-[35px]"/>
-					<p className="font-bold text-inherit text-lg">{ import.meta.env._TITLE }</p>
+				<Link color="foreground" as="div">
+					<NavLink to="/" className="gap-2 relative inline-flex items-center tap-highlight-transparent outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 text-medium text-foreground no-underline hover:opacity-80 active:opacity-disabled transition-opacity">
+						<img src={ icon } className="w-[35px]"/>
+						<p className="font-bold text-inherit text-lg">{ import.meta.env._TITLE }</p>
+					</NavLink>
 				</Link>
 			</NavbarBrand>
 

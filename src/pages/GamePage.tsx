@@ -154,7 +154,7 @@ function JoinNormalGame({ game }: { game: Game }) {
 
 function JoinDiscordGame({ game }: { game: Game }) {
 	useEffect(() => {
-		window.location.href = `https://discord.com/oauth2/authorize?client_id=${ import.meta.env._CLIENT_ID }&scope=identify&response_type=code&redirect_uri=${ import.meta.env._BASE }/oauth2&state=${ game.id }`
+		window.location.href = `https://discord.com/oauth2/authorize?client_id=${ import.meta.env._CLIENT_ID }&scope=identify&response_type=code&redirect_uri=${ import.meta.env._URL }/oauth2&state=${ game.id }`
 	}, [])
 
 	return <CircularProgress className="m-auto"/>

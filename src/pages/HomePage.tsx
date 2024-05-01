@@ -79,7 +79,7 @@ function JoinGame() {
 	const navigate = useNavigate()
 
 	const [ id, setId ] = useState("")
-	const invalid = useMemo(() => !/^[a-zA-Z0-9]{11}$/i.test(id), [ id ])
+	const invalid = useMemo(() => !/^[a-zA-Z0-9]{11}$/.test(id), [ id ])
 
 	function joinGame(e?: FormEvent) {
 		e?.preventDefault()
