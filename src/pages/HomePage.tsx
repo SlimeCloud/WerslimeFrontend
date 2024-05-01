@@ -60,8 +60,9 @@ function CreateGame() {
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" spinner={ <Spinner/> } onPress={ () => createGame() } isLoading={ state === "loading" }>Runde Erstellen</Button>
 						</form>
 
-						<Card className="text-xl bg-default-100 tracking-wide h-full hidden md:flex" shadow="none">
+						<Card className="text-lg bg-default-100 tracking-wide h-full hidden md:flex" shadow="none">
 							<CardHeader className="font-bold">Informationen</CardHeader>
+							<Divider/>
 							<CardBody>
 								Erstelle eine eigene Runde und lade andere Mitspieler ein. In dieser Runde kannst du eigene Einstellungen vornehmen und Teilnehmer verwalten.
 							</CardBody>
@@ -104,8 +105,9 @@ function JoinGame() {
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
 
-						<Card className="text-xl bg-default-100 tracking-wide hidden md:flex" shadow="none">
+						<Card className="text-lg bg-default-100 tracking-wide hidden md:flex" shadow="none">
 							<CardHeader className="font-bold">Informationen</CardHeader>
+							<Divider/>
 							<CardBody>
 								Tritt einer bestehenden Runde bei. Die Regeln werden vom Ersteller der Runde kontrolliert, dieser hat jedoch keine Vorteile im Spiel.
 							</CardBody>
