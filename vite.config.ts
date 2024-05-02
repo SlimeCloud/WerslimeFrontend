@@ -13,6 +13,9 @@ export default defineConfig(({ mode }) => {
 				plugins: [ tailwindcss() ],
 			}
 		},
+		define: {
+			'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV)
+		},
 		envPrefix: "_"
 	}
 })
