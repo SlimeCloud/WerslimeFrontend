@@ -35,8 +35,11 @@ export default function GamePage() {
 
 async function playSound(sound: Sound) {
 	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.mp3`)
+
 	const audio = new Audio(path.default)
 	audio.volume = sound.volume
+	console.log(audio.volume)
+	await audio.play()
 }
 
 function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
