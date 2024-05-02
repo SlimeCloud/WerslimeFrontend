@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalHeader, Slider, useDisclosure } from "@nextui-org/react";
 import { GameState } from "../types/GameState.ts";
 import { useToken } from "../hooks/useToken.ts";
 import { useNavigate } from "react-router";
@@ -7,6 +7,7 @@ import { roleImages } from "../types/Role.ts"
 import { FormEvent, useMemo, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import Spinner from "../components/Spinner.tsx"
+import { useVolume } from "../hooks/useVolume.ts"
 
 export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const navigate = useNavigate()
@@ -27,6 +28,8 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 
 	const [ name, setName ] = useState(player.name)
 	const invalid = useMemo(() => !/^[a-zA-Z0-9_-]{3,16}$/.test(name), [ name ])
+
+	const { volume, setVolume } = useVolume()
 
 	function rename(e?: FormEvent) {
 		e?.preventDefault()
@@ -49,6 +52,10 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					<DropdownItem className="h-14 gap-2" textValue="Nutzer Info" onPress={ () => !player.avatar && onOpen() } isDisabled={ isOpen || game.started }>
 						<p className="font-semibold">Aktuell eingeloggt als</p>
 						<p className="font-semibold text-primary">{ player.name }</p>
+					</DropdownItem>
+
+					<DropdownItem textValue="Lautstärke">
+						<Slider label="Lautstärke" size="sm" className="max-w-md" value={ volume } onChange={ v => setVolume(v as number) }/>
 					</DropdownItem>
 
 					<DropdownItem onPress={ () => navigate(`/game/${ game.id }`) }>Zurück zur Runde</DropdownItem>

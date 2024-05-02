@@ -16,6 +16,7 @@ import { useName } from "../hooks/useName.ts"
 import { Game } from "../types/Game.ts"
 import { useEvent } from "../hooks/useEvent.ts"
 import { Sound } from "../types/Sound.ts"
+import { useVolume } from "../hooks/useVolume.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -33,12 +34,11 @@ export default function GamePage() {
 	)
 }
 
-async function playSound(sound: Sound) {
+async function playSound(sound: Sound, volume: number) {
 	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.mp3`)
 
 	const audio = new Audio(path.default)
-	audio.volume = sound.volume
-	console.log(audio.volume)
+	audio.volume = sound.volume * volume
 	await audio.play()
 }
 
@@ -49,7 +49,8 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 	const { set } = useGameStateRequest()!
 	const state = useServerValue("UPDATE", defaultValue)
 
-	useEvent<Sound>("SOUND", sound => playSound(sound))
+	const { volume } = useVolume()
+	useEvent<Sound>("SOUND", sound => playSound(sound, volume / 100))
 
 	useEffect(() => {
 		set(state)
