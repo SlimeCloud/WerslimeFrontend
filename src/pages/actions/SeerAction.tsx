@@ -35,7 +35,7 @@ export default function useSeerAction(action: (req?: Request<unknown>) => void):
 		node: <>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="sm" placement="center">
 				<ModalContent>
-					<ModalHeader className="flex justify-center">Rolle Ansehen</ModalHeader>
+					<ModalHeader className="py-3 flex justify-center">Rolle Ansehen</ModalHeader>
 					<ModalBody>
 						<div className="cursor-pointer flex justify-center" onClick={ () => action({
 							data: { target: target.id }, onSuccess: data => {
@@ -51,7 +51,7 @@ export default function useSeerAction(action: (req?: Request<unknown>) => void):
 
 			<Modal isOpen={ isInfoOpen } onOpenChange={ onInfoOpenChange } size="sm" placement="center">
 				<ModalContent>
-					<ModalHeader className="flex justify-center">Rolle von { target.name }</ModalHeader>
+					<ModalHeader className="py-3 flex justify-center">Rolle von { target.name }</ModalHeader>
 					<Divider/>
 					<ModalBody className="flex flex-row items-center m-auto p-5 font-bold text-lg">
 						<Image width="50px" isBlurred alt={ roleNames.get(result!) } src={ roleImages.get(result!) }/>

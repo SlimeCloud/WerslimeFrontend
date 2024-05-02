@@ -33,18 +33,18 @@ export default function EventProvider({ route, children }: { route: string, chil
 
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
 				<ModalContent>
-					<ModalHeader>Verbindung getrennt</ModalHeader>
+					<ModalHeader className="py-3">Verbindung getrennt</ModalHeader>
 					<Divider/>
 
 					<ModalBody>
-						{ event?.wasClean
-							? <>Verbindung konnte nicht hergestellt werden: <b>{ event.reason || "Unbekannt" }</b></>
+						{ event?.reason
+							? <>Verbindung konnte nicht hergestellt werden: <b>{ event.reason }</b></>
 							: <>Die Verbindung zum Server wurde Unterbrochen. Überprüfe deine Internet-Verbindung und stelle sicher, dass diese Seite nur in einem Tab geöffnet ist.</>
 						}
 					</ModalBody>
 
 					<Divider/>
-					<ModalFooter>
+					<ModalFooter className="px-4 py-2">
 						<Button color="primary" size="sm" onPress={ () => {
 							source.close()
 							onClose()

@@ -56,7 +56,7 @@ export default function useWitchAction(action: (req?: Request<unknown>) => void)
 		node: <>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="lg" placement="center">
 				<ModalContent>
-					<ModalHeader className="font-bold flex justify-center text-xl">Wähle eine Aktion</ModalHeader>
+					<ModalHeader className="py-3 font-bold flex justify-center text-xl">Wähle eine Aktion</ModalHeader>
 					<ModalBody className="grid grid-cols-3 gap-2 px-10 py-5">
 						<Card className={ `border-2 border-transparent ${ target === heal ? "border-[gold]" : "" }` } isPressable onPress={ () => setHeal(target) } isDisabled={ target !== game.victim || target === heal || !array(game.roleMeta)?.includes("HEAL") }>
 							<CardHeader className="font-bold flex justify-center px-5">Heilen</CardHeader>

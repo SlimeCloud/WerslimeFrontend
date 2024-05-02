@@ -28,7 +28,7 @@ export default function useHunterAction(action: (req?: Request<unknown>) => void
 		node: <>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="sm" placement="center">
 				<ModalContent>
-					<ModalHeader className="flex justify-center">Erschießen</ModalHeader>
+					<ModalHeader className="py-3 flex justify-center">Erschießen</ModalHeader>
 					<ModalBody>
 						<div className="cursor-pointer flex justify-center" onClick={ () => action({ data: { target: target } }) }>
 							<Image

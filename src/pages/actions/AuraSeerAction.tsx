@@ -35,7 +35,7 @@ export default function useAuraSeerAction(action: (req?: Request<unknown>) => vo
 		node: <>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="sm" placement="center">
 				<ModalContent>
-					<ModalHeader className="flex justify-center">Team Ansehen</ModalHeader>
+					<ModalHeader className="py-3 flex justify-center">Team Ansehen</ModalHeader>
 					<ModalBody>
 						<div className="cursor-pointer flex justify-center" onClick={ () => action({
 							data: { target: target.id }, onSuccess: data => {
@@ -51,7 +51,7 @@ export default function useAuraSeerAction(action: (req?: Request<unknown>) => vo
 
 			<Modal isOpen={ isInfoOpen } onOpenChange={ onInfoOpenChange } size="sm" placement="center">
 				<ModalContent>
-					<ModalHeader className="flex justify-center">Team von { target.name }</ModalHeader>
+					<ModalHeader className="py-3 flex justify-center">Team von { target.name }</ModalHeader>
 					<Divider/>
 					<ModalBody className={ `flex flex-row items-center m-auto p-5 font-bold text-lg text-${ teamColors.get(result!) }` }>
 						<Image width="50px" isBlurred alt={ teamNames.get(result!) } src={ roleImages.get(result === "HOSTILE" ? "WEREWOLF" : result === "VILLAGE" ? "VILLAGER" : "UNKNOWN") }/>

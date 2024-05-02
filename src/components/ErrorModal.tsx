@@ -6,7 +6,7 @@ export default function ErrorModal({ error, isOpen, onOpenChange, onClose }: { e
 	return (
 		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } onClose={ onClose }>
 			<ModalContent>
-				<ModalHeader className="text-danger">Fehler</ModalHeader>
+				<ModalHeader className="py-3 text-danger">Fehler</ModalHeader>
 				<ModalBody className="pb-5">
 					<span className="flex gap-2">
 						<span>{ error?.status }:</span>

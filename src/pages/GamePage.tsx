@@ -65,7 +65,7 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 				navigate("/")
 				setToken("")
 			} }>
-				<ModalHeader className="text-danger">Kick</ModalHeader>
+				<ModalHeader className="py-3 text-danger">Kick</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Du wurdest vom Spiel-Leiter aus der Runde geworfen!</ModalBody>
 			</EventModal>
@@ -74,7 +74,7 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 				setToken("")
 				navigate("/")
 			} }>
-				<ModalHeader className="text-warning">Runde Geschlossen</ModalHeader>
+				<ModalHeader className="py-3 text-warning">Runde Geschlossen</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Diese Runde wurde beendet. Erstelle selbst eine neue Runde oder tritt einer andren bei, um weiter zu spielen!</ModalBody>
 			</EventModal>

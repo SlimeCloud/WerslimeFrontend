@@ -57,7 +57,7 @@ export default function GameBoard() {
 			<EndModal/>
 
 			<EventModal event="KILL">
-				<ModalHeader>Du bist gestorben</ModalHeader>
+				<ModalHeader className="py-3">Du bist gestorben</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5">Du bist gestorben. Du kannst das Spielgeschehen weiter beobachten und in der nächsten Runde wieder mitspielen!</ModalBody>
 			</EventModal>
@@ -99,7 +99,7 @@ function EndModal() {
 	return (
 		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ false } hideCloseButton={ true }>
 			<ModalContent>
-				<ModalHeader>Spiel Beendet</ModalHeader>
+				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
 				<Divider/>
 				<ModalBody className="p-5 flex flex-row">
 					<Image width="25px" alt="Gewinner-Icon" src={ roleImages.get(winner?.winner || "VILLAGER") }/>
@@ -111,7 +111,7 @@ function EndModal() {
 					} die Runde gewonnen!
 				</ModalBody>
 				<Divider/>
-				<ModalFooter>
+				<ModalFooter className="px-4 py-2">
 					<Button size="sm" onPress={ () => {
 						if(player.master) reset()
 						else {

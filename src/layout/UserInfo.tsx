@@ -62,7 +62,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 			</Dropdown>
 			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
 				<ModalContent>
-					<ModalHeader>Name Ändern</ModalHeader>
+					<ModalHeader className="py-3">Name Ändern</ModalHeader>
 					<Divider/>
 					<ModalBody className="py-5">
 						<form className="gap-5 flex flex-col" onSubmit={ rename }>
