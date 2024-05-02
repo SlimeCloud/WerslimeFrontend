@@ -17,8 +17,6 @@ export default function EventProvider({ route, children }: { route: string, chil
 	const source = useMemo(() => {
 		const ws = new WebSocket(`${ import.meta.env._WS }${ route }?token=${ token }`)
 		ws.onclose = event => {
-			console.log(event)
-
 			if(event.reason === "leave") return
 
 			setEvent(event)
