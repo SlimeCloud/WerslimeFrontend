@@ -19,8 +19,8 @@ export default function GameLobby() {
 }
 
 function PlayerList() {
-	const { post: kick } = useRest("/game/kick")
-	const { post: promote } = useRest("/game/promote")
+	const { delete: kick } = useRest("/games/@me/members")
+	const { patch: promote } = useRest("/games/@me/members")
 	const { game } = useGameState()!
 
 	return (
@@ -57,8 +57,8 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 					{ player.master &&
 						<span className="flex gap-2 items-center">
 						<span className="font-bold">Aktionen</span>
-						<Tooltip content="Rauswerfen"><Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ data: { id: p.id } }) }><UserX/></Button></Tooltip>
-						<Tooltip content="Zum Spielleiter machen"><Button title="Zum Spiel-Leiter machen" color="warning" size="sm" onPress={ () => promote({ data: { id: p.id } }) }><ShieldPlus/></Button></Tooltip>
+						<Tooltip content="Rauswerfen"><Button title="Rauswerfen" color="danger" size="sm" onPress={ () => kick({ path: `/${ p.id }` }) }><UserX/></Button></Tooltip>
+						<Tooltip content="Zum Spielleiter machen"><Button title="Zum Spiel-Leiter machen" color="warning" size="sm" onPress={ () => promote({ path: `/${ p.id }`, data: { master: true } }) }><ShieldPlus/></Button></Tooltip>
 					</span>
 					}
 				</PopoverContent>
@@ -89,8 +89,8 @@ function Settings() {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-	const { state: startState, post: start } = useRest("/game/start")
-	const { state: updateState, error, post: update } = useRest("/game/settings", {
+	const { state: startState, put: start } = useRest("/games/@me/session")
+	const { state: updateState, error, patch: update } = useRest("/games/@me", {
 		onError: onOpen
 	})
 

@@ -26,10 +26,10 @@ export default function GameBoard() {
 	const { game, player } = useGameState()!
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-	const { post: next } = useRest("/game/next", {
+	const { patch: next } = useRest("/games/@me/session", {
 		onError: () => onOpen()
 	})
-	const { error, post } = useRest("/game/action", {
+	const { error, post } = useRest("/games/@me/action", {
 		onError: () => onOpen()
 	})
 
@@ -83,7 +83,7 @@ function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 
 function EndModal() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { post: reset } = useRest("/game/reset")
+	const { delete: reset } = useRest("/games/@me/session")
 
 	const { player } = useGameState()!
 

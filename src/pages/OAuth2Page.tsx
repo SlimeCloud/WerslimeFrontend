@@ -13,7 +13,7 @@ export default function OAuth2Page() {
 	const state = params.get("state")
 
 	const { setToken } = useToken()
-	const { post } = useRest<{ token: string }>("/@me/authenticate", {
+	const { put: login } = useRest<{ token: string }>("/@me/game", {
 		onSuccess: data => {
 			setToken(data.token)
 			navigate(`/game/${ state }`)
@@ -21,10 +21,12 @@ export default function OAuth2Page() {
 	})
 
 	useEffect(() => {
-		post({ data: {
-			code: code,
-			game: state
-		} })
+		login({
+			path: `/${ state }`,
+			data: {
+				code: code
+			}
+		})
 	}, [ ])
 
 	return <CircularProgress className="m-auto"/>

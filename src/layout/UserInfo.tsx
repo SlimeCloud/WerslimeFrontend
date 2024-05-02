@@ -17,8 +17,8 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 	const { isOpen: isErrorOpen, onOpen: onErrorOpen, onOpenChange: onErrorOpenChange } = useDisclosure()
 
-	const { post: reset } = useRest("/game/reset")
-	const { post: leave } = useRest("/game/leave")
+	const { delete: reset } = useRest("/games/@me/session")
+	const { delete: leave } = useRest("/@me/game")
 
 	const { state, error, patch: renameExec } = useRest("/@me", {
 		onError: onErrorOpen,

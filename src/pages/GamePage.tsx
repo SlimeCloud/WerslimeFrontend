@@ -108,7 +108,7 @@ function JoinNormalGame({ game }: { game: Game }) {
 	const { setToken } = useToken()
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { state, error, post } = useRest<{ token: string }>("/game/join", {
+	const { state, error, put: join } = useRest<{ token: string }>("/@me/game", {
 		onError: onOpen,
 		onSuccess: ({ token }) => setToken(token)
 	})
@@ -120,8 +120,8 @@ function JoinNormalGame({ game }: { game: Game }) {
 		e?.preventDefault()
 		if(invalid) return
 
-		post({
-			path: `?id=${ game.id }`,
+		join({
+			path: `/${ game.id }`,
 			data: {
 				name: name
 			}
