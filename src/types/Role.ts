@@ -55,7 +55,7 @@ export const roleTeams = new Map<Role, Team>([
 	[ "VILLAGER", "VILLAGE" ],
 	[ "HUNTER", "VILLAGE" ],
 	[ "JESTER", "NEUTRAL" ],
-	[ "SPY", "VILLAGE" ]
+	[ "SPY", "HOSTILE" ]
 ])
 
 export const teamColors = new Map<Team, "primary" | "warning" | "danger">([
