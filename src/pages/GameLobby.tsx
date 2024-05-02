@@ -4,7 +4,7 @@ import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import { ReactNode, useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
-import { Role, roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
+import { Role, roleDescriptions, roleNames, roleTeams, teamColors, teamNames } from "../types/Role.ts"
 import { Player } from "../types/Player.ts"
 import ConditionalParent from "../components/ConditionalParent.tsx"
 import ErrorModal from "../components/ErrorModal.tsx"
@@ -129,7 +129,12 @@ function Settings() {
 										isDisabled={ disabled }
 									>
 										{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
-											<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
+											<Tooltip key={ role } shouldFlip={ false } placement="right" content={
+												<div className="flex flex-col">
+													<span>{ description }</span>
+													<span className={ `text-${ teamColors.get(roleTeams.get(role)!) }` }>({ teamNames.get(roleTeams.get(role)!) })</span>
+												</div>
+											}>
 												<div className="w-fit">
 													<Checkbox color={ teamColors.get(roleTeams.get(role)!) } value={ role }>{ roleNames.get(role) }</Checkbox>
 												</div>
