@@ -97,5 +97,5 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 ])
 
 export function isRoleActive(player: Player, role: Role) {
-	return role === "VILLAGER" || role === "VILLAGER_ELECT" || player.role === role
+	return role === "VILLAGER" || role === "VILLAGER_ELECT" || player.role === role || (player.role === "SPY" && role === "WEREWOLF")
 }

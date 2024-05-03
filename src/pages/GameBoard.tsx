@@ -189,6 +189,7 @@ function useInteractions(action: (req?: Request<unknown>) => void): Action | und
 		case "VILLAGER":
 		case "VILLAGER_ELECT":
 		case "WEREWOLF": return voteAction
+
 		case "AMOR": return armorAction
 		case "WITCH": return witchAction
 		case "AURA_SEER": return auraSeerAction
