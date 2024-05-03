@@ -75,8 +75,6 @@ export default function useWitchAction(action: (req?: Request<unknown>) => void)
 						</Card>
 
 						<Card isPressable onPress={ () => {
-							console.log(target, heal, poison)
-
 							if (heal === target) setHeal("")
 							if (poison === target) setPoison("")
 						} } isDisabled={ target !== heal && target !== poison }>
