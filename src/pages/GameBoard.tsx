@@ -109,7 +109,7 @@ function EndModal() {
 						winner?.winner === "JESTER" ? <><b>Der Narr</b> hat</> :
 						winner?.winner === "LOVER" ? <><b>Die Verliebten</b> hat</> :
 						<><b>Das Dorf</b> hat</>
-					} die Runde gewonnen!
+					} {' '} die Runde gewonnen!
 				</ModalBody>
 				<Divider/>
 				<ModalFooter className="px-4 py-2">
