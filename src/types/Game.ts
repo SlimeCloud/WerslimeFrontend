@@ -13,10 +13,12 @@ export interface Game {
 	victim?: string
 
 	interactions?: object
-	interacted: number
-	total: number
-
 	roleMeta: object
+
+	target?: string,
+	interacted: number
+	total: number,
+	valid: boolean
 }
 
 export interface GameSettings {

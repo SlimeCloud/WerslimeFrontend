@@ -4,7 +4,7 @@ import victim from "../assets/modifier/victim.png"
 import { useGameState } from "../hooks/useGameState.ts";
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { Player } from "../types/Player.ts"
-import { isRoleActive, Role, roleImages, roleNames, teamColors } from "../types/Role.ts"
+import { isRoleActive, Role, roleImages, roleNames, teamColors, teamNames } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
 import { Suspense, useContext, useEffect, useState } from "react"
@@ -21,6 +21,7 @@ import useSeerAction from "./actions/SeerAction.tsx"
 import useHunterAction from "./actions/HunterAction.tsx"
 import useAuraSeerAction from "./actions/AuraSeerAction.tsx"
 import useVoteAction from "./actions/VoteAction.tsx"
+import ConditionalParent from "../components/ConditionalParent.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -48,7 +49,7 @@ export default function GameBoard() {
 			<Board post={ post }/>
 
 			{ player.master &&
-				<Button color={ game.interacted >= game.total ? "primary" : "warning" } className="fixed bottom-[60px] block right-5 z-20" onPress={ () => next() }>
+				<Button color={ game.valid ? "primary" : "warning" } className="fixed bottom-[60px] block right-5 z-20" onPress={ () => next() }>
 					Weiter (<b>{ game.interacted } / { game.total }</b>)
 				</Button>
 			}
@@ -132,46 +133,52 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	const target = game.interactions && game.interactions[p.id as never] as string
 	const targetName = game.players.find(p => p.id === target)?.name
 
-	const votes = game.interactions ? Object.entries(game.interactions).filter(([, target]) => target === p.id).length : 0
-
 	const [ targets ] = useContext(TargetContext)!
+	const votes = game.interactions ? Object.entries(game.interactions).filter(([, target]) => target === p.id).length : 0
+	const tooltip = p.id === game.target ? "Aktuell Gewählt" :
+		targets.includes(p.id) ? "Von dir Ausgewählt" :
+		p.id === game.victim ? "Opfer der Nacht" :
+		p.team ? teamNames.get(p.team) :
+		undefined
 
 	return (
-		<Card
-			className={ `h-[250px] border-2 border-transparent select-none ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[gold]" : "" }  ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
-			isDisabled={ !p.alive } isPressable
-			onPress={ () => {
-				(isRoleActive(player, game.current) && !!action) && action()
-			} }
-		>
-			<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
+		<ConditionalParent condition={ !!tooltip } parent={ children => <Tooltip content={ tooltip } >{ children }</Tooltip> }>
+			<Card
+				className={ `h-[250px] border-2 border-transparent select-none ${ p.id === player.id ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }  ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
+				isDisabled={ !p.alive } isPressable
+				onPress={ () => {
+					(isRoleActive(player, game.current) && !!action) && action()
+				} }
+			>
+				<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
 				<span className="flex gap-2 items-center">
 					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
 					{ p.name }
 					{ p.lover && <Heart width="15px" color="hotpink" fill="hotpink"/> }
 				</span>
-				<span className="flex gap-2 absolute right-2">
+					<span className="flex gap-2 absolute right-2">
 					{ p.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
-					{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
+						{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
 				</span>
-			</CardHeader>
-			<Divider/>
-			<CardBody className="overflow-hidden">
-				<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) } closeDelay={ 0 }>
-					<Image
-						isBlurred isZoomed
-						classNames={ { wrapper: "m-auto" } } className="object-cover h-[150px] hover:scale-[1.2]"
-						alt={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
-						src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
-					/>
-				</Tooltip>
-			</CardBody>
-			<Divider/>
-			<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
-				<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
-				<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
-			</CardFooter>
-		</Card>
+				</CardHeader>
+				<Divider/>
+				<CardBody className="overflow-hidden">
+					<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) } closeDelay={ 0 }>
+						<Image
+							isBlurred isZoomed
+							classNames={ { wrapper: "m-auto" } } className="object-cover h-[150px] hover:scale-[1.2]"
+							alt={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
+							src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
+						/>
+					</Tooltip>
+				</CardBody>
+				<Divider/>
+				<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
+					<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
+					<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
+				</CardFooter>
+			</Card>
+		</ConditionalParent>
 	)
 }
 
