@@ -42,7 +42,7 @@ export default function GameBoard() {
 
 	return (
 		<TargetContext.Provider value={ targets }>
-			<div className="fixed top-[70px] left-0 text-xl w-full flex gap-2 justify-center">
+			<div className="fixed top-[70px] left-0 text-xl w-full flex gap-2 justify-center z-10">
 				Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b>
 			</div>
 
