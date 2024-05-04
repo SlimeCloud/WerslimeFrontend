@@ -1,5 +1,5 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import { ReactNode, useEffect, useState } from "react";
@@ -8,7 +8,8 @@ import { Role, roleDescriptions, roleNames, roleTeams, teamColors, teamNames } f
 import { Player } from "../types/Player.ts"
 import ConditionalParent from "../components/ConditionalParent.tsx"
 import ErrorModal from "../components/ErrorModal.tsx"
-import { GameSettings } from "../types/Game.ts"
+
+import { GameSettings, MuteSystem } from "../types/GameSettings.ts"
 
 export default function GameLobby() {
 	return (
@@ -163,13 +164,20 @@ function Settings() {
 									name={ <>Zeige Verliebten Rolle</> }
 									description={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }
 								/>
-								{ game.discord &&
-									<BooleanProperty disabled={ disabled } property="muteMembers" update={ update }
-										name={ <>Mitglieder muten</> }
-										description={ <>Mitglieder werden automatisch gemutet, wenn sie nicht sprechen dürfen</> }
-									/>
-								}
 							</div>
+
+							{ game.discord &&
+								<div>
+									<h3>Mitglieder Muten</h3>
+									<SettingsProperty<MuteSystem> property="muteSystem" update={ update }>{ (value, setValue) =>
+										<RadioGroup aria-label="Mitglieder Muten" orientation="vertical" value={ value } onValueChange={ v => setValue(v as MuteSystem) }>
+											<Tooltip content="Deaktiviert"><Radio value="NONE">Deaktiviert</Radio></Tooltip>
+											<Tooltip content="Tote muten, Nachts muten und deafen"><Radio value="FULL">Vollständig</Radio></Tooltip>
+											<Tooltip content="Nur Tote muten"><Radio value="DEAD_ONLY">Nur Tote</Radio></Tooltip>
+										</RadioGroup> }
+									</SettingsProperty>
+								</div>
+							}
 						</div>
 					</div>
 

@@ -1,5 +1,6 @@
 import { Role } from "./Role.ts";
 import { Player } from "./Player.ts"
+import { GameSettings } from "./GameSettings.ts"
 
 export interface Game {
 	id: string
@@ -21,13 +22,3 @@ export interface Game {
 	valid: boolean
 }
 
-export interface GameSettings {
-	werewolfAmount: number
-	roles: Role[]
-
-	isPublic: boolean
-	revealDeadRoles: boolean
-	deadSpectators: boolean
-	revealLoverRoles: boolean
-	muteMembers: boolean
-}
