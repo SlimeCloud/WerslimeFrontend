@@ -170,7 +170,7 @@ function Settings() {
 								<div>
 									<h3>Mitglieder Muten</h3>
 									<SettingsProperty<MuteSystem> property="muteSystem" update={ update }>{ (value, setValue) =>
-										<RadioGroup aria-label="Mitglieder Muten" orientation="vertical" value={ value } onValueChange={ v => setValue(v as MuteSystem) }>
+										<RadioGroup isDisabled={ disabled } aria-label="Mitglieder Muten" orientation="vertical" value={ value } onValueChange={ v => setValue(v as MuteSystem) }>
 											<Tooltip content="Deaktiviert"><Radio value="NONE">Deaktiviert</Radio></Tooltip>
 											<Tooltip content="Tote muten, Nachts muten und deafen"><Radio value="FULL">Vollständig</Radio></Tooltip>
 											<Tooltip content="Nur Tote muten"><Radio value="DEAD_ONLY">Nur Tote</Radio></Tooltip>
