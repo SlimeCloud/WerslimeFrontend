@@ -40,7 +40,7 @@ export default function useHunterAction(action: (req?: Request<unknown>) => void
 					</ModalBody>
 				</ModalContent>
 			</Modal>
-			<Button color="warning" className="fixed bottom-[60px] block left-5 z-20" onPress={ () => action({ data: { target: null } }) }>Überspringen</Button>
+			{ !game.interacted && <Button color="warning" className="fixed bottom-[60px] block left-5 z-20" onPress={ () => action({ data: { target: null } }) }>Überspringen</Button> }
 		</>
 	}
 }
