@@ -119,7 +119,7 @@ function Settings() {
 							</div> }
 						</SettingsProperty>
 
-						<div className="flex flex-col gap-4 justify-between xl:flex-row xl:[&>div]:w-1/2 [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
+						<div className="flex gap-4 justify-between flex-row flex-wrap xl:[&>div]:max-w-1/2 [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
 							<SettingsProperty<Role[]> property="roles" compare={ (a, b) => a.toString() == b.toString() } update={ update }>{ (value, setValue) =>
 								<div>
 									<h3>Rollen</h3>
