@@ -119,7 +119,7 @@ function Settings() {
 							</div> }
 						</SettingsProperty>
 
-						<div className="flex gap-4 gap-x-12 flex-row flex-wrap [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
+						<div className="flex gap-4 justify-between flex-row flex-wrap [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
 							<SettingsProperty<Role[]> property="roles" compare={ (a, b) => a.toString() == b.toString() } update={ update }>{ (value, setValue) =>
 								<div>
 									<h3>Rollen</h3>
@@ -166,7 +166,7 @@ function Settings() {
 								/>
 							</div>
 
-							{ game.discord &&
+							{ game.discord ?
 								<div>
 									<h3>Mitglieder Muten</h3>
 									<SettingsProperty<MuteSystem> property="muteSystem" update={ update }>{ (value, setValue) =>
@@ -176,7 +176,8 @@ function Settings() {
 											<Tooltip content="Nur Tote muten"><Radio value="DEAD_ONLY">Nur Tote</Radio></Tooltip>
 										</RadioGroup> }
 									</SettingsProperty>
-								</div>
+								</div> :
+								<div/>
 							}
 						</div>
 					</div>
