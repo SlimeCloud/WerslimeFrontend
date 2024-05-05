@@ -50,7 +50,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 				</DropdownTrigger>
 				<DropdownMenu aria-label="Nutzer Optionen" variant="flat">
 					<DropdownItem className="h-14 gap-2" textValue="Nutzer Info" onPress={ () => !player.avatar && onOpen() } isDisabled={ isOpen || game.started }>
-						<p className="font-semibold">Aktuell eingeloggt als</p>
+						<p className="font-semibold">Aktuell angemeldet als</p>
 						<p className="font-semibold text-primary">{ player.name }</p>
 					</DropdownItem>
 
