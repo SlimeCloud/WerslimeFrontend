@@ -2,7 +2,7 @@ import { GameStateContext, useGameState, useGameStateRequest } from "../hooks/us
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
-import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Input, ModalBody, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
 import { FormEvent, useEffect, useMemo } from "react";
 import { useToken } from "../hooks/useToken.ts";
@@ -17,6 +17,7 @@ import { Game } from "../types/Game.ts"
 import { useEvent } from "../hooks/useEvent.ts"
 import { Sound } from "../types/Sound.ts"
 import { useVolume } from "../hooks/useVolume.ts"
+import { Role, roleImages } from "../types/Role.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -82,7 +83,54 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 				<Divider/>
 				<ModalBody className="p-5">Diese Runde wurde beendet. Erstelle selbst eine neue Runde oder tritt einer andren bei, um weiter zu spielen!</ModalBody>
 			</EventModal>
+
+			<EndModal/>
 		</>
+	)
+}
+
+function EndModal() {
+	const { game } = useGameState()!
+
+	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
+	const { delete: reset } = useRest("/games/@me/session")
+	const { delete: leave } = useRest("/@me/game")
+
+	const { player } = useGameState()!
+
+	const navigate = useNavigate()
+	const { setToken } = useToken()
+
+	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, () => onOpen())
+
+	return (
+		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started }>
+			<ModalContent>
+				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
+				<Divider/>
+				<ModalBody className="p-5 flex flex-row">
+					<Image width="25px" alt="Gewinner-Icon" src={ roleImages.get(winner?.winner || "VILLAGER") }/>
+					{
+						winner?.winner === "WEREWOLF" ? <><b>Die Werwölfe</b> haben</> :
+						winner?.winner === "JESTER" ? <><b>Der Narr</b> hat</> :
+						winner?.winner === "LOVER" ? <><b>Die Verliebten</b> hat</> :
+						<><b>Das Dorf</b> hat</>
+					} {' '} die Runde gewonnen!
+				</ModalBody>
+				<Divider/>
+				<ModalFooter className="px-4 py-2">
+					<Button size="sm" color="warning" onPress={ () => {
+						if(player.master) reset()
+						else {
+							leave()
+							setToken("")
+							navigate("/")
+						}
+					} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
+					<Button size="sm" onPress={ onClose } color="primary">Schließen</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 	)
 }
 

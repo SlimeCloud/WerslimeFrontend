@@ -2,17 +2,13 @@ import mayor from "../assets/modifier/mayor.png"
 import victim from "../assets/modifier/victim.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
+import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { Player } from "../types/Player.ts"
 import { isRoleActive, Role, roleImages, roleNames, teamColors, teamNames } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
 import { Suspense, useContext, useEffect, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
-import { useNavigate } from "react-router"
-import { useToken } from "../hooks/useToken.ts"
-import { useServerValue } from "../hooks/useServerValue.ts"
-import Spinner from "../components/Spinner.tsx"
 import { Heart } from "lucide-react"
 import { Action, TargetContext } from "./actions/Action.ts"
 import useArmorAction from "./actions/AmorAction.tsx"
@@ -42,8 +38,9 @@ export default function GameBoard() {
 
 	return (
 		<TargetContext.Provider value={ targets }>
-			<div className="fixed top-[70px] left-0 text-xl w-full flex gap-2 justify-center z-10">
-				Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b>
+			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10">
+				<span className="flex flex-row gap-2 mx-auto">Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b></span>
+				{ !player.alive && <span className="mx-auto font-bold text-danger">☠️ Du bist tot</span> }
 			</div>
 
 			<Board post={ post }/>
@@ -55,7 +52,6 @@ export default function GameBoard() {
 			}
 
 			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
-			<EndModal/>
 
 			<EventModal event="KILL">
 				<ModalHeader className="py-3">Du bist gestorben</ModalHeader>
@@ -79,51 +75,6 @@ function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 
 			{ isRoleActive(player, game.current) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
 		</>
-	)
-}
-
-function EndModal() {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const { delete: reset } = useRest("/games/@me/session")
-
-	const { player } = useGameState()!
-
-	const navigate = useNavigate()
-	const { setToken } = useToken()
-
-	const [ waiting, setWaiting ] = useState(false)
-	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, () => {
-		onOpen()
-		setWaiting(false)
-	})
-
-	return (
-		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ false } hideCloseButton={ true }>
-			<ModalContent>
-				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
-				<Divider/>
-				<ModalBody className="p-5 flex flex-row">
-					<Image width="25px" alt="Gewinner-Icon" src={ roleImages.get(winner?.winner || "VILLAGER") }/>
-					{
-						winner?.winner === "WEREWOLF" ? <><b>Die Werwölfe</b> haben</> :
-						winner?.winner === "JESTER" ? <><b>Der Narr</b> hat</> :
-						winner?.winner === "LOVER" ? <><b>Die Verliebten</b> hat</> :
-						<><b>Das Dorf</b> hat</>
-					} {' '} die Runde gewonnen!
-				</ModalBody>
-				<Divider/>
-				<ModalFooter className="px-4 py-2">
-					<Button size="sm" onPress={ () => {
-						if(player.master) reset()
-						else {
-							navigate("/")
-							setToken("")
-						}
-					} }>{ player.master ? "Runde zurücksetzten" : "Runde verlassen" }</Button>
-					{ !player.master && <Button color="primary" size="sm" spinner={ <Spinner/> } isLoading={ waiting } onPress={ () => setWaiting(true) }>{ waiting ? "Warte auf Spiel-Leiter…" : "Auf nächste Runde Warten" }</Button> }
-				</ModalFooter>
-			</ModalContent>
-		</Modal>
 	)
 }
 
@@ -158,7 +109,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 				</span>
 					<span className="flex gap-2 absolute right-2">
 					{ p.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
-						{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
+					{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
 				</span>
 				</CardHeader>
 				<Divider/>
@@ -171,6 +122,17 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 							src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
 						/>
 					</Tooltip>
+
+					{ (player.role === "WARLOCK" && p.id === player.id) &&
+						<Tooltip content={ <span>Tarnrolle: <b>{ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }</b></span> } closeDelay={ 0 }>
+							<Image
+								isBlurred isZoomed radius="full"
+								classNames={ { wrapper: "absolute left-1 top-1" } } className="object-cover h-[50px] hover:scale-[1.2]"
+								alt={ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }
+								src={ roleImages.get((game.roleMeta as { camouflage: Role }).camouflage) }
+							/>
+						</Tooltip>
+					}
 				</CardBody>
 				<Divider/>
 				<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
@@ -200,6 +162,7 @@ function useInteractions(action: (req?: Request<unknown>) => void): Action | und
 		case "AMOR": return armorAction
 		case "WITCH": return witchAction
 		case "AURA_SEER": return auraSeerAction
+		case "WARLOCK":
 		case "SEER": return seerAction
 		case "HUNTER": return hunterAction
 	}
