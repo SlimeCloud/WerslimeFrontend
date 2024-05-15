@@ -17,7 +17,6 @@ import useSeerAction from "./actions/SeerAction.tsx"
 import useHunterAction from "./actions/HunterAction.tsx"
 import useAuraSeerAction from "./actions/AuraSeerAction.tsx"
 import useVoteAction from "./actions/VoteAction.tsx"
-import ConditionalParent from "../components/ConditionalParent.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -94,15 +93,15 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 
 	return (
 		<div className={ `perspective ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }>
-			<ConditionalParent condition={ !!tooltip } parent={ children => <Tooltip content={ tooltip } >{ children }</Tooltip> }>
+			<Tooltip content={ tooltip } classNames={ { content: tooltip ? "block" : "hidden" } }>
 				<Card
-					className={ `w-full h-[250px] border-2 border-transparent select-none ${ !p.role ? "rotate" : "" } ${ p.team ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
+					className={ `w-full h-[250px] border-2 border-transparent select-none !duration-500 ${ !p.role ? "rotate-y-180" : "rotate-y-0" } ${ p.team ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
 					isDisabled={ !p.alive } isPressable
 					onPress={ () => {
 						(isRoleActive(player, game.current) && !!action) && action()
 					} }
 				>
-					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate" : "" } py-2 font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
+					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } py-2 font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
 					<span className="flex gap-2 items-center">
 						{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
 						{ p.name }
@@ -114,7 +113,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 					</span>
 					</CardHeader>
 					<Divider/>
-					<CardBody className={ `delay-[147ms] ${ !p.role ? "rotate" : "" } overflow-hidden` }>
+					<CardBody className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } overflow-hidden` }>
 						<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) } closeDelay={ 0 }>
 							<Image
 								isBlurred isZoomed
@@ -141,7 +140,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 						<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
 					</CardFooter>
 				</Card>
-			</ConditionalParent>
+			</Tooltip>
 		</div>
 	)
 }
