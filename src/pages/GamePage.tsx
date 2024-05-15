@@ -103,6 +103,10 @@ function EndModal() {
 
 	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, () => onOpen())
 
+	useEffect(() => {
+		if(game.started) onClose()
+	}, [ game.started ])
+
 	return (
 		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started }>
 			<ModalContent>
@@ -120,6 +124,8 @@ function EndModal() {
 				<Divider/>
 				<ModalFooter className="px-4 py-2">
 					<Button size="sm" color="warning" onPress={ () => {
+						onClose()
+
 						if(player.master) reset()
 						else {
 							leave()
