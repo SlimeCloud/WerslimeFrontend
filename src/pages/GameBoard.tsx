@@ -93,54 +93,56 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 		undefined
 
 	return (
-		<ConditionalParent condition={ !!tooltip } parent={ children => <Tooltip content={ tooltip } >{ children }</Tooltip> }>
-			<Card
-				className={ `h-[250px] border-2 border-transparent select-none ${ p.team ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }  ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }
-				isDisabled={ !p.alive } isPressable
-				onPress={ () => {
-					(isRoleActive(player, game.current) && !!action) && action()
-				} }
-			>
-				<CardHeader className={ `font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
-				<span className="flex gap-2 items-center">
-					{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
-					{ p.name }
-					{ p.lover && <Heart width="15px" color="hotpink" fill="hotpink"/> }
-				</span>
-					<span className="flex gap-2 absolute right-2">
-					{ p.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
-					{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
-				</span>
-				</CardHeader>
-				<Divider/>
-				<CardBody className="overflow-hidden">
-					<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) } closeDelay={ 0 }>
-						<Image
-							isBlurred isZoomed
-							classNames={ { wrapper: "m-auto" } } className="object-cover h-[150px] hover:scale-[1.2]"
-							alt={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
-							src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
-						/>
-					</Tooltip>
-
-					{ (player.role === "WARLOCK" && p.id === player.id) &&
-						<Tooltip content={ <span>Tarnrolle: <b>{ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }</b></span> } closeDelay={ 0 }>
+		<div className={ `perspective ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }>
+			<ConditionalParent condition={ !!tooltip } parent={ children => <Tooltip content={ tooltip } >{ children }</Tooltip> }>
+				<Card
+					className={ `w-full h-[250px] border-2 border-transparent select-none ${ !p.role ? "rotate" : "" } ${ p.team ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
+					isDisabled={ !p.alive } isPressable
+					onPress={ () => {
+						(isRoleActive(player, game.current) && !!action) && action()
+					} }
+				>
+					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate" : "" } py-2 font-bold flex justify-between text-${ p.team ? teamColors.get(p.team) : "" }` }>
+					<span className="flex gap-2 items-center">
+						{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
+						{ p.name }
+						{ p.lover && <Heart width="15px" color="hotpink" fill="hotpink"/> }
+					</span>
+						<span className="flex gap-2 absolute right-2">
+						{ p.mayor && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px"/></Tooltip> }
+						{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px"/></Tooltip> }
+					</span>
+					</CardHeader>
+					<Divider/>
+					<CardBody className={ `delay-[147ms] ${ !p.role ? "rotate" : "" } overflow-hidden` }>
+						<Tooltip content={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) } closeDelay={ 0 }>
 							<Image
-								isBlurred isZoomed radius="full"
-								classNames={ { wrapper: "absolute left-1 top-1" } } className="object-cover h-[50px] hover:scale-[1.2]"
-								alt={ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }
-								src={ roleImages.get((game.roleMeta as { camouflage: Role }).camouflage) }
+								isBlurred isZoomed
+								classNames={ { wrapper: "m-auto" } } className="object-cover h-[150px] hover:scale-[1.2]"
+								alt={ roleNames.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
+								src={ roleImages.get(p.role || (p.mayor ? "MAYOR" : "UNKNOWN")) }
 							/>
 						</Tooltip>
-					}
-				</CardBody>
-				<Divider/>
-				<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
-					<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
-					<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
-				</CardFooter>
-			</Card>
-		</ConditionalParent>
+
+						{ (player.role === "WARLOCK" && p.id === player.id) &&
+							<Tooltip content={ <span>Tarnrolle: <b>{ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }</b></span> } closeDelay={ 0 }>
+								<Image
+									isBlurred isZoomed radius="full"
+									classNames={ { wrapper: "absolute left-1 top-1" } } className="object-cover h-[50px] hover:scale-[1.2]"
+									alt={ roleNames.get((game.roleMeta as { camouflage: Role }).camouflage) }
+									src={ roleImages.get((game.roleMeta as { camouflage: Role }).camouflage) }
+								/>
+							</Tooltip>
+						}
+					</CardBody>
+					<Divider/>
+					<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
+						<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
+						<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
+					</CardFooter>
+				</Card>
+			</ConditionalParent>
+		</div>
 	)
 }
 
