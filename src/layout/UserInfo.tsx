@@ -59,7 +59,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					</DropdownItem>
 
 					<DropdownItem onPress={ () => navigate(`/game/${ game.id }`) }>Zurück zur Runde</DropdownItem>
-					{ (player.master && <DropdownItem onPress={ () => reset() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
+					{ ((player.master && game.started) && <DropdownItem onPress={ () => reset() } color="warning">Runde Zurücksetzten</DropdownItem>) as never }
 					<DropdownItem color="danger" onPress={ () => {
 						leave()
 						setToken("")
