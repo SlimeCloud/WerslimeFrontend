@@ -1,5 +1,5 @@
 import { Request } from "../../hooks/useRest.ts"
-import { Divider, Image, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/react"
+import { Button, Divider, Image, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/react"
 import view from "../../assets/action/view.png"
 import { useGameState } from "../../hooks/useGameState.ts"
 import { useEffect, useState } from "react"
@@ -59,6 +59,8 @@ export default function useSeerAction(action: (req?: Request<unknown>) => void):
 					</ModalBody>
 				</ModalContent>
 			</Modal>
+
+			{ !game.interacted && <Button color="warning" className="fixed bottom-[60px] left-5 z-20" onPress={ () => action({ data: { target: "" } }) }>Überspringen</Button> }
 		</>
 	}
 }
