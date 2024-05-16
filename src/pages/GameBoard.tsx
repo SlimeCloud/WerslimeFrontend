@@ -139,7 +139,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 						}
 					</CardBody>
 					<Divider/>
-					<CardFooter className="h-[28px] overflow-hidden whitespace-nowrap text-sm py-1">
+					<CardFooter className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } h-[28px] overflow-hidden whitespace-nowrap text-sm py-1` }>
 						<Tooltip content={ `${ p.name } hat für ${ targetName } abgestimmt` }>{ targetName && (`${ game.current === "WEREWOLF" ? "☠️" : "🗳️" } ${ targetName }`) }</Tooltip>
 						<Tooltip content={ `${ p.name } hat ${ votes } Stimmen` }>{ !!votes && <span className="absolute right-2 font-bold">({ votes })</span> }</Tooltip>
 					</CardFooter>
