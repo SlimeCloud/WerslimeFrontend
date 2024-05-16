@@ -100,7 +100,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 			<Tooltip content={ tooltip } classNames={ { content: tooltip ? "block" : "hidden" } }>
 				<Card
 					className={ `w-full h-[250px] border-2 border-transparent select-none !duration-500 ${ !p.role ? "rotate-y-180" : "rotate-y-0" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
-					isDisabled={ !p.alive } isPressable
+					isDisabled={ !p.alive } isPressable disableRipple
 					onPress={ () => {
 						(isRoleActive(player, game.current) && !!action) && action()
 					} }
