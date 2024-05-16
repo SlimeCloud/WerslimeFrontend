@@ -21,7 +21,7 @@ export default function GameLobby() {
 }
 
 function PlayerList() {
-	const { delete: kick } = useRest("/games/@me/members")
+	const { del: kick } = useRest("/games/@me/members")
 	const { patch: promote } = useRest("/games/@me/members")
 	const { game } = useGameState()!
 

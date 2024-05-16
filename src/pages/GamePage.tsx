@@ -93,8 +93,8 @@ function EndModal() {
 	const { game } = useGameState()!
 
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
-	const { delete: reset } = useRest("/games/@me/session")
-	const { delete: leave } = useRest("/@me/game")
+	const { del: reset } = useRest("/games/@me/session")
+	const { del: leave } = useRest("/@me/game")
 
 	const { player } = useGameState()!
 
