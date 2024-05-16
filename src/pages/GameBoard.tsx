@@ -88,7 +88,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	const targetName = game.players.find(p => p.id === target)?.name
 
 	const [ targets ] = useContext(TargetContext)!
-	const votes = game.interactions ? Object.entries(game.interactions).filter(([, target]) => target === p.id).length : 0
+	const votes = game.interactions ? Object.entries(game.interactions).filter(([ , target ]) => target === p.id).length : 0
 	const tooltip = p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
 		targets.includes(p.id) ? "Von dir Ausgewählt" :
 		p.id === game.victim ? "Opfer der Nacht" :

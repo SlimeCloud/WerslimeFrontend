@@ -27,7 +27,7 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 	}, [ game.current ])
 
 	useEffect(() => {
-		setTargets([...selected.values()])
+		setTargets([ ...selected.values() ])
 		onClose()
 	}, [ selected ]);
 
@@ -65,7 +65,7 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 							</Card>
 						) }
 
-						<Card isPressable onPress={ () => selectedActions.setAll([...selected.entries()].filter(([, value]) => value !== target.id)) } isDisabled={ ![...selected.values()].includes(target.id) }>
+						<Card isPressable onPress={ () => selectedActions.setAll([ ...selected.entries() ].filter(([ , value ]) => value !== target.id)) } isDisabled={ ![ ...selected.values() ].includes(target.id) }>
 							<CardHeader className="font-bold flex justify-center px-5">Zurücksetzen</CardHeader>
 							<Divider/>
 							<CardBody>
