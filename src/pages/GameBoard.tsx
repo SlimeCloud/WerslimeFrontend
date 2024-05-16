@@ -10,13 +10,17 @@ import { Request, useRest } from "../hooks/useRest.ts"
 import { Suspense, useContext, useEffect, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import { Heart } from "lucide-react"
-import { Action, TargetContext } from "./actions/Action.ts"
-import useArmorAction from "./actions/AmorAction.tsx"
-import useWitchAction from "./actions/WitchAction.tsx"
-import useSeerAction from "./actions/SeerAction.tsx"
-import useHunterAction from "./actions/HunterAction.tsx"
-import useAuraSeerAction from "./actions/AuraSeerAction.tsx"
-import useVoteAction from "./actions/VoteAction.tsx"
+import { PlayerClickHandler, TargetContext } from "./actions/PlayerClickHandler.ts"
+import useSingleSelect from "./actions/useSingleSelect.tsx"
+import useMultiSelect from "./actions/useMultiSelect.tsx"
+import useMultiAction from "./actions/useMultiAction.tsx"
+import array from "../utils/array.ts"
+
+import healIcon from "../assets/action/heal.png"
+import poisonIcon from "../assets/action/poison.png"
+import viewIcon from "../assets/action/view.png"
+import shootIcon from "../assets/action/shoot.png"
+import useSingleAction from "./actions/useSingleAction.tsx"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -145,22 +149,33 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	)
 }
 
-function useInteractions(action: (req?: Request<unknown>) => void): Action | undefined {
-	const { game } = useGameState()!
+function useInteractions(action: (req?: Request<unknown>) => void): PlayerClickHandler | undefined {
+	const { game, player } = useGameState()!
 
-	const voteAction = useVoteAction(action)
-	const armorAction = useArmorAction(action)
-	const witchAction = useWitchAction(action)
-	const auraSeerAction = useAuraSeerAction(action)
-	const seerAction = useSeerAction(action)
-	const hunterAction = useHunterAction(action)
+	const voteAction = useSingleSelect(action, target => target.alive && player.alive)
+	const amorAction = useMultiSelect(action, target => target.alive && player.alive, 2)
+	const witchAction = useMultiAction(action, target => target.alive && player.alive, [
+		{ id: "HEAL", name: "Heilen", image: healIcon, condition: target => target.id === game.victim && array(game.roleMeta)?.includes("HEAL") },
+		{ id: "POISON", name: "Vergiften", image: poisonIcon, condition: target => target.id !== game.victim && array(game.roleMeta)?.includes("POISON") }
+	])
+
+	const auraSeerAction = useSingleAction(action, target => target.alive && player.alive && !target.team, {
+		id: "target", name: "Team Ansehen", image: viewIcon
+	})
+	const seerAction = useSingleAction(action, target => target.alive && player.alive && !target.role, {
+		id: "target", name: "Rolle Ansehen", image: viewIcon
+	})
+
+	const hunterAction = useSingleAction(action, target => target.alive, {
+		id: "target", name: "Schießen", image: shootIcon
+	})
 
 	switch(game.current) {
 		case "VILLAGER":
 		case "VILLAGER_ELECT":
 		case "WEREWOLF": return voteAction
 
-		case "AMOR": return armorAction
+		case "AMOR": return amorAction
 		case "WITCH": return witchAction
 		case "AURA_SEER": return auraSeerAction
 		case "WARLOCK":
