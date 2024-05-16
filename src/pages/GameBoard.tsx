@@ -92,14 +92,14 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	const tooltip = p.id === game.target ? "Aktuell Gewählt" :
 		targets.includes(p.id) ? "Von dir Ausgewählt" :
 		p.id === game.victim ? "Opfer der Nacht" :
-		p.team ? teamNames.get(p.team) :
+		p.team ? "Team: " + teamNames.get(p.team) :
 		undefined
 
 	return (
 		<div className={ `perspective ${ (isRoleActive(player, game.current) && !!action) ? "hover:scale-[1.05]" : "" }` }>
 			<Tooltip content={ tooltip } classNames={ { content: tooltip ? "block" : "hidden" } }>
 				<Card
-					className={ `w-full h-[250px] border-2 border-transparent select-none !duration-500 ${ !p.role ? "rotate-y-180" : "rotate-y-0" } ${ p.team ? "border-" + teamColors.get(p.team) : "" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
+					className={ `w-full h-[250px] border-2 border-transparent select-none !duration-500 ${ !p.role ? "rotate-y-180" : "rotate-y-0" } ${ p.id === game.victim ? "border-danger" : "" } ${ targets.includes(p.id) ? "border-[#3483eb]" : "" } ${ p.id === game.target ? "border-[gold]" : "" }` }
 					isDisabled={ !p.alive } isPressable
 					onPress={ () => {
 						(isRoleActive(player, game.current) && !!action) && action()
