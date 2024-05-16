@@ -36,7 +36,7 @@ export default function GamePage() {
 }
 
 async function playSound(sound: Sound, volume: number) {
-	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.mp3`)
+	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.ogg`)
 
 	const audio = new Audio(path.default)
 	audio.volume = sound.volume * volume
