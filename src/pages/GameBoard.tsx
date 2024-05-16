@@ -89,7 +89,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 
 	const [ targets ] = useContext(TargetContext)!
 	const votes = game.interactions ? Object.entries(game.interactions).filter(([, target]) => target === p.id).length : 0
-	const tooltip = p.id === game.target ? "Aktuell Gewählt" :
+	const tooltip = p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
 		targets.includes(p.id) ? "Von dir Ausgewählt" :
 		p.id === game.victim ? "Opfer der Nacht" :
 		p.team ? "Team: " + teamNames.get(p.team) :
