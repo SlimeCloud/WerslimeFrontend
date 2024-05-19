@@ -5,8 +5,8 @@ import { configDotenv } from "dotenv"
 configDotenv({ path: `.env.${ process.env.NODE_ENV }` })
 
 const isProduction = process.env.NODE_ENV === "production"
-const port = process.env.PORT || 5173
-const clientPort = process.env.PUBLIC_PORT || 443
+const port = process.env._PORT || 5173
+const clientPort = process.env._PUBLIC_PORT || 443
 const base = process.env._BASE || "/"
 
 const templateHtml = isProduction
