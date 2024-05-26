@@ -96,8 +96,10 @@ export function useRest<T>(route: string, {
 				Authorization: token || ""
 			}
 		}).then(res => {
+			let action
+
 			if(res.ok) {
-				parser(res).then(data => {
+				action = parser(res).then(data => {
 					setState("success")
 					setError(undefined)
 					setData(data)
@@ -106,7 +108,7 @@ export function useRest<T>(route: string, {
 					if(request.onSuccess) request.onSuccess(data)
 				})
 			} else {
-				res.json().then(data => {
+				action = res.json().then(data => {
 					setState("error")
 					setError(data as ErrorResponse)
 					setData(undefined)
@@ -115,6 +117,17 @@ export function useRest<T>(route: string, {
 					if(request.onError) request.onError(data)
 				})
 			}
+
+			action.catch(() => {
+				const error = { status: res.status, type: "UNKNOWN" } as ErrorResponse
+
+				setState("error")
+				setError(error)
+				setData(undefined)
+
+				if(onError) onError(error)
+				if(request.onError) request.onError(error)
+			})
 		}).catch(() => {
 			if(signal.reason === "Cancel") setState("idle")
 			else {
