@@ -27,7 +27,7 @@ export default function OAuth2Page() {
 				code: code
 			}
 		})
-	}, [ ])
+	}, [])
 
 	return <CircularProgress className="m-auto"/>
 }

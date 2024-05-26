@@ -36,7 +36,7 @@ export default function GamePage() {
 }
 
 async function playSound(sound: Sound, volume: number) {
-	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.mp3`)
+	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.ogg`)
 
 	const audio = new Audio(path.default)
 	audio.volume = sound.volume * volume
@@ -93,8 +93,8 @@ function EndModal() {
 	const { game } = useGameState()!
 
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
-	const { delete: reset } = useRest("/games/@me/session")
-	const { delete: leave } = useRest("/@me/game")
+	const { del: reset } = useRest("/games/@me/session")
+	const { del: leave } = useRest("/@me/game")
 
 	const { player } = useGameState()!
 

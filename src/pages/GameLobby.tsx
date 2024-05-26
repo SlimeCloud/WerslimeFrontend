@@ -21,7 +21,7 @@ export default function GameLobby() {
 }
 
 function PlayerList() {
-	const { delete: kick } = useRest("/games/@me/members")
+	const { del: kick } = useRest("/games/@me/members")
 	const { patch: promote } = useRest("/games/@me/members")
 	const { game } = useGameState()!
 
@@ -147,20 +147,24 @@ function Settings() {
 
 							<div>
 								<h3>Sonstiges</h3>
-								<BooleanProperty disabled={ disabled } property="isPublic" update={ update }
+								<BooleanProperty
+									disabled={ disabled } property="isPublic" update={ update }
 									name={ <>Öffentlich</> }
 									description={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }
 								/>
-								<BooleanProperty disabled={ disabled } property="revealDeadRoles" update={ update }
+								<BooleanProperty
+									disabled={ disabled } property="revealDeadRoles" update={ update }
 									name={ <>Tote Rollen anzeigen</> }
 									description={ <>Rollen von Toten werden für alle angezeigt</> }
 								/>
 
-								<BooleanProperty disabled={ disabled } property="deadSpectators" update={ update }
+								<BooleanProperty
+									disabled={ disabled } property="deadSpectators" update={ update }
 									name={ <>Tote Zuschauer</> }
 									description={ <>Tote können die Rollen Aller sehen</> }
 								/>
-								<BooleanProperty disabled={ disabled } property="revealLoverRoles" update={ update }
+								<BooleanProperty
+									disabled={ disabled } property="revealLoverRoles" update={ update }
 									name={ <>Zeige Verliebten Rolle</> }
 									description={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }
 								/>

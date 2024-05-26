@@ -20,7 +20,7 @@ export interface RestRoute<T> {
 	post: (data?: Request<T>) => void
 	put: (data?: Request<T>) => void
 	patch: (data?: Request<T>) => void
-	delete: (data?: Request<T>) => void
+	del: (data?: Request<T>) => void
 
 	reset: () => void
 	cancel: () => void
@@ -57,6 +57,7 @@ export function useRest<T>(route: string, {
 	cache = true,
 	timeout = 10,
 	delay = 0,
+	authorization,
 	onError,
 	onSuccess
 }: {
@@ -65,6 +66,7 @@ export function useRest<T>(route: string, {
 	cache?: boolean,
 	timeout?: number,
 	delay?: number,
+	authorization?: string,
 	onError?: (error: ErrorResponse) => void,
 	onSuccess?: (data: T) => void
 } = {}): RestRoute<T> {
@@ -93,7 +95,7 @@ export function useRest<T>(route: string, {
 			method: method,
 			body: request.data && JSON.stringify(request.data),
 			headers: {
-				Authorization: token || ""
+				Authorization: authorization || token || ""
 			}
 		}).then(res => {
 			let action
@@ -115,6 +117,15 @@ export function useRest<T>(route: string, {
 
 					if(onError) onError(data)
 					if(request.onError) request.onError(data)
+				}).catch(() => {
+					const error = { status: res.status, type: "UNKNOWN" } as ErrorResponse
+
+					setState("error")
+					setError(error)
+					setData(undefined)
+
+					if(onError) onError(error)
+					if(request.onError) request.onError(error)
 				})
 			}
 
@@ -131,10 +142,12 @@ export function useRest<T>(route: string, {
 		}).catch(() => {
 			if(signal.reason === "Cancel") setState("idle")
 			else {
-				setState("error")
-
 				const error = { status: 0, type: "TIMEOUT" } as ErrorResponse
+
+				setState("error")
 				setError(error)
+				setData(undefined)
+
 				if(onError) onError(error)
 				if(request.onError) request.onError(error)
 			}
@@ -162,7 +175,7 @@ export function useRest<T>(route: string, {
 		post: (request: Request<T> = {}) => execute("POST", request),
 		put: (request: Request<T> = {}) => execute("PUT", request),
 		patch: (request: Request<T> = {}) => execute("PATCH", request),
-		delete: (request: Request<T> = {}) => execute("DELETE", request),
+		del: (request: Request<T> = {}) => execute("DELETE", request),
 
 		reset: reset,
 		cancel: () => abort.current?.abort("Cancel"),
