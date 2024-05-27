@@ -2,7 +2,7 @@ import { GameStateContext, useGameState, useGameStateRequest } from "../hooks/us
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
-import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, CardHeader, CircularProgress, Divider, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, Spacer, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
 import { FormEvent, useEffect, useMemo } from "react";
 import { useToken } from "../hooks/useToken.ts";
@@ -17,7 +17,8 @@ import { Game } from "../types/Game.ts"
 import { useEvent } from "../hooks/useEvent.ts"
 import { Sound } from "../types/Sound.ts"
 import { useVolume } from "../hooks/useVolume.ts"
-import { Role, roleImages } from "../types/Role.ts"
+import { Team, teamImages, teamNames } from "../types/Team.ts"
+import { Player } from "../types/Player.ts"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -101,7 +102,7 @@ function EndModal() {
 	const navigate = useNavigate()
 	const { setToken } = useToken()
 
-	const winner = useServerValue<{ winner: Role } | undefined>("END", undefined, () => onOpen())
+	const winner = useServerValue<{ winner: Team, players: Player[] } | undefined>("END", undefined, () => onOpen())
 
 	useEffect(() => {
 		if(game.started) onClose()
@@ -112,14 +113,23 @@ function EndModal() {
 			<ModalContent>
 				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
 				<Divider/>
-				<ModalBody className="p-5 flex flex-row">
-					<Image width="25px" alt="Gewinner-Icon" src={ roleImages.get(winner?.winner || "VILLAGER") }/>
-					{
-						winner?.winner === "WEREWOLF" ? <><b>Die Werwölfe</b> haben</> :
-						winner?.winner === "JESTER" ? <><b>Der Narr</b> hat</> :
-						winner?.winner === "LOVER" ? <><b>Die Verliebten</b> hat</> :
-						<><b>Das Dorf</b> hat</>
-					} {' '} die Runde gewonnen!
+				<ModalBody>
+					<div className="p-5 flex flex-row gap-3">
+						<Image width="25px" alt="Gewinner-Icon" src={ teamImages.get(winner?.winner || "VILLAGE") }/>
+						<b>{ teamNames.get(winner?.winner || "VILLAGE") }</b> haben die Runde gewonnen!
+					</div>
+
+					<h2 className="underline">Gewinner</h2>
+					<ul>
+						{ winner?.players.map(player =>
+							<span key={ player.id } className={ `flex gap-2 items-center ${ player.id === player.id ? "font-bold" : "" }` }>
+								<span>-</span>
+								{ player.avatar && <Avatar size="sm" src={ player.avatar } className="transition-transform h-[25px] w-[25px]"/> }
+								{ player.name }
+							</span>
+						) }
+					</ul>
+					<Spacer/>
 				</ModalBody>
 				<Divider/>
 				<ModalFooter className="px-4 py-2">

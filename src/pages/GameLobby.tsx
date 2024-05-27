@@ -4,7 +4,7 @@ import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import { ReactNode, useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
-import { Role, roleDescriptions, roleNames, roleTeams, teamColors, teamNames } from "../types/Role.ts"
+import { Role, roleDescriptions, roleNames } from "../types/Role.ts"
 import { Player } from "../types/Player.ts"
 import ConditionalParent from "../components/ConditionalParent.tsx"
 import ErrorModal from "../components/ErrorModal.tsx"
@@ -70,8 +70,8 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 				placement="right" className="font-bold"
 				content={
 					p.id === player.id ? "Du" :
-						p.master ? "Spiel-Leiter" :
-							<>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</>
+					p.master ? "Spiel-Leiter" :
+					<>Mitspieler{ p.connected ? "" : <span className="text-default"> (Verbindung getrennt)</span> }</>
 				}
 			>
 				<span className={ `flex gap-2 items-center ${ p.id === player.id ? "font-bold" : "" }` }>
@@ -130,14 +130,9 @@ function Settings() {
 										isDisabled={ disabled }
 									>
 										{ [ ...roleDescriptions.entries() ].map(([ role, description ]) =>
-											<Tooltip key={ role } shouldFlip={ false } placement="right" content={
-												<div className="flex flex-col">
-													<span>{ description }</span>
-													<span className={ `text-${ teamColors.get(roleTeams.get(role)!) }` }>({ teamNames.get(roleTeams.get(role)!) })</span>
-												</div>
-											}>
+											<Tooltip key={ role } shouldFlip={ false } placement="right" content={ description }>
 												<div className="w-fit">
-													<Checkbox color={ teamColors.get(roleTeams.get(role)!) } value={ role }>{ roleNames.get(role) }</Checkbox>
+													<Checkbox value={ role }>{ roleNames.get(role) }</Checkbox>
 												</div>
 											</Tooltip>
 										) }

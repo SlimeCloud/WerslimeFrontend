@@ -1,7 +1,7 @@
 import neutral from "../assets/roles/default.png"
 import villager from "../assets/roles/villager.png"
 import warlock from "../assets/roles/warlock.png"
-import wolf from "../assets/roles/wolf.png"
+import wolf from "../assets/roles/werslime.png"
 import witch from "../assets/roles/witch.png"
 import hunter from "../assets/roles/hunter.png"
 import jester from "../assets/roles/jester.png"
@@ -13,12 +13,9 @@ import mayor from "../assets/roles/mayor.png"
 import { ReactNode } from "react"
 import { Player } from "./Player.ts"
 
-export type Team = "VILLAGE" | "HOSTILE" | "NEUTRAL"
-
 export type Role =
 	"UNKNOWN" |
 	"MAYOR" |
-	"LOVER" |
 	"VILLAGER_ELECT" |
 
 	"AMOR" |
@@ -47,31 +44,6 @@ export const roleNames = new Map<Role, string>([
 	[ "HUNTER", "Jäger" ],
 	[ "JESTER", "Narr" ],
 	[ "SPY", "Spion" ]
-])
-
-export const roleTeams = new Map<Role, Team>([
-	[ "AMOR", "VILLAGE" ],
-	[ "SEER", "VILLAGE" ],
-	[ "AURA_SEER", "VILLAGE" ],
-	[ "WARLOCK", "HOSTILE" ],
-	[ "WEREWOLF", "HOSTILE" ],
-	[ "WITCH", "VILLAGE" ],
-	[ "VILLAGER", "VILLAGE" ],
-	[ "HUNTER", "VILLAGE" ],
-	[ "JESTER", "NEUTRAL" ],
-	[ "SPY", "HOSTILE" ]
-])
-
-export const teamColors = new Map<Team, "primary" | "warning" | "danger">([
-	[ "VILLAGE", "primary" ],
-	[ "NEUTRAL", "warning" ],
-	[ "HOSTILE", "danger" ]
-])
-
-export const teamNames = new Map<Team, string>([
-	[ "VILLAGE", "Dorf" ],
-	[ "NEUTRAL", "Neutral" ],
-	[ "HOSTILE", "Feindlich" ]
 ])
 
 export const roleImages = new Map<Role, string>([

@@ -56,16 +56,16 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 					<ModalHeader className="py-3 font-bold flex justify-center text-xl">Wähle eine Aktion</ModalHeader>
 					<ModalBody className="grid grid-cols-3 gap-2 px-10 py-5">
 						{ actions.map(action =>
-							<Card key={ action.id } className={ `border-2 border-transparent ${ selected.get(action.id) === target.id ? "border-[gold]" : "" }` } isPressable onPress={ () => selectedActions.set(action.id, target.id) } isDisabled={ selected.get(action.id) === target.id || (action.condition && !action.condition(target)) }>
+							<Card key={ action.id } className={ `${ !(selected.get(action.id) === target.id || (action.condition && !action.condition(target))) ? "hover:scale-[1.05]" : "" } border-2 bg-default-100 border-transparent ${ selected.get(action.id) === target.id ? "border-[gold]" : "" }` } isPressable onPress={ () => selectedActions.set(action.id, target.id) } isDisabled={ selected.get(action.id) === target.id || (action.condition && !action.condition(target)) }>
 								<CardHeader className="font-bold flex justify-center px-5 whitespace-nowrap">{ action.name }</CardHeader>
 								<Divider/>
 								<CardBody>
-									<Image src={ action.image } alt={ action.name } width="100%"/>
+									<Image src={ action.image } alt={ action.name } width="100%" className="pixel"/>
 								</CardBody>
 							</Card>
 						) }
 
-						<Card isPressable onPress={ () => selectedActions.setAll([ ...selected.entries() ].filter(([ , value ]) => value !== target.id)) } isDisabled={ ![ ...selected.values() ].includes(target.id) }>
+						<Card className={ `${ [ ...selected.values() ].includes(target.id) ? "hover:scale-[1.05]" : "" } bg-default-100` } isPressable onPress={ () => selectedActions.setAll([ ...selected.entries() ].filter(([ , value ]) => value !== target.id)) } isDisabled={ ![ ...selected.values() ].includes(target.id) }>
 							<CardHeader className="font-bold flex justify-center px-5">Zurücksetzen</CardHeader>
 							<Divider/>
 							<CardBody>

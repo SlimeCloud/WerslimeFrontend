@@ -47,11 +47,11 @@ export default function useSingleAction(action: (req?: Request<unknown>) => void
 					<ModalHeader className="py-3 font-bold flex justify-center text-xl">Wähle eine Aktion</ModalHeader>
 					<ModalBody className="grid grid-cols-3 gap-2 px-10 py-5">
 						<span/>
-						<Card className="mx-auto" isPressable onPress={ () => setSelected(target.id) } isDisabled={ actions.condition && !actions.condition(target) }>
+						<Card className="hover:scale-[1.05] mx-auto bg-default-100" isPressable onPress={ () => setSelected(target.id) } isDisabled={ actions.condition && !actions.condition(target) }>
 							<CardHeader className="font-bold flex justify-center px-5 whitespace-nowrap">{ actions.name }</CardHeader>
 							<Divider/>
 							<CardBody>
-								<Image src={ actions.image } alt={ actions.name } width="100%"/>
+								<Image src={ actions.image } alt={ actions.name } width="100%" className="pixel"/>
 							</CardBody>
 						</Card>
 					</ModalBody>

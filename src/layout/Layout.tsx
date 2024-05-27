@@ -11,9 +11,9 @@ export default function Layout() {
 	const request = useRest<GameState>("/@me", { auto: true })
 
 	return (
-		<div className="w-screen h-screen gap-4 h-md:gap-12 h-lg:gap-24 flex flex-col items-start justify-center">
+		<div className="w-screen h-screen gap-5 h-md:md:gap-12 flex flex-col items-start justify-center">
 			<Navigation gameState={ request.data }/>
-			<div className="w-[95vw] lg:w-[80vw] mx-auto flex-grow flex gap-5 md:gap-20 justify-center flex-col md:flex-row overflow-auto p-5">
+			<div className="w-[98vw] lg:w-[80vw] mx-auto flex-grow flex gap-5 md:gap-20 justify-center flex-col md:flex-row overflow-auto p-5">
 				<Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Seite"/> }>
 					{ request.state === "loading" ? <CircularProgress className="m-auto" aria-label="Lade letztes Spiel"/> :
 						<GameStateContext.Provider value={ request.data }>

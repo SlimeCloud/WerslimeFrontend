@@ -4,7 +4,7 @@ import ErrorModal from "../components/ErrorModal.tsx"
 import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, ScrollShadow, Skeleton, useDisclosure } from "@nextui-org/react"
 import { Game } from "../types/Game.ts"
 import { RefreshCw } from "lucide-react"
-import { roleDescriptions, roleNames, roleTeams, teamColors } from "../types/Role.ts"
+import { roleDescriptions, roleNames } from "../types/Role.ts"
 import { Link } from "react-router-dom"
 
 export default function GameListPage() {
@@ -57,7 +57,7 @@ function GameInfo({ state, game }: { state: RequestState, game: Game }) {
 							isReadOnly={ true }
 						>
 							{ [ ...roleDescriptions.keys() ].map(role =>
-								<Checkbox color={ teamColors.get(roleTeams.get(role)!) } key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
+								<Checkbox key={ role } value={ role }>{ roleNames.get(role) }</Checkbox>
 							) }
 						</CheckboxGroup>
 					</Skeleton>

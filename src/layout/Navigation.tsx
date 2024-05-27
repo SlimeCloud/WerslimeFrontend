@@ -1,10 +1,8 @@
-import { Link, Navbar, NavbarBrand, NavbarContent, Switch } from "@nextui-org/react";
+import { Link, Navbar, NavbarBrand, NavbarContent } from "@nextui-org/react";
 import { NavLink } from "react-router-dom"
 import icon from "../assets/icon.png"
 import NavEntry from "./NavEntry.tsx";
-import { Moon, Sun } from "lucide-react";
-import { useDarkMode } from "../hooks/useDarkMode.ts";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { GameState } from "../types/GameState.ts";
 import { useLocation } from "react-router";
 
@@ -12,12 +10,6 @@ const UserInfo = lazy(() => import("./UserInfo.tsx"));
 
 export default function Navigation({ gameState }: { gameState?: GameState }) {
 	const { pathname } = useLocation()
-	const { darkMode, setDarkMode } = useDarkMode()
-
-	useEffect(() => {
-		if(darkMode) document.body.classList.add("dark")
-		else document.body.classList.remove("dark")
-	}, [ darkMode ])
 
 	return (
 		<Navbar maxWidth="full" height="50px" className="select-none" isBordered>
@@ -38,12 +30,6 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 			</NavbarContent>
 
 			<NavbarContent justify="end">
-				<Switch
-					size="md" color="success"
-					startContent={ <Sun/> }
-					endContent={ <Moon/> }
-					isSelected={ darkMode } onValueChange={ setDarkMode }
-				/>
 				<Suspense>
 					{ gameState?.game && <UserInfo gameState={ gameState }/> }
 				</Suspense>
