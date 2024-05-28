@@ -1,10 +1,11 @@
+@import "font.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .pixel {
 	image-rendering: pixelated;
-	image-rendering: crisp-edges;
 }
 
 .perspective {

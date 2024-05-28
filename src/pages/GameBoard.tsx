@@ -44,7 +44,7 @@ export default function GameBoard() {
 
 	return (
 		<TargetContext.Provider value={ targets }>
-			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10">
+			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10 font-minecraft">
 				<span className="flex flex-row gap-2 mx-auto">Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b></span>
 				{ !player.alive && <span className="mx-auto font-bold text-danger flex gap-2"><Image src={ kill } width="30px"/> Du bist tot</span> }
 			</div>
@@ -75,7 +75,7 @@ function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 
 	return (
 		<>
-			<div className={ `grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full h-full mb-auto rounded-[20px] p-5 ${ (isRoleActive(player, game.current) && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
+			<div className={ `font-minecraft grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full h-full mb-auto rounded-[20px] p-5 ${ (isRoleActive(player, game.current) && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
 				{ game.players.map(p => <PlayerCard key={ p.id } p={ p } action={ action?.execute(p) }/>) }
 			</div>
 

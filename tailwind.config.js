@@ -35,6 +35,9 @@ export default {
 			screens: {
 				"h-md": { "raw": "(height >= 650px)" },
 				"h-lg": { "raw": "(height >= 800px)" }
+			},
+			fontFamily: {
+				"minecraft": "Minecraft, sans-serif"
 			}
 		}
 	},
