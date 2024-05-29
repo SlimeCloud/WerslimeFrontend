@@ -45,7 +45,7 @@ export default function GameBoard() {
 
 	return (
 		<TargetContext.Provider value={ targets }>
-			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10 font-minecraft">
+			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10 font-minecraft select-none">
 				<span className="flex flex-row gap-2 mx-auto">Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b></span>
 				{ !player.alive && <span className="mx-auto font-bold text-danger flex gap-2"><Image src={ kill } width="30px"/> Du bist tot</span> }
 			</div>
