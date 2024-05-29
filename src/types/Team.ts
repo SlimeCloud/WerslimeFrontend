@@ -11,7 +11,7 @@ export type Team =
 
 export const teamNames = new Map<Team, string>([
 	[ "JESTER", "Der Narr" ],
-	[ "LOVER", "Das Verliebten" ],
+	[ "LOVER", "Das Verliebten-Paar" ],
 	[ "WEREWOLF", "Das Werslime-Rudel" ],
 	[ "VILLAGE", "Das Dorf" ]
 ])

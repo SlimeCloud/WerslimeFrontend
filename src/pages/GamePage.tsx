@@ -110,12 +110,12 @@ function EndModal() {
 	}, [ game.started ])
 
 	return (
-		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started } backdrop="blur">
+		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started } size="2xl" backdrop="blur">
 			<ModalContent>
 				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
 				<Divider/>
 				<ModalBody>
-					<div className="p-5 flex gap-1">
+					<div className="p-3 flex gap-1">
 						<Image width="25px" alt="Gewinner-Icon" src={ teamImages.get(winner?.winner || "VILLAGE") }/>
 						<b>{ teamNames.get(winner?.winner || "VILLAGE") }</b>
 						hat die Runde gewonnen!
