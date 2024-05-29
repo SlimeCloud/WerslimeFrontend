@@ -3,6 +3,7 @@ import lover from "../assets/modifier/lover.png"
 import victim from "../assets/modifier/victim.png"
 import vote from "../assets/action/vote.png"
 import kill from "../assets/action/kill.png"
+import anvil from "../assets/action/anvil.png"
 import healIcon from "../assets/action/heal.png"
 import poisonIcon from "../assets/action/poison.png"
 import viewIcon from "../assets/action/view.png"
@@ -145,7 +146,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 					</CardBody>
 					<Divider/>
 					<CardFooter className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } h-[28px] overflow-hidden whitespace-nowrap text-sm py-1` }>
-						{ !!targetName && <Tooltip content={ <span className="block">{ p.name } hat für <b>{ targetName }</b> abgestimmt</span> }><span className="flex gap-2 items-center">{ game.current === "WEREWOLF" ? <Image src={ kill } width="20px"/> : <Image src={ vote } width="20px" className="pixel"/> } { targetName }</span></Tooltip> }
+						{ !!targetName && <Tooltip content={ <span className="block">{ p.name } hat für <b>{ targetName }</b> abgestimmt</span> }><span className="flex gap-2 items-center">{ game.current === "WEREWOLF" ? <Image src={ kill } width="20px"/> : game.current === "VILLAGER" ? <Image src={ anvil } width="20px"/> : <Image src={ vote } width="20px" className="pixel"/> } { targetName }</span></Tooltip> }
 						{ !!votes && <Tooltip content={ <span className="block">{ p.name } hat <b>{ votes }</b> Stimmen</span> }><span className="absolute right-2 font-bold">({ votes })</span></Tooltip> }
 					</CardFooter>
 				</Card>
