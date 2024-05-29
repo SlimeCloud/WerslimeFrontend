@@ -171,9 +171,9 @@ function useInteractions(action: (req?: Request<unknown>) => void): PlayerClickH
 	const seerAction = useSingleAction(action, target => target.alive && player.alive && !target.role, {
 		id: "target", name: "Rolle Ansehen", image: viewIcon
 	})
-	const warlockAction = useMultiAction(action, target => target.alive && player.alive && !target.role, [
-		{ id: "VIEW", name: "Rolle Ansehen", image: viewIcon },
-		{ id: "MARK", name: "Markieren", image: markIcon }
+	const warlockAction = useMultiAction(action, target => target.alive && player.alive, [
+		{ id: "VIEW", name: "Rolle Ansehen", image: viewIcon, condition: p => !p.role },
+		{ id: "MARK", name: "Markieren", image: markIcon, condition: () => game.roleMeta && (game.roleMeta as { targetLimit: number }).targetLimit > 0 }
 	])
 
 	const hunterAction = useSingleAction(action, target => target.alive, {
