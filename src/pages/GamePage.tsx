@@ -37,8 +37,8 @@ export default function GamePage() {
 	)
 }
 
-async function playSound(sound: Sound, volume: number) {
-	const path = await import(`../assets/sounds/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.ogg`)
+async function playSound(directory: string, sound: Sound, volume: number) {
+	const path = await import(`../assets/sounds/${ directory }/${ sound.sound.toLocaleLowerCase() }${ sound.variant >= 0 ? `_${ sound.variant }` : "" }.ogg`)
 
 	const audio = new Audio(path.default)
 	audio.volume = sound.volume * volume
@@ -53,7 +53,7 @@ function GameDisplay({ defaultValue }: { defaultValue: GameState }) {
 	const state = useServerValue("UPDATE", defaultValue)
 
 	const { volume } = useVolume()
-	useEvent<Sound>("SOUND", sound => playSound(sound, volume / 100))
+	useEvent<Sound>("SOUND", sound => playSound("event", sound, volume / 100))
 
 	useEffect(() => {
 		set(state)
@@ -103,7 +103,10 @@ function EndModal() {
 	const navigate = useNavigate()
 	const { setToken } = useToken()
 
-	const winner = useServerValue<{ winner: Team, players: string[] } | undefined>("END", undefined, () => onOpen())
+	const winner = useServerValue<{ winner: Team, players: string[] } | undefined>("END", undefined, value => {
+		playSound("win", { sound: value!.winner.toLowerCase(), volume: 1, variant: -1 }, 0.5)
+		onOpen()
+	})
 
 	useEffect(() => {
 		if(game.started) onClose()
