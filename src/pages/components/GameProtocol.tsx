@@ -36,9 +36,9 @@ export default function GameProtocol({ game, className }: { game: Game, classNam
 
 function Entry({ game, entry }: { game: Game, entry: ProtocolEntry }) {
 	return (
-		<span key={ entry.id } className="flex gap-2 items-center">
+		<li key={ entry.id } className="flex gap-2 items-center">
 			{ formatEntry(game, entry) }
-		</span>
+		</li>
 	)
 }
 

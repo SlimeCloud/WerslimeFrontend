@@ -131,10 +131,10 @@ function EndModal() {
 							<CardBody>
 								<ul>
 									{ game.players.map(p =>
-										<span key={ p.id } className={ `flex gap-2 items-center` }>
+										<li key={ p.id } className={ `flex gap-2 items-center` }>
 											<span>-</span>
 											<PlayerName bold={ p.id === player.id } color={ winner?.players.includes(p.id) && "[gold]" } player={ p } role/>
-										</span>
+										</li>
 									) }
 								</ul>
 							</CardBody>
