@@ -68,7 +68,7 @@ export default function GameBoard() {
 				<ModalBody className="p-5">Du bist gestorben. Du kannst das Spielgeschehen weiter beobachten und in der nächsten Runde wieder mitspielen!</ModalBody>
 			</EventModal>
 
-			{ (game.settings.storyMode && player.master) && <MasterProtocol/> }
+			{ ((game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators)) && <MasterProtocol/> }
 		</TargetContext.Provider>
 	)
 }
