@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { Request } from "../../hooks/useRest.ts"
 import { Button } from "@nextui-org/react"
 import { useGameState } from "../../hooks/useGameState.ts"
@@ -11,14 +11,10 @@ export default function useMultiSelect(action: (req?: Request<unknown>) => void,
 	const [ , setTargets ] = useContext(TargetContext)!
 	const [ selected, setSelected ] = useState([] as string[])
 
-	useEffect(() => {
-		setSelected([])
-	}, [ game.current ])
-
 	function confirm() {
 		action({
 			data: { targets: selected },
-			onSuccess: () => setSelected([])
+			onSuccess: () => setTargets([])
 		})
 	}
 
