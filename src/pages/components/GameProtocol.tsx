@@ -47,7 +47,7 @@ function formatEntry(game: Game, entry: ProtocolEntry): ReactNode {
 		case "START": return <><CirclePlay className="text-primary" width="20px"/> Spiel gestartet</>
 		case "DEATH": return <><Image src={ dead } width="20px"/><PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> ist gestorben ({ killReasonNames.get(entry.data[1] as never) })</>
 		case "END": return <><CircleStop className="text-danger" width="20px"/> Spiel beendet</>
-		case "AMOR": return <><Image src={ love } width="20px"/>Amor <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[0] as never }/>, <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[1] as never }/></>
+		case "AMOR": return <><Image src={ love } width="20px"/>Amor verliebt <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[0] as never }/> und <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[1] as never }/></>
 		case "SEER": return <><Image src={ viewIcon } width="20px"/> Seherin schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
 		case "AURA_SEER": return <><Image src={ viewIcon } width="20px"/> Aura-Seher schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
 		case "WARLOCK_VIEW": return <><Image src={ viewIcon } width="20px"/> Hexenmeister schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>

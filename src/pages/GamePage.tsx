@@ -113,7 +113,7 @@ function EndModal() {
 	}, [ game.started ])
 
 	return (
-		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started } size="2xl" backdrop="blur">
+		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } isDismissable={ !game.started } hideCloseButton={ game.started } size="5xl" backdrop="blur">
 			<ModalContent>
 				<ModalHeader className="py-3">Spiel Beendet</ModalHeader>
 				<Divider/>
@@ -124,7 +124,7 @@ function EndModal() {
 						hat die Runde gewonnen!
 					</div>
 
-					<div className="flex gap-5 flex-col md:flex-row mb-5">
+					<div className="flex gap-5 flex-col md:flex-row mb-5 max-h-[60vh] overflow-auto">
 						<Card className="bg-default-100">
 							<CardHeader className="font-bold py-2">Spieler</CardHeader>
 							<Divider/>

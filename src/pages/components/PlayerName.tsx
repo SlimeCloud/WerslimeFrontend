@@ -16,7 +16,7 @@ export default function PlayerName({ player, role = false, modifier = true, bold
 				</Tooltip> }
 
 				{ modifier && <>
-					{ player.modifiers.includes("LOVER") && <Tooltip content="Verliebt"><Image alt="Verliebt" src={ lover } width="20px" className="pixel"/></Tooltip> }
+					{ player.modifiers.includes("LOVER") && <Tooltip content="Verliebt"><Image alt="Verliebt" src={ lover } width="25px" className="pixel"/></Tooltip> }
 					{ player.modifiers.includes("MAYOR") && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px" className="pixel"/></Tooltip> }
 				</>}
 			</span>
