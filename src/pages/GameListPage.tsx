@@ -37,8 +37,8 @@ export default function GameListPage() {
 
 function GameInfo({ state, game }: { state: RequestState, game: Game }) {
 	return (
-		<Link to={ `/game/${ game.id }` }>
-			<Card key={ game.id } className="flex-shrink-0 bg-default-100 mx-5 hover:scale-x-[1.025]">
+		<Link key={ game.id } to={ `/game/${ game.id }` }>
+			<Card className="flex-shrink-0 bg-default-100 mx-5 hover:scale-x-[1.025]">
 				<CardHeader className="flex justify-between">
 					<Skeleton isLoaded={ state === "success" } className="rounded-lg px-2">
 						<div className="font-bold h-6">{ game.players.find(p => p.master)?.name }</div>
