@@ -63,14 +63,16 @@ function GameInfo({ state, game }: { state: RequestState, game: Game }) {
 						</CheckboxGroup>
 					</Skeleton>
 
-					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow md:w-1/3">
+					<Skeleton isLoaded={state === "success"} className="rounded-lg flex-grow md:w-1/3">
 						<h3 className="font-bold">Einstellungen</h3>
-						<SettingsDisplay game={ game } disabled update={ () => {} }/>
+						<ul className="flex flex-col flex-wrap gap-2 max-h-56">
+							<SettingsDisplay game={ game } readOnly update={() => {}}/>
+						</ul>
 					</Skeleton>
 
-					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow md:w-1/3">
+					<Skeleton isLoaded={state === "success"} className="rounded-lg flex-grow md:w-1/3">
 						<h3 className="font-bold">Spieler</h3>
-						<ul className="flex flex-col flex-wrap gap-1 max-h-56">
+						<ul className="flex flex-col flex-wrap gap-2 max-h-56">
 							{ game.players.slice(0, 8).map(player =>
 								<li key={ player.id }>
 									{ player.name }
