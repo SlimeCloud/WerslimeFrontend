@@ -27,7 +27,7 @@ export default function GameListPage() {
 				<ScrollShadow className="flex flex-col gap-5">
 					{ data && <>
 						{ data.length === 0 && <i className="mx-auto">Keine Öffentlichen Runden</i> }
-						{ data?.map(game => <GameInfo state={ state } game={ game }/> ) }
+						{ data?.map(game => <GameInfo key={ game.id } state={ state } game={ game }/> ) }
 					</> }
 				</ScrollShadow>
 				{ state === "error" && <ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/> }
