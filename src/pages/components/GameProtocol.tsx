@@ -12,7 +12,6 @@ import markIcon from "../../assets/action/mark.png"
 import { killReasonNames, ProtocolEntry } from "../../types/GameProtocol.ts"
 import { Card, CardBody, CardHeader, Divider, Image, ScrollShadow } from "@nextui-org/react"
 import { ReactNode } from "react"
-import { teamImages, teamNames } from "../../types/Team.ts"
 import { Game } from "../../types/Game.ts"
 import PlayerName from "./PlayerName.tsx"
 import { CirclePlay, CircleStop } from "lucide-react"
@@ -46,7 +45,7 @@ function formatEntry(game: Game, entry: ProtocolEntry): ReactNode {
 	switch(entry.type) {
 		case "START": return <><CirclePlay className="text-primary" width="20px"/> Spiel gestartet</>
 		case "DEATH": return <><Image src={ dead } width="20px"/><PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> ist gestorben ({ killReasonNames.get(entry.data[1] as never) })</>
-		case "END": return <><CircleStop className="text-danger" width="20px"/> Spiel beendet, Gewinner: <Image src={ teamImages.get(entry.data[0] as never) } width="30px"/>{ teamNames.get(entry.data[0] as never) }</>
+		case "END": return <><CircleStop className="text-danger" width="20px"/> Spiel beendet</>
 		case "AMOR": return <><Image src={ love } width="20px"/>Amor <PlayerName modifier={ false } bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/>, <PlayerName modifier={ false } bold player={ game.players.find(p => p.id === entry.data[1] as never)! }/></>
 		case "SEER": return <><Image src={ viewIcon } width="20px"/> Seherin <PlayerName bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
 		case "AURA_SEER": return <><Image src={ viewIcon } width="20px"/> Aura-Seher <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
