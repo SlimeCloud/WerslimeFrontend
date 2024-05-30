@@ -163,6 +163,12 @@ function Settings() {
 									name={ <>Zeige Verliebten Rolle</> }
 									description={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }
 								/>
+
+								<BooleanProperty
+									disabled={ disabled } property="storyMode" update={ update }
+									name={ <>Story-Mode</> }
+									description={ <>Der Spiel-Leiter spielt nicht sondern ist von Beginn an Zuschauer</> }
+								/>
 							</div>
 
 							{ game.discord ?

@@ -2,13 +2,14 @@ import { Role } from "./Role.ts"
 
 export interface GameSettings {
 	werewolfAmount: number
+	muteSystem: MuteSystem
 	roles: Role[]
 
 	isPublic: boolean
 	revealDeadRoles: boolean
 	deadSpectators: boolean
 	revealLoverRoles: boolean
-	muteSystem: MuteSystem
+	storyMode: boolean
 }
 
 export type MuteSystem =

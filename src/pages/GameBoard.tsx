@@ -1,5 +1,3 @@
-import mayor from "../assets/modifier/mayor.png"
-import lover from "../assets/modifier/lover.png"
 import victim from "../assets/modifier/victim.png"
 import vote from "../assets/icon/vote.png"
 import dead from "../assets/icon/dead.png"
@@ -11,7 +9,7 @@ import shootIcon from "../assets/action/shoot.png"
 import markIcon from "../assets/action/mark.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
 import { getEffectiveRole, Player } from "../types/Player.ts"
 import { isRoleActive, Role, roleImages, roleNames } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
@@ -25,6 +23,10 @@ import useMultiAction from "./actions/useMultiAction.tsx"
 import array from "../utils/array.ts"
 import useSingleAction from "./actions/useSingleAction.tsx"
 import { auraColors, auraNames } from "../types/Aura.ts"
+import PlayerName from "./components/PlayerName.tsx"
+import GameProtocol from "./components/GameProtocol.tsx"
+import { ScrollText } from "lucide-react"
+import { useToggle } from "usehooks-ts"
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -46,8 +48,8 @@ export default function GameBoard() {
 	return (
 		<TargetContext.Provider value={ targets }>
 			<div className="fixed top-[70px] left-0 text-xl w-full flex flex-col z-10 font-minecraft select-none">
-				<span className="flex flex-row gap-2 mx-auto">Aktuell an der Reihe: <Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b></span>
-				{ !player.alive && <span className="mx-auto font-bold text-danger flex gap-2"><Image src={ dead } width="30px"/> Du bist tot</span> }
+				<span className="mx-auto flex sm:gap-2 flex-col sm:flex-row">Aktuell an der Reihe: <span className="flex gap-2"><Image width="30px" alt={ roleNames.get(game.current) } src={ roleImages.get(game.current) }/> <b>{ roleNames.get(game.current) }</b></span></span>
+				{ (!player.alive && !(game.settings.storyMode && player.master)) && <span className="mx-auto font-bold text-danger flex gap-2"><Image src={ dead } width="30px"/> Du bist tot</span> }
 			</div>
 
 			<Board post={ post }/>
@@ -65,7 +67,21 @@ export default function GameBoard() {
 				<Divider/>
 				<ModalBody className="p-5">Du bist gestorben. Du kannst das Spielgeschehen weiter beobachten und in der nächsten Runde wieder mitspielen!</ModalBody>
 			</EventModal>
+
+			{ (game.settings.storyMode && player.master) && <MasterProtocol/> }
 		</TargetContext.Provider>
+	)
+}
+
+function MasterProtocol() {
+	const { game } = useGameState()!
+	const [ show, toggle ] = useToggle()
+
+	return (
+		<>
+			<Button className="fixed bottom-[60px] left-5 z-20" isIconOnly onClick={ toggle }><ScrollText/></Button>
+			{ show && <GameProtocol game={ game } className="fixed bottom-[110px] left-5"/> }
+		</>
 	)
 }
 
@@ -111,16 +127,11 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 						(isRoleActive(player, game.current) && !!action) && action()
 					} }
 				>
-					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } py-2 ${ p.id === player.id ? "font-bold" : "" } flex justify-between text-${ p.aura ? auraColors.get(p.aura) : "" }` }>
-					<span className="flex gap-2 items-center">
-						{ p.avatar && <Avatar size="sm" src={ p.avatar } className="transition-transform h-[25px] w-[25px]"/> }
-						{ p.name }
-						{ p.modifiers.includes("LOVER") && <Tooltip content="Verliebt"><Image alt="Verliebt" src={ lover } width="20px" className="pixel"/></Tooltip> }
-					</span>
+					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } py-2 flex justify-between text-${ p.aura ? auraColors.get(p.aura) : "" }` }>
+						<PlayerName bold={ p.id === player.id } player={ p }/>
 						<span className="flex gap-2 absolute right-2">
-						{ p.modifiers.includes("MAYOR") && <Tooltip content="Bürgermeister"><Image alt="Bürgermeister" src={ mayor } width="25px" className="pixel"/></Tooltip> }
-						{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px" className="pixel"/></Tooltip> }
-					</span>
+							{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px" className="pixel"/></Tooltip> }
+						</span>
 					</CardHeader>
 					<Divider/>
 					<CardBody className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } overflow-hidden` }>

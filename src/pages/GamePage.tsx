@@ -2,7 +2,7 @@ import { GameStateContext, useGameState, useGameStateRequest } from "../hooks/us
 import { useNavigate, useParams } from "react-router";
 import GameBoard from "./GameBoard.tsx";
 import GameLobby from "./GameLobby.tsx";
-import { Avatar, Button, Card, CardBody, CardHeader, CircularProgress, Divider, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, Spacer, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, CircularProgress, Divider, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { useRest } from "../hooks/useRest.ts";
 import { FormEvent, useEffect, useMemo } from "react";
 import { useToken } from "../hooks/useToken.ts";
@@ -18,8 +18,8 @@ import { useEvent } from "../hooks/useEvent.ts"
 import { Sound } from "../types/Sound.ts"
 import { useVolume } from "../hooks/useVolume.ts"
 import { Team, teamImages, teamNames } from "../types/Team.ts"
-import { getEffectiveRole } from "../types/Player.ts"
-import { roleImages, roleNames } from "../types/Role.ts"
+import PlayerName from "./components/PlayerName.tsx"
+import GameProtocol from "./components/GameProtocol.tsx"
 
 export default function GamePage() {
 	const state = useGameState()
@@ -124,27 +124,24 @@ function EndModal() {
 						hat die Runde gewonnen!
 					</div>
 
-					<Card className="bg-default-100">
-						<CardHeader className="font-bold py-2">Spieler</CardHeader>
-						<Divider/>
-						<CardBody>
-							<ul>
-								{ game.players.map(player =>
-									<span key={ player.id } className={ `flex gap-2 items-center` }>
-										<span>-</span>
-										{ player.avatar && <Avatar size="sm" src={ player.avatar } className="transition-transform h-[25px] w-[25px]"/> }
-										<Tooltip content={ roleNames.get(player.role || "UNKNOWN") }>
-											<span className={ `flex gap-1 ${ winner?.players.includes(player.id) ? "font-bold text-[gold]" : "" }`}>
-												{ player.name }
-												<Image src={ roleImages.get(getEffectiveRole(player)) } width="30px"/>
-											</span>
-										</Tooltip>
-									</span>
-								) }
-							</ul>
-						</CardBody>
-					</Card>
-					<Spacer/>
+					<div className="flex gap-5 flex-col md:flex-row mb-5">
+						<Card className="bg-default-100">
+							<CardHeader className="font-bold py-2">Spieler</CardHeader>
+							<Divider/>
+							<CardBody>
+								<ul>
+									{ game.players.map(p =>
+										<span key={ p.id } className={ `flex gap-2 items-center` }>
+											<span>-</span>
+											<PlayerName bold={ p.id === player.id } color={ winner?.players.includes(p.id) && "[gold]" } player={ p } role/>
+										</span>
+									) }
+								</ul>
+							</CardBody>
+						</Card>
+
+						<GameProtocol game={ game } className="bg-default-100 flex-grow"/>
+					</div>
 				</ModalBody>
 				<Divider/>
 				<ModalFooter className="px-4 py-2">
