@@ -133,7 +133,7 @@ function EndModal() {
 									{ game.players.map(p =>
 										<li key={ p.id } className={ `flex gap-2 items-center` }>
 											<span>-</span>
-											<PlayerName bold={ p.id === player.id } color={ winner?.players.includes(p.id) && "[gold]" } player={ p } role/>
+											<PlayerName bold={ p.id === player.id } className={ winner?.players.includes(p.id) ? "text-[gold]" : "" } player={ p } role/>
 										</li>
 									) }
 								</ul>

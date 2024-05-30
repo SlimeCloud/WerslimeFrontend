@@ -4,9 +4,9 @@ import lover from "../../assets/modifier/lover.png"
 import mayor from "../../assets/modifier/mayor.png"
 import { roleImages, roleNames } from "../../types/Role.ts"
 
-export default function PlayerName({ player, role = false, modifier = true, bold = false, color = undefined }: { player: Player, role?: boolean, modifier?: boolean, bold?: boolean, color?: string | boolean }) {
+export default function PlayerName({ player, role = false, modifier = true, bold = false, className }: { player: Player, role?: boolean, modifier?: boolean, bold?: boolean, className?: string }) {
 	return (
-		<span className={ `flex gap-2 items-center ${ bold ? "font-bold" : "" } ${ color ? `text-${ color }` : "" }` }>
+		<span className={ `flex gap-2 items-center ${ bold ? "font-bold" : "" } ${ className || "" }` }>
 			{ player.avatar && <Avatar size="sm" src={ player.avatar } className="transition-transform h-[25px] w-[25px]"/> }
 			{ player.name }
 

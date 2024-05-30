@@ -15,6 +15,7 @@ import { ReactNode } from "react"
 import { Game } from "../../types/Game.ts"
 import PlayerName from "./PlayerName.tsx"
 import { CirclePlay, CircleStop } from "lucide-react"
+import { Player } from "../../types/Player.ts"
 
 export default function GameProtocol({ game, className }: { game: Game, className?: string }) {
 	if(!game.protocol) return
@@ -44,20 +45,22 @@ function Entry({ game, entry }: { game: Game, entry: ProtocolEntry }) {
 function formatEntry(game: Game, entry: ProtocolEntry): ReactNode {
 	switch(entry.type) {
 		case "START": return <><CirclePlay className="text-primary" width="20px"/> Spiel gestartet</>
-		case "DEATH": return <><Image src={ dead } width="20px"/><PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> ist gestorben ({ killReasonNames.get(entry.data[1] as never) })</>
+		case "DEATH": return <><Image src={ dead } width="20px"/><PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> ist gestorben ({ killReasonNames.get(entry.data[1] as never) })</>
 		case "END": return <><CircleStop className="text-danger" width="20px"/> Spiel beendet</>
-		case "AMOR": return <><Image src={ love } width="20px"/>Amor <PlayerName modifier={ false } bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/>, <PlayerName modifier={ false } bold player={ game.players.find(p => p.id === entry.data[1] as never)! }/></>
-		case "SEER": return <><Image src={ viewIcon } width="20px"/> Seherin schaut <PlayerName bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> an</>
-		case "AURA_SEER": return <><Image src={ viewIcon } width="20px"/> Aura-Seher schaut <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> an</>
-		case "WARLOCK_VIEW": return <><Image src={ viewIcon } width="20px"/> Hexenmeister schaut <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> an</>
-		case "WARLOCK_MARK": return <><Image src={ markIcon } width="20px"/> Hexenmeister markiert <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
-		case "WEREWOLF": return <><Image src={ victim } width="20px"/> Werslimes greifen <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> an</>
-		case "WITCH_HEAL": return <><Image src={ healIcon } width="20px"/> Hexe heilt <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
-		case "WITCH_POISON": return <><Image src={ poisonIcon } width="20px"/> Hexe vergiftet <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
-		case "HUNTER": return <><Image src={ shootIcon } width="20px"/> Jäger schießt auf <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
-		case "VILLAGER": return <><Image src={ anvil } width="20px"/> Dorf henkt <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/></>
-		case "VILLAGER_ELECT": return <><Image src={ vote } width="20px"/> <PlayerName role bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/> wird Bürgermeister</>
+		case "AMOR": return <><Image src={ love } width="20px"/>Amor <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[0] as never }/>, <PlayerDisplay game={ game } modifier={ false } condition={ p => p.id === entry.data[1] as never }/></>
+		case "SEER": return <><Image src={ viewIcon } width="20px"/> Seherin schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
+		case "AURA_SEER": return <><Image src={ viewIcon } width="20px"/> Aura-Seher schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
+		case "WARLOCK_VIEW": return <><Image src={ viewIcon } width="20px"/> Hexenmeister schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
+		case "WARLOCK_MARK": return <><Image src={ markIcon } width="20px"/> Hexenmeister markiert <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "WEREWOLF": return <><Image src={ victim } width="20px"/> Werslimes greifen <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
+		case "WITCH_HEAL": return <><Image src={ healIcon } width="20px"/> Hexe heilt <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "WITCH_POISON": return <><Image src={ poisonIcon } width="20px"/> Hexe vergiftet <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "HUNTER": return <><Image src={ shootIcon } width="20px"/> Jäger schießt auf <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "VILLAGER": return <><Image src={ anvil } width="20px"/> Dorf henkt <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "VILLAGER_ELECT": return <><Image src={ vote } width="20px"/> <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> wird Bürgermeister</>
 	}
 }
 
-//<PlayerName bold player={ game.players.find(p => p.id === entry.data[0] as never)! }/>
+function PlayerDisplay({ game, condition, modifier = true }: { game: Game, condition: (player: Player) => boolean, modifier?: boolean }) {
+	return <PlayerName role bold modifier={ modifier } player={ game.players.find(p => condition(p))! } className="bg-default-200 px-1 py-0.5 rounded-xl"/>
+}
