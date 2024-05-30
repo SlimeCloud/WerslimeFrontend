@@ -6,6 +6,7 @@ import { Game } from "../types/Game.ts"
 import { RefreshCw } from "lucide-react"
 import { roleDescriptions, roleNames } from "../types/Role.ts"
 import { Link } from "react-router-dom"
+import SettingsDisplay from "./components/SettingsDisplay.tsx"
 
 export default function GameListPage() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -48,8 +49,8 @@ function GameInfo({ state, game }: { state: RequestState, game: Game }) {
 					</Skeleton>
 				</CardHeader>
 				<Divider></Divider>
-				<CardBody className="flex flex-row justify-between gap-10">
-					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow w-1/2">
+				<CardBody className="flex flex-col md:flex-row justify-between gap-10">
+					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow md:w-1/3">
 						<h3 className="font-bold">Rollen</h3>
 						<CheckboxGroup
 							aria-label="Spezial-Rollen" size="md"
@@ -62,7 +63,12 @@ function GameInfo({ state, game }: { state: RequestState, game: Game }) {
 						</CheckboxGroup>
 					</Skeleton>
 
-					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow w-1/2">
+					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow md:w-1/3">
+						<h3 className="font-bold">Einstellungen</h3>
+						<SettingsDisplay game={ game } disabled update={ () => {} }/>
+					</Skeleton>
+
+					<Skeleton isLoaded={ state === "success" } className="rounded-lg flex-grow md:w-1/3">
 						<h3 className="font-bold">Spieler</h3>
 						<ul className="flex flex-col flex-wrap gap-1 max-h-56">
 							{ game.players.slice(0, 8).map(player =>

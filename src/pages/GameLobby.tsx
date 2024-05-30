@@ -2,7 +2,6 @@ import { useGameState } from "../hooks/useGameState.ts";
 import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
-import { ReactNode, useEffect, useState } from "react";
 import Spinner from "../components/Spinner.tsx";
 import { Role, roleDescriptions, roleNames } from "../types/Role.ts"
 import { Player } from "../types/Player.ts"
@@ -10,6 +9,7 @@ import ConditionalParent from "../components/ConditionalParent.tsx"
 import ErrorModal from "../components/ErrorModal.tsx"
 
 import { GameSettings, MuteSystem } from "../types/GameSettings.ts"
+import SettingsDisplay, { SettingsProperty } from "./components/SettingsDisplay.tsx"
 
 export default function GameLobby() {
 	return (
@@ -105,7 +105,7 @@ function Settings() {
 				<Divider/>
 				<CardBody className="flex flex-col justify-between gap-4">
 					<div className="flex flex-col gap-5 [&_h3]:font-bold">
-						<SettingsProperty<number> property="werewolfAmount" update={ update } autoUpdate={ false }>{ (value, setValue, update) =>
+						<SettingsProperty<number> game={ game } property="werewolfAmount" update={ update } autoUpdate={ false }>{ (value, setValue, update) =>
 							<div>
 								<h3 className="flex flex-row justify-between">Werslime Anzahl <span>{ value }</span></h3>
 								<Slider
@@ -120,7 +120,7 @@ function Settings() {
 						</SettingsProperty>
 
 						<div className="flex gap-4 justify-between flex-row flex-wrap [&>div]:flex [&>div]:flex-col [&>div]:gap-1">
-							<SettingsProperty<Role[]> property="roles" compare={ (a, b) => a.toString() == b.toString() } update={ update }>{ (value, setValue) =>
+							<SettingsProperty<Role[]> game={ game } property="roles" compare={ (a, b) => a.toString() == b.toString() } update={ update }>{ (value, setValue) =>
 								<div>
 									<h3>Rollen</h3>
 									<CheckboxGroup
@@ -142,39 +142,13 @@ function Settings() {
 
 							<div>
 								<h3>Sonstiges</h3>
-								<BooleanProperty
-									disabled={ disabled } property="isPublic" update={ update }
-									name={ <>Öffentlich</> }
-									description={ <span className="max-w-[400px]">Die Runde wird in 'Öffentliche Runden' angezeigt und kann ohne Link betreten werden</span> }
-								/>
-								<BooleanProperty
-									disabled={ disabled } property="revealDeadRoles" update={ update }
-									name={ <>Tote Rollen anzeigen</> }
-									description={ <>Rollen von Toten werden für alle angezeigt</> }
-								/>
-
-								<BooleanProperty
-									disabled={ disabled } property="deadSpectators" update={ update }
-									name={ <>Tote Zuschauer</> }
-									description={ <>Tote können die Rollen Aller sehen</> }
-								/>
-								<BooleanProperty
-									disabled={ disabled } property="revealLoverRoles" update={ update }
-									name={ <>Zeige Verliebten Rolle</> }
-									description={ <>Die Verliebten sehen gegenseitig ihre Rollen</> }
-								/>
-
-								<BooleanProperty
-									disabled={ disabled } property="storyMode" update={ update }
-									name={ <>Story-Mode</> }
-									description={ <>Der Spiel-Leiter spielt nicht sondern ist von Beginn an Zuschauer</> }
-								/>
+								<SettingsDisplay game={ game } disabled={ disabled } update={ update }/>
 							</div>
 
 							{ game.discord ?
 								<div>
 									<h3>Mitglieder Muten</h3>
-									<SettingsProperty<MuteSystem> property="muteSystem" update={ update }>{ (value, setValue) =>
+									<SettingsProperty<MuteSystem> game={ game } property="muteSystem" update={ update }>{ (value, setValue) =>
 										<RadioGroup isDisabled={ disabled } aria-label="Mitglieder Muten" orientation="vertical" value={ value } onValueChange={ v => setValue(v as MuteSystem) }>
 											<Tooltip content="Deaktiviert"><Radio value="NONE">Deaktiviert</Radio></Tooltip>
 											<Tooltip content="Tote muten, Nachts muten und deafen"><Radio value="FULL">Vollständig</Radio></Tooltip>
@@ -192,49 +166,5 @@ function Settings() {
 			</Card>
 			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
 		</>
-	)
-}
-
-function SettingsProperty<T>({ property, compare = (a, b) => a === b, update, autoUpdate = true, children }: {
-	property: keyof GameSettings,
-	compare?: (a: T, b: T) => boolean,
-	update: (req?: Request<GameSettings>) => void,
-	autoUpdate?: boolean,
-	children: (value: T, setValue: (value: T) => void, update: (value: T) => void) => ReactNode
-}) {
-	const { game } = useGameState()!
-	const actualValue = game.settings[property] as T
-
-	const [ value, setValue ] = useState<T>(game.settings[property] as T)
-
-	function doUpdate(value: T) {
-		update({
-			data: {
-				[property]: value
-			}
-		})
-	}
-
-	useEffect(() => {
-		setValue(actualValue)
-	}, [ actualValue ])
-
-	useEffect(() => {
-		if(compare(value, actualValue)) return
-		if(autoUpdate) doUpdate(value)
-	}, [ value ])
-
-	return children(value, setValue, doUpdate)
-}
-
-function BooleanProperty({ disabled, property, update, name, description }: { disabled: boolean, property: keyof GameSettings, update: (req?: Request<GameSettings>) => void, name: ReactNode, description: ReactNode }) {
-	return (
-		<SettingsProperty<boolean> property={ property } update={ update }>{ (value, setValue) =>
-			<Tooltip shouldFlip={ false } placement="right" content={ description }>
-				<div className="w-fit">
-					<Checkbox isDisabled={ disabled } isSelected={ value } onValueChange={ setValue }>{ name }</Checkbox>
-				</div>
-			</Tooltip> }
-		</SettingsProperty>
 	)
 }
