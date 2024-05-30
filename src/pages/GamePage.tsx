@@ -104,7 +104,7 @@ function EndModal() {
 	const { setToken } = useToken()
 
 	const winner = useServerValue<{ winner: Team, players: string[] } | undefined>("END", undefined, value => {
-		playSound("win", { sound: value!.winner.toLowerCase(), volume: 1, variant: -1 }, 0.5)
+		playSound("win", { sound: value!.winner.toLowerCase(), volume: 1, variant: -1 }, 0.3)
 		onOpen()
 	})
 
