@@ -44,7 +44,7 @@ function PlayerList() {
 					</ul>
 				</ScrollShadow>
 
-				{ !game.settings.isPublic && <Button onClick={ () => copy(window.location.href).then(onOpen) }>Einladung Kopieren</Button> }
+				{ !game.settings.isPublic && <Button onPress={ () => copy(window.location.href).then(onOpen) }>Einladung Kopieren</Button> }
 
 				<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
 					<ModalContent>

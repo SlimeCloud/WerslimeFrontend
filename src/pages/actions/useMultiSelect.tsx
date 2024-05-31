@@ -33,8 +33,6 @@ export default function useMultiSelect(action: (req?: Request<unknown>) => void,
 				return [ ...old ]
 			})
 		},
-		node: <>
-			{ (selected.length === amount && !game.interacted) && <Button color="primary" className="fixed bottom-[60px] block left-5 z-20" onPress={ confirm }>Bestätigen</Button> }
-		</>
+		confirm: (selected.length === amount && !game.interacted) && <Button color="primary" onPress={ confirm }>Bestätigen</Button>
 	}
 }

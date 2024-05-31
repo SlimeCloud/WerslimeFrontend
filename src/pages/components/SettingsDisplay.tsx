@@ -39,6 +39,13 @@ export default function SettingsDisplay({ game, disabled = false, readOnly = fal
 				name={ <>Story-Mode</> }
 				description={ <>Der Spiel-Leiter spielt nicht sondern ist von Beginn an Zuschauer</> }
 			/>
+
+			<BooleanProperty
+				game={ game }
+				disabled={ disabled } readOnly={ readOnly } property="chat" update={ update }
+				name={ <>Chat</> }
+				description={ <>Für die aktuelle rolle steht ein Chat bereit</> }
+			/>
 		</>
 	)
 }

@@ -77,3 +77,16 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 export function isRoleActive(player: Player, role: Role) {
 	return role === "VILLAGER" || role === "VILLAGER_ELECT" || player.role === role
 }
+
+export function isChatActive(player: Player, role: Role) {
+	return isRoleActive(player, role) || (role === "WEREWOLF" && player.role === "SPY")
+}
+
+export function hasChat(role: Role) {
+	switch (role) {
+		case "WEREWOLF":
+		case "VILLAGER":
+		case "VILLAGER_ELECT": return true
+		default: return false
+	}
+}

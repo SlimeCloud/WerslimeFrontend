@@ -9,12 +9,12 @@ import shootIcon from "../assets/action/shoot.png"
 import markIcon from "../assets/action/mark.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Popover, PopoverContent, PopoverTrigger, Tooltip, useDisclosure } from "@nextui-org/react"
 import { getEffectiveRole, Player } from "../types/Player.ts"
-import { isRoleActive, Role, roleImages, roleNames } from "../types/Role.ts"
+import { hasChat, isChatActive, isRoleActive, Role, roleImages, roleNames } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
-import { Suspense, useContext, useEffect, useState } from "react"
+import { ReactNode, Suspense, useContext, useEffect, useState } from "react"
 import ErrorModal from "../components/ErrorModal.tsx"
 import { PlayerClickHandler, TargetContext } from "./actions/PlayerClickHandler.ts"
 import useSingleSelect from "./actions/useSingleSelect.tsx"
@@ -25,8 +25,9 @@ import useSingleAction from "./actions/useSingleAction.tsx"
 import { auraColors, auraNames } from "../types/Aura.ts"
 import PlayerName from "./components/PlayerName.tsx"
 import GameProtocol from "./components/GameProtocol.tsx"
-import { ScrollText } from "lucide-react"
-import { useToggle } from "usehooks-ts"
+import { MessageCircle, ScrollText } from "lucide-react"
+import Chat from "./components/Chat.tsx";
+import { Message } from "../types/Message.ts";
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -52,13 +53,7 @@ export default function GameBoard() {
 				{ (!player.alive && !(game.settings.storyMode && player.master)) && <span className="mx-auto font-bold text-danger flex gap-2"><Image src={ dead } width="30px"/> Du bist tot</span> }
 			</div>
 
-			<Board post={ post }/>
-
-			{ player.master &&
-				<Button color={ game.valid ? "primary" : "warning" } className="fixed bottom-[60px] block right-5 z-20" onPress={ () => next() }>
-					Weiter (<b>{ game.interacted } / { game.total }</b>)
-				</Button>
-			}
+			<Board post={ post } next={ next }/>
 
 			<ErrorModal error={ error! } isOpen={ isOpen } onOpenChange={ onOpenChange }/>
 
@@ -67,27 +62,47 @@ export default function GameBoard() {
 				<Divider/>
 				<ModalBody className="p-5">Du bist gestorben. Du kannst das Spielgeschehen weiter beobachten und in der nächsten Runde wieder mitspielen!</ModalBody>
 			</EventModal>
-
-			{ ((game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators)) && <MasterProtocol/> }
 		</TargetContext.Provider>
 	)
 }
 
-function MasterProtocol() {
-	const { game } = useGameState()!
-	const [ show, toggle ] = useToggle()
+function Actions({ confirm, next }: { confirm: ReactNode, next: (req?: Request<unknown>) => void }) {
+	const { game, player} = useGameState()!
+
+	const [ messages, setMessages ] = useState<Message[]>([])
+
+	const protocol = (game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators)
+	const chat = game.settings.chat && ((game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators) || (isChatActive(player, game.current) && hasChat(game.current)))
 
 	return (
-		<>
-			<Button className="fixed bottom-[60px] left-5 z-20" isIconOnly onClick={ toggle }><ScrollText/></Button>
-			{ show && <GameProtocol game={ game } className="fixed bottom-[110px] left-5"/> }
-		</>
+		<div className="fixed w-screen bottom-[60px] flex justify-between z-20 px-3">
+			{ (protocol || chat) && <span className="flex gap-2">
+				{ protocol && <Popover>
+					<PopoverTrigger><Button isIconOnly><ScrollText/></Button></PopoverTrigger>
+					<PopoverContent className="bg-none shadow-none"><GameProtocol game={ game }/></PopoverContent>
+				</Popover> }
+
+				{ chat && <Popover>
+					<PopoverTrigger><Button isIconOnly><MessageCircle/></Button></PopoverTrigger>
+					<PopoverContent className="bg-transparent shadow-none"><Chat messages={ messages } setMessages={ setMessages }/></PopoverContent>
+				</Popover> }
+			</span> }
+
+			{ confirm }
+
+			{ (!(protocol || chat) && !confirm) && <span/> }
+
+			{ player.master &&
+				<Button color={ game.valid ? "primary" : "warning" } className="block" onPress={ () => next() }>
+					Weiter (<b>{ game.interacted } / { game.total }</b>)
+				</Button>
+			}
+		</div>
 	)
 }
 
-function Board({ post }: { post: (req?: Request<unknown>) => void }) {
-	const { game, player } = useGameState()!
-
+function Board({ post, next }: { post: (req?: Request<unknown>) => void, next: (req?: Request<unknown>) => void }) {
+	const { game, player} = useGameState()!
 	const action = useInteractions(post)
 
 	return (
@@ -97,12 +112,14 @@ function Board({ post }: { post: (req?: Request<unknown>) => void }) {
 			</div>
 
 			{ isRoleActive(player, game.current) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
+
+			<Actions confirm={ action?.confirm } next={ next }/>
 		</>
 	)
 }
 
-function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
-	const { game, player } = useGameState()!
+function PlayerCard({p, action}: { p: Player, action?: () => void }) {
+	const {game, player} = useGameState()!
 
 	const target = game.interactions && game.interactions[p.id as never] as string
 	const targetName = game.players.find(p => p.id === target)?.name
@@ -111,7 +128,7 @@ function PlayerCard({ p, action }: { p: Player, action?: () => void }) {
 	const votes = game.interactions ? Object.entries(game.interactions).filter(([ , target ]) => target === p.id).length : 0
 	const tooltip =
 		p.id === game.roleMeta as never as string && player.role === "WEREWOLF" ? "Vom Hexenmeister markiert" :
-		p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
+			p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
 		targets.includes(p.id) ? "Von dir Ausgewählt" :
 		p.id === game.victim ? "Opfer der Nacht" :
 		p.aura ? "Aura: " + auraNames.get(p.aura) :

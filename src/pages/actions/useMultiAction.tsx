@@ -75,7 +75,7 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 					</ModalBody>
 				</ModalContent>
 			</Modal>
-			{ !game.interacted && <Button color={ selected.size ? "primary" : "warning" } className="fixed bottom-[60px] left-5 z-20" onPress={ confirm }>Bestätigen</Button> }
-		</>
+		</>,
+		confirm: !game.interacted && <Button color={ selected.size ? "primary" : "warning" } onPress={ confirm }>Bestätigen</Button>
 	}
 }

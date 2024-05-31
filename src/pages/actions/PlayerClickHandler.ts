@@ -4,6 +4,7 @@ import { Player } from "../../types/Player.ts"
 export const TargetContext = createContext<[ string[], Dispatch<SetStateAction<string[]>> ] | undefined>(undefined)
 
 export interface PlayerClickHandler {
-	node: ReactNode,
+	node?: ReactNode
 	execute: (target: Player) => (() => void) | undefined
+	confirm?: ReactNode
 }

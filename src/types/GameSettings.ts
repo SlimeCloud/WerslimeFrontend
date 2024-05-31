@@ -10,6 +10,7 @@ export interface GameSettings {
 	deadSpectators: boolean
 	revealLoverRoles: boolean
 	storyMode: boolean
+	chat: boolean
 }
 
 export type MuteSystem =

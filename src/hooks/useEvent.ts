@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect } from "react";
+import { EventType } from "../types/EventType.ts";
 
 export const EventSourceContext = createContext<WebSocket | undefined>(undefined)
 
 interface Payload<T> {
-	name: string
+	type: string
 	data: T
 }
 
-export function useEvent<T>(eventName: string, handler: (data: T) => void) {
+export function useEvent<T>(eventName: EventType, handler: (data: T) => void) {
 	const source = useContext(EventSourceContext)
 	if(!source) throw new Error("Could not find an Event context. You have to wrap useEvent() in an <EventProvider>");
 
@@ -15,7 +16,7 @@ export function useEvent<T>(eventName: string, handler: (data: T) => void) {
 	useEffect(() => {
 		const listener = (event: MessageEvent) => {
 			const payload = JSON.parse(event.data) as Payload<T>
-			if(payload.name !== eventName) return
+			if(payload.type !== eventName) return
 
 			handler(payload.data)
 		}
