@@ -6,7 +6,7 @@ export default function Footer() {
 			<Divider className="absolute"/>
 			<div className="z-40 flex px-6 gap-4 w-full flex-row relative flex-nowrap whitespace-nowrap items-center justify-between h-full max-w-full">
 				<span className="justify-start">© 2024 { import.meta.env._OWNER }</span>
-				<span className="justify-end hidden sm:block"><Link className="text-foreground hover:underline" target="_blank" href={ `https://github.com/${ import.meta.env._REPOSITORY }` }>{ import.meta.env._REPOSITORY }</Link></span>
+				<span className="justify-end hidden sm:block"><Link className="text-foreground hover:underline" showAnchorIcon target="_blank" href={ `https://github.com/${ import.meta.env._REPOSITORY }` }>{ import.meta.env._REPOSITORY }</Link></span>
 			</div>
 		</footer>
 	)
