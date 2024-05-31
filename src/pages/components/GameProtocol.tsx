@@ -26,7 +26,7 @@ export default function GameProtocol({ game, className }: { game: Game, classNam
 			<CardBody>
 				<ScrollShadow>
 					<ul className="flex flex-col gap-2">
-						{ game.protocol!.map(e => <Entry game={ game } entry={ e }/>) }
+						{ game.protocol!.map(e => <Entry key={ e.id } game={ game } entry={ e }/>) }
 					</ul>
 				</ScrollShadow>
 			</CardBody>
