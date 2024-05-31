@@ -28,6 +28,7 @@ import GameProtocol from "./components/GameProtocol.tsx"
 import { MessageCircle, ScrollText } from "lucide-react"
 import Chat from "./components/Chat.tsx";
 import { Message } from "../types/Message.ts";
+import { useEvent } from "../hooks/useEvent.ts";
 
 export default function GameBoard() {
 	const { game, player } = useGameState()!
@@ -71,6 +72,14 @@ function Actions({ confirm, next }: { confirm: ReactNode, next: (req?: Request<u
 
 	const [ messages, setMessages ] = useState<Message[]>([])
 
+	useEvent<Message>("CHAT", message => {
+		setMessages(old => {
+			const temp = [ ...old, message ]
+			if(temp.length > 50) temp.shift()
+			return temp
+		})
+	})
+
 	const protocol = (game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators)
 	const chat = game.settings.chat && ((game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators) || (isChatActive(player, game.current) && hasChat(game.current)))
 
@@ -79,12 +88,12 @@ function Actions({ confirm, next }: { confirm: ReactNode, next: (req?: Request<u
 			{ (protocol || chat) && <span className="flex gap-2">
 				{ protocol && <Popover>
 					<PopoverTrigger><Button isIconOnly><ScrollText/></Button></PopoverTrigger>
-					<PopoverContent className="bg-none shadow-none"><GameProtocol game={ game }/></PopoverContent>
+					<PopoverContent className="bg-none shadow-none z-5"><GameProtocol game={ game }/></PopoverContent>
 				</Popover> }
 
 				{ chat && <Popover>
 					<PopoverTrigger><Button isIconOnly><MessageCircle/></Button></PopoverTrigger>
-					<PopoverContent className="bg-transparent shadow-none"><Chat messages={ messages } setMessages={ setMessages }/></PopoverContent>
+					<PopoverContent className="bg-transparent shadow-none z-5"><Chat messages={ messages }/></PopoverContent>
 				</Popover> }
 			</span> }
 

@@ -1,26 +1,17 @@
 import { useGameState } from "../../hooks/useGameState.ts";
 import { Game } from "../../types/Game.ts";
 import { Message } from "../../types/Message.ts";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Card, CardBody, CardHeader, Divider, Image, Input, ScrollShadow } from "@nextui-org/react";
 import PlayerName from "./PlayerName.tsx";
 import { roleImages, roleNames } from "../../types/Role.ts";
 import { useRest } from "../../hooks/useRest.ts";
-import { useEvent } from "../../hooks/useEvent.ts";
 
-export default function Chat({ messages, setMessages }: { messages: Message[], setMessages: Dispatch<SetStateAction<Message[]>> }) {
+export default function Chat({ messages }: { messages: Message[] }) {
 	const { game, player } = useGameState()!
 
 	const [ message, setMessage ] = useState("")
 	const { post } = useRest("/games/@me/chat")
-
-	useEvent<Message>("CHAT", message => {
-		setMessages(old => {
-			const temp = [ ...old, message ]
-			if(temp.length > 50) temp.shift()
-			return temp
-		})
-	})
 
 	function sendMessage(e: FormEvent) {
 		e.preventDefault()
@@ -54,11 +45,10 @@ export default function Chat({ messages, setMessages }: { messages: Message[], s
 
 function MessageDisplay({ game, message }: { game: Game, message: Message }) {
 	const author = game.players.find(p => p.id === message.author)
-	if(!author) return
 
 	return (
-		<li className="bg-default-100 p-2 rounded-lg">
-			<PlayerName bold player={ author }/>
+		<li className="bg-default-100 p-2 rounded-lg flex flex-col">
+			{ author ? <PlayerName bold player={ author }/> : <b>***</b> }
 			{ message.message }
 		</li>
 	)
