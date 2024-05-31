@@ -1,5 +1,5 @@
 import { useGameState } from "../hooks/useGameState.ts";
-import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Modal, ModalBody, ModalContent, ModalHeader, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, ScrollShadow, Slider, Tooltip, useDisclosure } from "@nextui-org/react";
 import { Crown, ShieldPlus, Unplug, UserX } from "lucide-react";
 import { Request, useRest } from "../hooks/useRest.ts";
 import Spinner from "../components/Spinner.tsx";
@@ -10,6 +10,7 @@ import ErrorModal from "../components/ErrorModal.tsx"
 
 import { GameSettings, MuteSystem } from "../types/GameSettings.ts"
 import SettingsDisplay, { SettingsProperty } from "./components/SettingsDisplay.tsx"
+import { useCopyToClipboard } from "usehooks-ts";
 
 export default function GameLobby() {
 	return (
@@ -25,12 +26,15 @@ function PlayerList() {
 	const { patch: promote } = useRest("/games/@me/members")
 	const { game } = useGameState()!
 
+	const [ , copy] = useCopyToClipboard()
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
 	return (
 		<Card shadow="sm" className="font-minecraft flex-shrink-0 md:flex-shrink md:w-1/2 select-none">
 			<CardHeader className="text-2xl font-black flex justify-center">Mitspieler ({ game.players.length })</CardHeader>
 			<Divider/>
 			<CardBody>
-				<ScrollShadow className="h-full">
+				<ScrollShadow className="flex-grow">
 					<ul className="flex flex-col gap-2">
 						{ game.players.map(p =>
 							<li key={ p.id } className="w-fit">
@@ -39,6 +43,18 @@ function PlayerList() {
 						) }
 					</ul>
 				</ScrollShadow>
+
+				{ !game.settings.isPublic && <Button onClick={ () => copy(window.location.href).then(onOpen) }>Einladung Kopieren</Button> }
+
+				<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
+					<ModalContent>
+						<ModalHeader className="py-2 font-bold">Einladung Kopiert</ModalHeader>
+						<Divider/>
+						<ModalBody>
+							Der Einladungs-Link wurde in die Zwischenablage kopiert. T_eile diesen Link mit deinen Freunden, damit Sie dem Spiel beitreten können!
+						</ModalBody>
+					</ModalContent>
+				</Modal>
 			</CardBody>
 		</Card>
 	)
@@ -55,7 +71,7 @@ function PlayerInfo({ p, kick, promote }: { p: Player, kick: (req: Request<unkno
 						{ children }
 					</a>
 				</PopoverTrigger>
-				<PopoverContent>
+				<PopoverContent className="bg-default-100">
 					{ player.master &&
 						<span className="flex gap-2 items-center">
 						<span className="font-bold">Aktionen</span>
