@@ -45,7 +45,7 @@ export default function UserInfo({ gameState }: { gameState: GameState }) {
 					<Avatar
 						isBordered as="button" className="transition-transform"
 						color="primary" size="sm"
-						src={ player.avatar || (game.started ? roleImages.get(player.role) : undefined) }
+						src={ player.avatar || (game.started ? roleImages.get(player.role || "VILLAGER") : undefined) }
 					/>
 				</DropdownTrigger>
 				<DropdownMenu aria-label="Nutzer Optionen" variant="flat">
