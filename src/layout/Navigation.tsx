@@ -29,7 +29,7 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 						<PopoverContent>
 							<ul className="flex flex-col gap-2 text-left">
 								<NavEntry path="/">Startseite</NavEntry>
-								<NavEntry path="/instructions">Anleitung</NavEntry>
+								<NavEntry path="/anleitung">Anleitung</NavEntry>
 								<NavEntry path="/games">Öffentlich Runden</NavEntry>
 								{ (!!gameState?.game || pathname.startsWith("/game/")) && <NavEntry path={ gameState?.game ? `/game/${ gameState.game.id }` : pathname }>Spiel</NavEntry> }
 							</ul>
@@ -40,7 +40,7 @@ export default function Navigation({ gameState }: { gameState?: GameState }) {
 
 			<NavbarContent className="hidden sm:flex gap-7" justify="center">
 				<NavEntry path="/">Startseite</NavEntry>
-				<NavEntry path="/instructions">Anleitung</NavEntry>
+				<NavEntry path="/anleitung">Anleitung</NavEntry>
 				<NavEntry path="/games">Öffentlich Runden</NavEntry>
 				{ (!!gameState?.game || pathname.startsWith("/game/")) && <NavEntry path={ gameState?.game ? `/game/${ gameState.game.id }` : pathname }>Spiel</NavEntry> }
 			</NavbarContent>
