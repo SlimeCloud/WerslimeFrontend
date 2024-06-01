@@ -63,7 +63,7 @@ function CreateGame() {
 						<Card className="text-lg bg-default-100 tracking-wide h-full hidden md:flex" shadow="none">
 							<CardHeader className="font-bold py-2">Informationen</CardHeader>
 							<Divider/>
-							<CardBody>
+							<CardBody className="select-text">
 								Erstelle eine eigene Runde und lade andere Mitspieler ein. In dieser Runde kannst du eigene Einstellungen vornehmen und Teilnehmer verwalten.
 							</CardBody>
 						</Card>
@@ -108,7 +108,7 @@ function JoinGame() {
 						<Card className="text-lg bg-default-100 tracking-wide hidden md:flex" shadow="none">
 							<CardHeader className="font-bold py-2">Informationen</CardHeader>
 							<Divider/>
-							<CardBody>
+							<CardBody className="select-text">
 								Tritt einer bestehenden Runde bei. Die Regeln werden vom Ersteller der Runde kontrolliert, dieser hat jedoch keine Vorteile im Spiel.
 							</CardBody>
 						</Card>
