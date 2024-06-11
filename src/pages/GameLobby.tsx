@@ -44,14 +44,14 @@ function PlayerList() {
 					</ul>
 				</ScrollShadow>
 
-				{ !game.settings.isPublic && <Button onPress={ () => copy(window.location.href).then(onOpen) }>Einladung Kopieren</Button> }
+				<Button onPress={ () => copy(window.location.href).then(onOpen) }>Einladung Kopieren</Button>
 
 				<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
 					<ModalContent>
 						<ModalHeader className="py-2 font-bold">Einladung Kopiert</ModalHeader>
 						<Divider/>
 						<ModalBody>
-							Der Einladungs-Link wurde in die Zwischenablage kopiert. T_eile diesen Link mit deinen Freunden, damit Sie dem Spiel beitreten können!
+							Der Einladungs-Link wurde in die Zwischenablage kopiert. Teile diesen Link mit deinen Freunden, damit Sie dem Spiel beitreten können!
 						</ModalBody>
 					</ModalContent>
 				</Modal>
