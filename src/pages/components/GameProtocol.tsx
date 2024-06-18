@@ -1,8 +1,10 @@
+import werslime from "../../assets/roles/werslime.png"
 import victim from "../../assets/modifier/victim.png"
 import vote from "../../assets/icon/vote.png"
 import dead from "../../assets/icon/dead.png"
 import anvil from "../../assets/icon/anvil.png"
 import love from "../../assets/modifier/lover.png"
+import shieldIcon from "../../assets/action/shield.png"
 import healIcon from "../../assets/action/heal.png"
 import poisonIcon from "../../assets/action/poison.png"
 import viewIcon from "../../assets/action/view.png"
@@ -52,7 +54,9 @@ function formatEntry(game: Game, entry: ProtocolEntry): ReactNode {
 		case "AURA_SEER": return <><Image src={ viewIcon } width="20px"/> Aura-Seher schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
 		case "WARLOCK_VIEW": return <><Image src={ viewIcon } width="20px"/> Hexenmeister schaut <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
 		case "WARLOCK_MARK": return <><Image src={ markIcon } width="20px"/> Hexenmeister markiert <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
+		case "HEALER": return <><Image src={ shieldIcon } width="20px"/> Heiler beschützt <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
 		case "WEREWOLF": return <><Image src={ victim } width="20px"/> Werslimes greifen <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an</>
+		case "WEREWOLF_HEALER": return <><Image src={ werslime } width="20px"/> Werslimes greifen <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/> an (<Image src={ shieldIcon } width="20px"/>)</>
 		case "WITCH_HEAL": return <><Image src={ healIcon } width="20px"/> Hexe heilt <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
 		case "WITCH_POISON": return <><Image src={ poisonIcon } width="20px"/> Hexe vergiftet <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>
 		case "HUNTER": return <><Image src={ shootIcon } width="20px"/> Jäger schießt auf <PlayerDisplay game={ game } condition={ p => p.id === entry.data[0] as never }/></>

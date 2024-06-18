@@ -5,4 +5,6 @@ export type EventType =
     "KILL" |
     "KICK" |
     "END" |
-    "CLOSE"
+    "CLOSE" |
+
+	"SHIELD_ATTACK"

@@ -24,7 +24,7 @@ export default function Chat({ messages }: { messages: Message[] }) {
 
 	return (
 		<Card className="w-[50vw] lg:w-[30vw]">
-			<CardHeader className="py-2 font-bold text-lg flex flex-wrap justify-between">Rollen-Chat <span className="flex items-center gap-2"><Image src={ roleImages.get(game.current) } width="20px"/> { roleNames.get(game.current) }</span></CardHeader>
+			<CardHeader className="py-2 font-bold text-lg flex flex-wrap justify-between"><span className="flex items-center gap-2"><Image src={ roleImages.get(game.current) } width="20px"/> { roleNames.get(game.current) }-Chat</span></CardHeader>
 			<Divider/>
 			<CardBody className="h-[30vh] p-2 gap-2">
 				{ player.alive &&

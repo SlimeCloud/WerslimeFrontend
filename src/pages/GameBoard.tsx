@@ -1,7 +1,7 @@
-import victim from "../assets/modifier/victim.png"
 import vote from "../assets/icon/vote.png"
 import dead from "../assets/icon/dead.png"
 import anvil from "../assets/icon/anvil.png"
+import shieldIcon from "../assets/action/shield.png"
 import healIcon from "../assets/action/heal.png"
 import poisonIcon from "../assets/action/poison.png"
 import viewIcon from "../assets/action/view.png"
@@ -9,8 +9,8 @@ import shootIcon from "../assets/action/shoot.png"
 import markIcon from "../assets/action/mark.png"
 
 import { useGameState } from "../hooks/useGameState.ts";
-import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, ModalBody, ModalHeader, Popover, PopoverContent, PopoverTrigger, Tooltip, useDisclosure } from "@nextui-org/react"
-import { getEffectiveRole, Player } from "../types/Player.ts"
+import { Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Image, Modal, ModalBody, ModalContent, ModalHeader, Popover, PopoverContent, PopoverTrigger, Tooltip, useDisclosure } from "@nextui-org/react"
+import { EMPTY_PLAYER, getEffectiveRole, Player } from "../types/Player.ts"
 import { hasChat, isChatActive, isRoleActive, Role, roleImages, roleNames } from "../types/Role.ts"
 import EventModal from "../components/EventModal.tsx"
 import { Request, useRest } from "../hooks/useRest.ts"
@@ -84,7 +84,7 @@ function Actions({ confirm, next }: { confirm: ReactNode, next: (req?: Request<u
 	const chat = game.settings.chat && ((game.settings.storyMode && player.master) || (!player.alive && game.settings.deadSpectators) || (isChatActive(player, game.current) && hasChat(game.current)))
 
 	return (
-		<div className="fixed w-screen bottom-[60px] flex justify-between z-20 px-3">
+		<div className="fixed w-screen bottom-[50px] flex justify-between z-20 px-3">
 			{ (protocol || chat) && <span className="flex gap-2">
 				{ protocol && <Popover>
 					<PopoverTrigger><Button isIconOnly><ScrollText/></Button></PopoverTrigger>
@@ -97,9 +97,8 @@ function Actions({ confirm, next }: { confirm: ReactNode, next: (req?: Request<u
 				</Popover> }
 			</span> }
 
-			{ confirm }
-
 			{ (!(protocol || chat) && !confirm) && <span/> }
+			{ confirm }
 
 			{ player.master &&
 				<Button color={ game.valid ? "primary" : "warning" } className="block" onPress={ () => next() }>
@@ -116,19 +115,39 @@ function Board({ post, next }: { post: (req?: Request<unknown>) => void, next: (
 
 	return (
 		<>
-			<div className={ `font-minecraft grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full h-full mb-auto rounded-[20px] p-5 ${ (isRoleActive(player, game.current) && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
+			<div className={ `font-minecraft grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-10 w-full max-h-full mb-auto rounded-[20px] p-5 ${ (isRoleActive(player, game.current) && !Object.keys(game.interactions || {}).includes(player.id) && player.alive) ? "animate-border-pulse" : "" }` }>
 				{ game.players.map(p => <PlayerCard key={ p.id } p={ p } action={ action?.execute(p) }/>) }
 			</div>
 
 			{ isRoleActive(player, game.current) && <Suspense fallback={ <CircularProgress className="m-auto" aria-label="Lade Aktion"/> }>{ action?.node }</Suspense> }
+			{ player.role === "HEALER" && <HealerModal/> }
 
-			<Actions confirm={ action?.confirm } next={ next }/>
+			<Actions confirm={ isRoleActive(player, game.current) && action?.confirm } next={ next }/>
 		</>
 	)
 }
 
+function HealerModal() {
+	const { game } = useGameState()!
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+	useEvent("SHIELD_ATTACK", onOpen)
+
+	return (
+		<Modal isOpen={ isOpen } onOpenChange={ onOpenChange }>
+			<ModalContent>
+				<ModalHeader className="py-3">Schild-Angriff</ModalHeader>
+				<Divider/>
+				<ModalBody className="flex flex-row flex-wrap gap-x-2 gap-y-1">
+					Dein Schützling <PlayerName player={ game.players.find(p => p.modifiers.includes("SHIELD")) || EMPTY_PLAYER } modifier={ false } bold/> wurde von den Werwölfen angegriffen!
+				</ModalBody>
+			</ModalContent>
+		</Modal>
+	)
+}
+
 function PlayerCard({p, action}: { p: Player, action?: () => void }) {
-	const {game, player} = useGameState()!
+	const { game, player } = useGameState()!
 
 	const target = game.interactions && game.interactions[p.id as never] as string
 	const targetName = game.players.find(p => p.id === target)?.name
@@ -137,7 +156,7 @@ function PlayerCard({p, action}: { p: Player, action?: () => void }) {
 	const votes = game.interactions ? Object.entries(game.interactions).filter(([ , target ]) => target === p.id).length : 0
 	const tooltip =
 		p.id === game.roleMeta as never as string && player.role === "WEREWOLF" ? "Vom Hexenmeister markiert" :
-			p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
+		p.id === game.target ? "Gewinnt die aktuelle Abstimmung" :
 		targets.includes(p.id) ? "Von dir Ausgewählt" :
 		p.id === game.victim ? "Opfer der Nacht" :
 		p.aura ? "Aura: " + auraNames.get(p.aura) :
@@ -155,9 +174,6 @@ function PlayerCard({p, action}: { p: Player, action?: () => void }) {
 				>
 					<CardHeader className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } py-2 flex justify-between text-${ p.aura ? auraColors.get(p.aura) : "" }` }>
 						<PlayerName bold={ p.id === player.id } player={ p }/>
-						<span className="flex gap-2 absolute right-2">
-							{ p.id === game.victim && <Tooltip content="Opfer der Nacht"><Image alt="Opfer der Nacht" src={ victim } width="25px" className="pixel"/></Tooltip> }
-						</span>
 					</CardHeader>
 					<Divider/>
 					<CardBody className={ `delay-[147ms] ${ !p.role ? "rotate-y-180" : "rotate-y-0" } overflow-hidden` }>
@@ -217,12 +233,17 @@ function useInteractions(action: (req?: Request<unknown>) => void): PlayerClickH
 		id: "target", name: "Schießen", image: shootIcon
 	})
 
+	const healerAction = useSingleAction(action, target => target.alive, {
+		id: "target", name: "Beschützen", image: shieldIcon, condition: p => !p.modifiers.includes("SHIELD") && p.id !== game.roleMeta as never
+	})
+
 	switch(game.current) {
 		case "VILLAGER":
 		case "VILLAGER_ELECT":
 		case "WEREWOLF": return voteAction
 
 		case "AMOR": return amorAction
+		case "HEALER": return healerAction
 		case "WITCH": return witchAction
 		case "AURA_SEER": return auraSeerAction
 		case "WARLOCK": return warlockAction

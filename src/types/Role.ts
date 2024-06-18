@@ -1,15 +1,18 @@
 import neutral from "../assets/roles/default.png"
-import villager from "../assets/roles/villager.png"
-import warlock from "../assets/roles/warlock.png"
-import wolf from "../assets/roles/werslime.png"
-import witch from "../assets/roles/witch.png"
-import hunter from "../assets/roles/hunter.png"
-import jester from "../assets/roles/jester.png"
-import spy from "../assets/roles/spy.png"
+import mayor from "../assets/roles/mayor.png"
+
 import amor from "../assets/roles/amor.png"
 import seer from "../assets/roles/seer.png"
 import aura_seer from "../assets/roles/aura_seer.png"
-import mayor from "../assets/roles/mayor.png"
+import warlock from "../assets/roles/warlock.png"
+import healer from "../assets/roles/healer.png"
+import werewolf from "../assets/roles/werslime.png"
+import witch from "../assets/roles/witch.png"
+import villager from "../assets/roles/villager.png"
+import hunter from "../assets/roles/hunter.png"
+import jester from "../assets/roles/jester.png"
+import spy from "../assets/roles/spy.png"
+
 import { ReactNode } from "react"
 import { Player } from "./Player.ts"
 
@@ -22,6 +25,7 @@ export type Role =
 	"SEER" |
 	"AURA_SEER" |
 	"WARLOCK" |
+	"HEALER" |
 	"WEREWOLF" |
 	"WITCH" |
 	"VILLAGER" |
@@ -32,12 +36,13 @@ export type Role =
 export const roleNames = new Map<Role, string>([
 	[ "UNKNOWN", "Unbekannt" ],
 	[ "MAYOR", "Bürgermeister" ],
-	[ "VILLAGER_ELECT", "Dorfbewohner (Bürgermeister-Wahl)" ],
+	[ "VILLAGER_ELECT", "Bürgermeister-Wahl" ],
 
 	[ "AMOR", "Amor" ],
 	[ "SEER", "Seherin" ],
 	[ "AURA_SEER", "Aura-Seher" ],
 	[ "WARLOCK", "Hexenmeister" ],
+	[ "HEALER", "Heiler" ],
 	[ "WEREWOLF", "Werslime" ],
 	[ "WITCH", "Hexe" ],
 	[ "VILLAGER", "Dorfbewohner" ],
@@ -55,7 +60,8 @@ export const roleImages = new Map<Role, string>([
 	[ "SEER", seer ],
 	[ "AURA_SEER", aura_seer ],
 	[ "WARLOCK", warlock ],
-	[ "WEREWOLF", wolf ],
+	[ "HEALER", healer ],
+	[ "WEREWOLF", werewolf ],
 	[ "WITCH", witch ],
 	[ "VILLAGER", villager ],
 	[ "HUNTER", hunter ],
@@ -70,6 +76,7 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 	[ "HUNTER", "Kann wenn er stirbt eine weitere Person erschießen" ],
 	[ "AURA_SEER", "Kann jede Nacht das Team einer Person ansehen" ],
 	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ],
+	[ "HEALER", "Der Heile kann jede Nacht einen Spieler vor Werwolf-Attacken schützen" ],
 	[ "SPY", "Dorfbewohner, der für Werwölfe als Werwolf angezeigt wird" ],
 	[ "WARLOCK", "Seherin der Werslimes, hat eine Tarn-Rolle" ]
 ])

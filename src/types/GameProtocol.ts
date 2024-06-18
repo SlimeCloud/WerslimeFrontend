@@ -5,7 +5,9 @@ export type ProtocolType =
 	"AURA_SEER" |
 	"WARLOCK_VIEW" |
 	"WARLOCK_MARK" |
+	"HEALER" |
 	"WEREWOLF" |
+	"WEREWOLF_HEALER" |
 	"WITCH_HEAL" |
 	"WITCH_POISON" |
 	"HUNTER" |

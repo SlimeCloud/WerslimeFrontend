@@ -51,7 +51,7 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 			}
 		},
 		node: <>
-			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="lg" placement="center">
+			<Modal isOpen={ isOpen } onOpenChange={ onOpenChange } size="lg" placement="center" className="select-none">
 				<ModalContent>
 					<ModalHeader className="py-3 font-bold flex justify-center text-xl">Wähle eine Aktion</ModalHeader>
 					<ModalBody className="grid grid-cols-3 gap-2 px-10 py-5">
@@ -76,6 +76,6 @@ export default function useMultiAction(action: (req?: Request<unknown>) => void,
 				</ModalContent>
 			</Modal>
 		</>,
-		confirm: !game.interacted && <Button color={ selected.size ? "primary" : "warning" } onPress={ confirm }>Bestätigen</Button>
+		confirm: !game.interacted && <Button color={ selected.size ? "primary" : "warning" } onPress={ confirm }>{ selected.size ? "Bestätigen" : "Überspringen" }</Button>
 	}
 }
