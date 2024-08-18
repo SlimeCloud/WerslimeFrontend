@@ -79,7 +79,7 @@ function JoinGame() {
 	const navigate = useNavigate()
 
 	const [ id, setId ] = useState("")
-	const invalid = useMemo(() => !/^[a-zA-Z0-9]{11}$/.test(id), [ id ])
+	const invalid = useMemo(() => !/^[a-zA-Z0-9]{9}$/.test(id), [ id ])
 
 	function joinGame(e?: FormEvent) {
 		e?.preventDefault()
@@ -100,7 +100,8 @@ function JoinGame() {
 								label="Spiel-ID" placeholder="Gib die ID der Runde ein"
 								value={ id }
 								onValueChange={ setId }
-								maxLength={ 11 }
+								maxLength={ 9 }
+								minLength={ 9 }
 							/>
 							<Button isDisabled={ invalid } className="h-[45px]" color="primary" onPress={ () => joinGame() }>Runde Beitreten</Button>
 						</form>
