@@ -11,7 +11,6 @@ import witch from "../assets/roles/witch.png"
 import villager from "../assets/roles/villager.png"
 import hunter from "../assets/roles/hunter.png"
 import jester from "../assets/roles/jester.png"
-import spy from "../assets/roles/spy.png"
 
 import { ReactNode } from "react"
 import { Player } from "./Player.ts"
@@ -30,8 +29,7 @@ export type Role =
 	"WITCH" |
 	"VILLAGER" |
 	"HUNTER" |
-	"JESTER" |
-	"SPY"
+	"JESTER"
 
 export const roleNames = new Map<Role, string>([
 	[ "UNKNOWN", "Unbekannt" ],
@@ -47,8 +45,7 @@ export const roleNames = new Map<Role, string>([
 	[ "WITCH", "Hexe" ],
 	[ "VILLAGER", "Dorfbewohner" ],
 	[ "HUNTER", "Jäger" ],
-	[ "JESTER", "Narr" ],
-	[ "SPY", "Spion" ]
+	[ "JESTER", "Narr" ]
 ])
 
 export const roleImages = new Map<Role, string>([
@@ -65,8 +62,7 @@ export const roleImages = new Map<Role, string>([
 	[ "WITCH", witch ],
 	[ "VILLAGER", villager ],
 	[ "HUNTER", hunter ],
-	[ "JESTER", jester ],
-	[ "SPY", spy ]
+	[ "JESTER", jester ]
 ])
 
 export const roleDescriptions = new Map<Role, ReactNode>([
@@ -77,7 +73,6 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 	[ "AURA_SEER", "Kann jede Nacht das Team einer Person ansehen" ],
 	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ],
 	[ "HEALER", "Der Heile kann jede Nacht einen Spieler vor Werwolf-Attacken schützen" ],
-	[ "SPY", "Dorfbewohner, der für Werwölfe als Werwolf angezeigt wird" ],
 	[ "WARLOCK", "Seherin der Werslimes, hat eine Tarn-Rolle" ]
 ])
 
@@ -86,7 +81,7 @@ export function isRoleActive(player: Player, role: Role) {
 }
 
 export function isChatActive(player: Player, role: Role) {
-	return isRoleActive(player, role) || (role === "WEREWOLF" && player.role === "SPY")
+	return isRoleActive(player, role)
 }
 
 export function hasChat(role: Role) {
