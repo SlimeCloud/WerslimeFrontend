@@ -72,7 +72,7 @@ export const roleDescriptions = new Map<Role, ReactNode>([
 	[ "HUNTER", "Kann wenn er stirbt eine weitere Person erschießen" ],
 	[ "AURA_SEER", "Kann jede Nacht das Team einer Person ansehen" ],
 	[ "JESTER", "Gewinnt, wenn er vom Dorf gehenkt wird" ],
-	[ "HEALER", "Der Heile kann jede Nacht einen Spieler vor Werwolf-Attacken schützen" ],
+	[ "HEALER", "Der Heiler kann jede Nacht einen Spieler vor Werwolf-Attacken schützen" ],
 	[ "WARLOCK", "Seherin der Werslimes, hat eine Tarn-Rolle" ]
 ])
 
